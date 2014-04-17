@@ -8,8 +8,14 @@
 
 #include <stdio.h>
 
+#define ILOSC_POMIAROW_SCENNER 800
+
+
 int main(int argc, char* argv[])
 {
+	int SkanerLaserowy[ILOSC_POMIAROW_SCENNER];
+
+	
 	//UdpClient *cli = new UdpClient(1234);
 	//char* tabliczka;
 
