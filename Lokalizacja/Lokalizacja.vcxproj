@@ -82,6 +82,7 @@
   <ItemGroup>
     <ClCompile Include="Lokalizacja.cpp" />
     <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="UdpClient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Particle.h" />
