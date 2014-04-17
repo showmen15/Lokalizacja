@@ -8,6 +8,7 @@ class  UdpClient
 {
 public:
 	UdpClient(unsigned short port);
+	UdpClient(unsigned short port,unsigned int bufforSize);
 	~ UdpClient();
 
 	int ReceiveLength; /* Size of received message */
@@ -20,7 +21,7 @@ private:
 	int sock; /* Socket */
 	struct sockaddr_in echoServAddr; /* Local address */
 	struct sockaddr_in echoClntAddr; /* Client address */
-	char echoBuffer[ECHOMAX]; /* Buffer for echo string */
+	char* echoBuffer; /* Buffer for echo string */ //char echoBuffer[ECHOMAX]; 
 	unsigned short echoServPort; /* Server port */
 	int cliLen; /* Length of incoming message */
 	//int recvMsgSize; 

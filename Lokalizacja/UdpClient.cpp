@@ -3,6 +3,12 @@
 
 UdpClient::UdpClient(unsigned short port)
 {
+	UdpClient(port,ECHOMAX);
+}
+
+UdpClient::UdpClient(unsigned short port,unsigned int bufforSize)
+{
+	echoBuffer = new char[bufforSize];	
 	echoServPort = port;
 
 	if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) /* Load Winsock 2.0 DLL */
@@ -22,9 +28,10 @@ UdpClient::UdpClient(unsigned short port)
 		DieWithError("bind() failed");
 
 }
+
 UdpClient::~UdpClient()
 {
-
+	delete[] echoBuffer;
 }
 
 //int ReceiveLength; /* Size of received message */

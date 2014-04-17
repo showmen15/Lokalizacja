@@ -10,15 +10,16 @@
 
 int main(int argc, char* argv[])
 {
-	UdpClient *cli = new UdpClient(1234);
+	//UdpClient *cli = new UdpClient(1234);
+	//char* tabliczka;
 
-	char* tablica = "ff";
+	//char* tablica = "ff";
 
-	cli->Send(tablica,2);
+	//cli->Send(tablica,2);
 
-	//cli->Receive(
+	//tabliczka = cli->Receive();
 
-	return 0;
+	//return 0;
 
 }
 
