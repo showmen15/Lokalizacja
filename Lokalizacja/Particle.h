@@ -8,4 +8,3 @@ public:
 	void Move(unsigned long newX,unsigned long newY, unsigned long newAlfa);
 	void Update();
 };
-//
