@@ -10,17 +10,15 @@
 
 int main(int argc, char* argv[])
 {
-
 	UdpClient *cli = new UdpClient(1234);
 
-	cli->
+	char* tablica = "ff";
 
+	cli->Send(tablica,2);
 
-//	Particle czastka;
-
-	//czastka.
+	//cli->Receive(
 
 	return 0;
-	
+
 }
 

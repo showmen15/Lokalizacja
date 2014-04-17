@@ -32,7 +32,9 @@ UdpClient::~UdpClient()
 char* UdpClient::Receive()
 {
 	if ((ReceiveLength = recvfrom(sock, echoBuffer, ECHOMAX, 0,(struct sockaddr *) &echoClntAddr, &cliLen)) < 0)
-		DieWithError("recvfrom() failed");		
+		DieWithError("recvfrom() failed");	
+
+	return echoBuffer;
 }
 
 void UdpClient::Send(char* dgram,int bytes)
