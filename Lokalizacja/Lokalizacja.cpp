@@ -3,10 +3,17 @@
 
 //#include "stdafx.h"
 
+#include "Particle.h";
+
 #include <stdio.h>
 
 int main(int argc, char* argv[])
 {
+
+	Particle czastka;
+
+	//czastka.
+
 	return 0;
 	
 }
