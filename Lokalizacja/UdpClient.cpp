@@ -17,6 +17,10 @@ UdpClient::UdpClient(unsigned short port,unsigned int bufforSize)
 		exit(1);
 	}
 
+	/* Create socket for sending/receiving datagrams */
+	if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+		DieWithError("socket() failed");
+
 	/* Construct local address structure */
 	memset(&echoServAddr, 0, sizeof(echoServAddr)); /* Zero out structure */
 	echoServAddr.sin_family = AF_INET; /* Internet address family */
