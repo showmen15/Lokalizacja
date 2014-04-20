@@ -15,7 +15,7 @@ public:
 	
 	char* Receive();
 
-	void Send(char* dgram,int bytes);
+	void Send(const char* dgram,int bytes);
 
 private:
 	int sock; /* Socket */

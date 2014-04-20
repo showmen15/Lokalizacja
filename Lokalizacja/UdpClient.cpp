@@ -44,7 +44,7 @@ char* UdpClient::Receive()
 	return echoBuffer;
 }
 
-void UdpClient::Send(char* dgram,int bytes)
+void UdpClient::Send(const char* dgram,int bytes)
 {
 	if (sendto(sock, dgram, bytes, 0, (struct sockaddr *) &echoClntAddr,sizeof(echoClntAddr)) != bytes)
 		DieWithError("sendto() sent a different number of bytes than expected");
