@@ -3,7 +3,30 @@
 
 UdpClient::UdpClient(unsigned short port)
 {
-	UdpClient(port,ECHOMAX);
+	echoBuffer = new char[ECHOMAX];	
+	echoServPort = port;
+
+	if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) /* Load Winsock 2.0 DLL */
+	{
+		fprintf(stderr, "WSAStartup() failed");
+		exit(1);
+	}
+
+	/* Create socket for sending/receiving datagrams */
+	if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+		DieWithError("socket() failed");
+
+	/* Construct local address structure */
+	memset(&echoServAddr, 0, sizeof(echoServAddr)); /* Zero out structure */
+	echoServAddr.sin_family = AF_INET; /* Internet address family */
+	echoServAddr.sin_addr.s_addr = htonl(INADDR_ANY); /* Any incoming interface */
+	echoServAddr.sin_port = htons(echoServPort); /* Local port */
+
+	/* Bind to the local address */
+	if (bind(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
+		DieWithError("bind() failed");
+	
+	//UdpClient(port,ECHOMAX);
 }
 
 UdpClient::UdpClient(unsigned short port,unsigned int bufforSize)
@@ -50,8 +73,7 @@ char* UdpClient::Receive()
 
 void UdpClient::Send(const char* dgram,int bytes)
 {
-	if (sendto(sock, dgram, bytes, 0, (struct sockaddr *) &echoClntAddr,sizeof(echoClntAddr)) != bytes)
-		DieWithError("sendto() sent a different number of bytes than expected");
+	sendto(sock, dgram, bytes, 0, (struct sockaddr *) &echoClntAddr,sizeof(echoClntAddr));
 }
 
 

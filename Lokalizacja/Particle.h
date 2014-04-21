@@ -14,14 +14,16 @@ public:
 	void Move(unsigned long newX,unsigned long newY, unsigned long newAlfa);
 	void Update();
 
-	const char* TransmitParticle(int index)
-	{
-		stringstream temp;
-		string tmp;
-		
-		temp << "#" << index << ";" << X << ";" << Y << ";" << Alfa << ";" << Probability << ";";	
-		tmp = temp.str();
+	//const char* TransmitParticle(int index)
+	//{
+	//	stringstream temp;
+	//	string tmp = "rrrrrrwwww";
+	//	//const char yy;
+	//	
+	//	temp << "#" << index << ";" << X << ";" << Y << ";" << Alfa << ";" << Probability << ";" << '\0';	
+	//	//tmp = temp.str();
 
-		return tmp.c_str();
-	}
+	//	//return tmp.c_str();
+	//	return tmp.c_str();
+	//}
 };
