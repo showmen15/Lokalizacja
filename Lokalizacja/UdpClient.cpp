@@ -1,79 +1,111 @@
 #include "UdpClient.h"
 
 
-UdpClient::UdpClient(unsigned short port)
+UdpClient::UdpClient(char* sIP, unsigned short port)
 {
-	echoBuffer = new char[ECHOMAX];	
+	//echoBuffer = new char[ECHOMAX];	
+	//echoServPort = port;
+
+
+	servIP = sIP;
 	echoServPort = port;
 
-	if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) /* Load Winsock 2.0 DLL */
+
+	if (WSAStartup(MAKEWORD(2, 0), &wsaData)!= 0) /* Load Winsock 2.0 DLL */
 	{
 		fprintf(stderr, "WSAStartup() failed");
 		exit(1);
 	}
-
-	/* Create socket for sending/receiving datagrams */
-	if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+	/* Create a best-effort datagram socket using UDP */
+	if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP))< 0)
 		DieWithError("socket() failed");
 
-	/* Construct local address structure */
+	/* Construct the server address structure */
 	memset(&echoServAddr, 0, sizeof(echoServAddr)); /* Zero out structure */
 	echoServAddr.sin_family = AF_INET; /* Internet address family */
-	echoServAddr.sin_addr.s_addr = htonl(INADDR_ANY); /* Any incoming interface */
-	echoServAddr.sin_port = htons(echoServPort); /* Local port */
+	echoServAddr.sin_addr.s_addr = inet_addr(servIP); /* Server IP address */
+	echoServAddr.sin_port = htons(echoServPort); /* Server port */
 
-	/* Bind to the local address */
-	if (bind(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
-		DieWithError("bind() failed");
-	
+
+
+
+	//if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) /* Load Winsock 2.0 DLL */
+	//{
+	//	fprintf(stderr, "WSAStartup() failed");
+	//	exit(1);
+	//}
+
+	///* Create socket for sending/receiving datagrams */
+	//if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+	//	DieWithError("socket() failed");
+
+	///* Construct local address structure */
+	//memset(&echoServAddr, 0, sizeof(echoServAddr)); /* Zero out structure */
+	//echoServAddr.sin_family = AF_INET; /* Internet address family */
+	//echoServAddr.sin_addr.s_addr = htonl(INADDR_ANY); /* Any incoming interface */
+	//echoServAddr.sin_port = htons(echoServPort); /* Local port */
+
+	///* Bind to the local address */
+	//if (bind(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
+	//	DieWithError("bind() failed");
+
 	//UdpClient(port,ECHOMAX);
 }
 
 UdpClient::UdpClient(unsigned short port,unsigned int bufforSize)
 {
-	echoBuffer = new char[bufforSize];	
-	echoServPort = port;
+	//echoBuffer = new char[bufforSize];	
+	//echoServPort = port;
 
-	if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) /* Load Winsock 2.0 DLL */
-	{
-		fprintf(stderr, "WSAStartup() failed");
-		exit(1);
-	}
+	//if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) /* Load Winsock 2.0 DLL */
+	//{
+	//	fprintf(stderr, "WSAStartup() failed");
+	//	exit(1);
+	//}
 
-	/* Create socket for sending/receiving datagrams */
-	if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
-		DieWithError("socket() failed");
+	///* Create socket for sending/receiving datagrams */
+	//if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+	//	DieWithError("socket() failed");
 
-	/* Construct local address structure */
-	memset(&echoServAddr, 0, sizeof(echoServAddr)); /* Zero out structure */
-	echoServAddr.sin_family = AF_INET; /* Internet address family */
-	echoServAddr.sin_addr.s_addr = htonl(INADDR_ANY); /* Any incoming interface */
-	echoServAddr.sin_port = htons(echoServPort); /* Local port */
+	///* Construct local address structure */
+	//memset(&echoServAddr, 0, sizeof(echoServAddr)); /* Zero out structure */
+	//echoServAddr.sin_family = AF_INET; /* Internet address family */
+	//echoServAddr.sin_addr.s_addr = htonl(INADDR_ANY); /* Any incoming interface */
+	//echoServAddr.sin_port = htons(echoServPort); /* Local port */
 
-	/* Bind to the local address */
-	if (bind(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
-		DieWithError("bind() failed");
+	///* Bind to the local address */
+	//if (bind(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
+	//	DieWithError("bind() failed");
 
 }
 
 UdpClient::~UdpClient()
 {
-	delete[] echoBuffer;
+	closesocket(sock);
+
+	WSACleanup(); /* Cleanup Winsock */
+	//delete[] echoBuffer;
 }
 
 //int ReceiveLength; /* Size of received message */
 
 char* UdpClient::Receive()
 {
-	if ((ReceiveLength = recvfrom(sock, echoBuffer, ECHOMAX, 0,(struct sockaddr *) &echoClntAddr, &cliLen)) < 0)
-		DieWithError("recvfrom() failed");	
+	respStringLen = recvfrom(sock, echoBuffer, ECHOMAX, 0, (struct sockaddr *) (int*)&fromAddr,(int*)&fromSize);
+
+
+	//if ((ReceiveLength = recvfrom(sock, echoBuffer, ECHOMAX, 0,(struct sockaddr *) &echoClntAddr, &cliLen)) < 0)
+	//	DieWithError("recvfrom() failed");	
 
 	return echoBuffer;
 }
 
-void UdpClient::Send(const char* dgram,int bytes)
+void UdpClient::Send(const char* dgram)
 {
-	sendto(sock, dgram, bytes, 0, (struct sockaddr *) &echoClntAddr,sizeof(echoClntAddr));
+	int bytes = strlen(dgram);
+	sendto(sock, dgram, bytes, 0, (struct sockaddr *)&echoServAddr, sizeof(echoServAddr));
+
+	//	sendto(sock, dgram, bytes, 0, (struct sockaddr *) &echoClntAddr,sizeof(echoClntAddr));
 }
 
 

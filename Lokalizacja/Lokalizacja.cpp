@@ -14,6 +14,48 @@
 
 int main(int argc, char* argv[])
 {
+	Particle tab[ILOSC_CZASTEK];
+	
+	for(int i = 0; i < ILOSC_CZASTEK; i++)
+	{
+		tab[i].X = rand();
+		tab[i].Y = rand();
+		tab[i].Alfa = rand();
+		tab[i].Probability =  (rand()/(double)(RAND_MAX + 1));
+	}
+	
+
+	
+	UdpClient client("127.0.0.1",1234);
+	//const char* str = "jakis teekst";
+
+	stringstream temp;
+	string tmp;
+
+	temp.clear();
+	tmp = "";
+
+	for(int i = 0; i < ILOSC_CZASTEK; i++)
+	{
+		temp << "#" << i << ";" << tab[i].X << ";" << tab[i].Y << ";" << tab[i].Alfa << ";" << tab[i].Probability << ";";
+		
+
+		/*tab[i].X = rand();
+		tab[i].Y = rand();
+		tab[i].Alfa = rand();
+		tab[i].Probability =  (rand()/(double)(RAND_MAX + 1));
+
+		temp << "#" << i << ";" << tab[i].X << ";" << tab[i].Y << ";" << tab[i].Alfa << ";" << tab[i].Probability << ";" << '\0';		
+		tmp = temp.str();
+		client.Send( tmp.c_str(),strlen( tmp.c_str()));*/
+	}
+
+	tmp += temp.str();
+
+	client.Send(tmp.c_str());
+
+	int it = 44;
+
 	//const char* s;
 	//Particle p;
 	//p.Alfa = 444;
@@ -26,16 +68,16 @@ int main(int argc, char* argv[])
 
 
 
-	const char* str = "jakis teekst";
+	
 
-	UdpClient client(1234);
+	
 
 	//client.Send(str,strlen(str));
 	//const char* temp;
 
 	//int SkanerLaserowy[ILOSC_POMIAROW_SCENNER];
 
-	Particle tab[ILOSC_CZASTEK];
+	/*Particle tab[ILOSC_CZASTEK];
 	stringstream temp;
 	string tmp;
 
@@ -50,7 +92,7 @@ int main(int argc, char* argv[])
 		temp << "#" << i << ";" << tab[i].X << ";" << tab[i].Y << ";" << tab[i].Alfa << ";" << tab[i].Probability << ";" << '\0';		
 		tmp = temp.str();
 		client.Send( tmp.c_str(),strlen( tmp.c_str()));
-	}
+	}*/
 
 	/*char* tablica = new char[sizeof(tab)];
 
