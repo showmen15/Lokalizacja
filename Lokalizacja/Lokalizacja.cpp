@@ -10,51 +10,125 @@
 
 #define ILOSC_POMIAROW_SCENNER 800
 #define ILOSC_CZASTEK 100
+#define THRESHILD 1.222
+#define EPSILON 2
+#define GENERATION 3
+#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 2
+
+
+void InitTablicaCzastek(Particle *tablica,double dMaxX,double dMaxY,double dRMAX)
+{
+	for (int i = 0; i < ILOSC_CZASTEK; i++)
+	{
+		Particle temp(dMaxX,dMaxY, dRMAX); 	
+		tablica[i] = temp;
+	}
+}
 
 
 int main(int argc, char* argv[])
 {
-	Particle tab[ILOSC_CZASTEK];
-	
+	Particle tablicaCzastek[ILOSC_CZASTEK];
+	int WolneMiejscaTablicaCzastek[ILOSC_CZASTEK];
+	int index;
+	double SkanerLaserowy[ILOSC_POMIAROW_SCENNER];
+
+	InitTablicaCzastek(tablicaCzastek,10,10,10);
+
+	double przesuniecieX;
+	double przesuniecieY;
+	double przesuniecieAlfa;
+
+	while(true)
+	{
+		index = 0;
+
+		for(int i= 0; i < ILOSC_CZASTEK;i++)
+		{
+			tablicaCzastek[i].UpdateCountProbability(SkanerLaserowy,ILOSC_POMIAROW_SCENNER); //przeliczamy prawdopodobienstwa
+
+			if(tablicaCzastek[i].sMarkToDelete > 0) 
+			{
+				if((tablicaCzastek[i].Probability < EPSILON) && (tablicaCzastek[i].sMarkToDelete > GENERATION)) //usuwamy te które s¹ poza epsilonem
+				{
+					WolneMiejscaTablicaCzastek[index] = i;
+					index++;
+				}
+			}
+			else
+				tablicaCzastek[i].Move(przesuniecieX,przesuniecieY,przesuniecieAlfa);
+		}
+
+	/*	for (int i = 0; i < length; i++)
+		{
+
+		}*/
+
+	}
+
+
+
+
+	//tab = new 
+
+
+
+	//Particle *tab;
+	//tab = new Particle(10,10)[ILOSC_CZASTEK];
+	/*	Particle part(10,10,2);
+	Particle part1(10,10,2);
+
+
+	part1.Losuj(part.X,part.Y);*/
+
+
+
+
+	//part.Losuj();
+
+	int i = 323;
+
+	/*Particle tab(222,333)[ILOSC_CZASTEK];
+
 	for(int i = 0; i < ILOSC_CZASTEK; i++)
 	{
-		tab[i].X = rand();
-		tab[i].Y = rand();
-		tab[i].Alfa = rand();
-		tab[i].Probability =  (rand()/(double)(RAND_MAX + 1));
-	}
-	
-
-	
-	UdpClient client("127.0.0.1",1234);
-	//const char* str = "jakis teekst";
-
-	stringstream temp;
-	string tmp;
-
-	temp.clear();
-	tmp = "";
-
-	for(int i = 0; i < ILOSC_CZASTEK; i++)
-	{
-		temp << "#" << i << ";" << tab[i].X << ";" << tab[i].Y << ";" << tab[i].Alfa << ";" << tab[i].Probability << ";";
-		
-
-		/*tab[i].X = rand();
-		tab[i].Y = rand();
-		tab[i].Alfa = rand();
-		tab[i].Probability =  (rand()/(double)(RAND_MAX + 1));
-
-		temp << "#" << i << ";" << tab[i].X << ";" << tab[i].Y << ";" << tab[i].Alfa << ";" << tab[i].Probability << ";" << '\0';		
-		tmp = temp.str();
-		client.Send( tmp.c_str(),strlen( tmp.c_str()));*/
+	tab[i].X = rand();
+	tab[i].Y = rand();
+	tab[i].Alfa = rand();
+	tab[i].Probability =  (rand()/(double)(RAND_MAX + 1));
 	}
 
-	tmp += temp.str();
+	*/
+	//
+	//UdpClient client("127.0.0.1",1234);
+	////const char* str = "jakis teekst";
 
-	client.Send(tmp.c_str());
+	//stringstream temp;
+	//string tmp;
 
-	int it = 44;
+	//temp.clear();
+	//tmp = "";
+
+	//for(int i = 0; i < ILOSC_CZASTEK; i++)
+	//{
+	//	temp << "#" << i << ";" << tab[i].X << ";" << tab[i].Y << ";" << tab[i].Alfa << ";" << tab[i].Probability << ";";
+	//	
+
+	//	/*tab[i].X = rand();
+	//	tab[i].Y = rand();
+	//	tab[i].Alfa = rand();
+	//	tab[i].Probability =  (rand()/(double)(RAND_MAX + 1));
+
+	//	temp << "#" << i << ";" << tab[i].X << ";" << tab[i].Y << ";" << tab[i].Alfa << ";" << tab[i].Probability << ";" << '\0';		
+	//	tmp = temp.str();
+	//	client.Send( tmp.c_str(),strlen( tmp.c_str()));*/
+	//}
+
+	//tmp += temp.str();
+
+	//client.Send(tmp.c_str());
+
+	//int it = 44;
 
 	//const char* s;
 	//Particle p;
@@ -68,9 +142,9 @@ int main(int argc, char* argv[])
 
 
 
-	
 
-	
+
+
 
 	//client.Send(str,strlen(str));
 	//const char* temp;
@@ -84,14 +158,14 @@ int main(int argc, char* argv[])
 	for(int i = 0; i < ILOSC_CZASTEK; i++)
 	{
 
-		tab[i].X = rand();
-		tab[i].Y = rand();
-		tab[i].Alfa = rand();
-		tab[i].Probability =  (rand()/(double)(RAND_MAX + 1));
+	tab[i].X = rand();
+	tab[i].Y = rand();
+	tab[i].Alfa = rand();
+	tab[i].Probability =  (rand()/(double)(RAND_MAX + 1));
 
-		temp << "#" << i << ";" << tab[i].X << ";" << tab[i].Y << ";" << tab[i].Alfa << ";" << tab[i].Probability << ";" << '\0';		
-		tmp = temp.str();
-		client.Send( tmp.c_str(),strlen( tmp.c_str()));
+	temp << "#" << i << ";" << tab[i].X << ";" << tab[i].Y << ";" << tab[i].Alfa << ";" << tab[i].Probability << ";" << '\0';		
+	tmp = temp.str();
+	client.Send( tmp.c_str(),strlen( tmp.c_str()));
 	}*/
 
 	/*char* tablica = new char[sizeof(tab)];

@@ -27,12 +27,18 @@
     <ClCompile Include="UdpClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Desktop\Nowy folder (8)\frozen-master\frozen-master\frozen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Particle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UdpClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Desktop\Nowy folder (8)\frozen-master\frozen-master\frozen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
