@@ -29,6 +29,7 @@ void InitTablicaCzastek(Particle *tablica,double dMaxX,double dMaxY,double dRMAX
 int main(int argc, char* argv[])
 {
 	Particle tablicaCzastek[ILOSC_CZASTEK];
+
 	int WolneMiejscaTablicaCzastek[ILOSC_CZASTEK];
 	int index;
 	double SkanerLaserowy[ILOSC_POMIAROW_SCENNER];
@@ -47,7 +48,7 @@ int main(int argc, char* argv[])
 		{
 			tablicaCzastek[i].UpdateCountProbability(SkanerLaserowy,ILOSC_POMIAROW_SCENNER); //przeliczamy prawdopodobienstwa
 
-			if(tablicaCzastek[i].sMarkToDelete > 0) 
+			if(tablicaCzastek[i]./*sMarkToDelete*/ > 0) 
 			{
 				if((tablicaCzastek[i].Probability < EPSILON) && (tablicaCzastek[i].sMarkToDelete > GENERATION)) //usuwamy te które s¹ poza epsilonem
 				{
