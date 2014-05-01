@@ -1,8 +1,13 @@
 
 #include <stdio.h>
 #include <sstream>
+#include <math.h>
+#include <iostream>
+#include <conio.h>
 using namespace std;
 
+
+#define M_PI       3.14159265358979323846
 
 
 struct Particle 
@@ -14,7 +19,7 @@ private:
 	double rMAX;
 public:	
 
-	Particle();
+	//Particle();
 
 	Particle(double dMaxX,double dMaxY,double dRMAX)
 	{
@@ -82,9 +87,32 @@ public:
 	 Probability = sumProbability;
 	}
 
+	inline void ZaktualizujPrzesuniecie(double V,double dt) //liczy droge i aktualizuje przemieszczenie
+	{
+		double s = V * dt;
+
+		ZaktualizujPrzesuniecie(s);
+	}
+	
+	inline void ZaktualizujPrzesuniecie(double s) 
+	{
+			X += s * cos((Alfa * M_PI) / 180 ); // A'= [x + Sx, ...]
+			Y += s * cos(((90 - Alfa) * M_PI) / 180); // A' [... ,y + Sy]
+	}
+
+
+	inline void ObrotCzastkiKat(double alfaNew)
+	{
+		X = X * cos((alfaNew * M_PI) / 180) - Y * sin((alfaNew * M_PI) / 180);
+		Y = X * sin((alfaNew * M_PI) / 180) + Y * cos((alfaNew * M_PI) / 180);
+
+		Alfa += alfaNew;
+	}
+
+
 	//const char* TransmitParticle(int index)
 	//{
-	//	stringstream temp;
+	//	stringstream temp; 
 	//	string tmp = "rrrrrrwwww";
 	//	//const char yy;
 	//	

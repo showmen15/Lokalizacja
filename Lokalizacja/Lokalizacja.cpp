@@ -16,56 +16,123 @@
 #define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 2
 
 
-void InitTablicaCzastek(Particle *tablica,double dMaxX,double dMaxY,double dRMAX)
-{
-	for (int i = 0; i < ILOSC_CZASTEK; i++)
-	{
-		Particle temp(dMaxX,dMaxY, dRMAX); 	
-		tablica[i] = temp;
-	}
-}
+//void InitTablicaCzastek(Particle *tablica,double dMaxX,double dMaxY,double dRMAX)
+//{
+//	for (int i = 0; i < ILOSC_CZASTEK; i++)
+//	{
+//		Particle temp(dMaxX,dMaxY, dRMAX); 	
+//		tablica[i] = temp;
+//	}
+//}
 
 
 int main(int argc, char* argv[])
 {
-	Particle tablicaCzastek[ILOSC_CZASTEK];
+	double e = 44;
 
-	int WolneMiejscaTablicaCzastek[ILOSC_CZASTEK];
+	Particle p(e,e,e);
+
+	p.X = 67;
+	p.Y = 554;
+	p.Alfa = 278;
+
+	p.ZaktualizujPrzesuniecie(0,0);
+
+	
+p.X = 222;
+
+
+	//Particle tablicaCzastek[ILOSC_CZASTEK];
+
+
+	/*int WolneMiejscaTablicaCzastek[ILOSC_CZASTEK];
 	int index;
-	double SkanerLaserowy[ILOSC_POMIAROW_SCENNER];
+	double SkanerLaserowy[ILOSC_POMIAROW_SCENNER];*/
 
-	InitTablicaCzastek(tablicaCzastek,10,10,10);
+	//InitTablicaCzastek(tablicaCzastek,10,10,10);
 
-	double przesuniecieX;
-	double przesuniecieY;
-	double przesuniecieAlfa;
+	//for (int i = 0; i < ILOSC_CZASTEK; i++)
+	//{
+	//	Particle temp(100,100, 100); 	
+	//	tablicaCzastek[i] = temp;
+	//}
 
-	while(true)
-	{
-		index = 0;
+ //   tablicaCzastek[0].X = 15;
+	//tablicaCzastek[0].Y = 13;
 
-		for(int i= 0; i < ILOSC_CZASTEK;i++)
-		{
-			tablicaCzastek[i].UpdateCountProbability(SkanerLaserowy,ILOSC_POMIAROW_SCENNER); //przeliczamy prawdopodobienstwa
 
-			if(tablicaCzastek[i].sMarkToDelete > 0) 
-			{
-				if((tablicaCzastek[i].Probability < EPSILON) && (tablicaCzastek[i].sMarkToDelete > GENERATION)) //usuwamy te które s¹ poza epsilonem
-				{
-					WolneMiejscaTablicaCzastek[index] = i;
-					index++;
-				}
-			}
-			else
-				tablicaCzastek[i].Move(przesuniecieX,przesuniecieY,przesuniecieAlfa);
-		}
+
+	//UdpClient client("127.0.0.1",1234);
+
+
+	//for(int i = 0; i < 1000000; i++)
+	//{
+
+	//stringstream temp;
+	//string tmp;
+
+	//temp.clear();
+	//tmp = "";
+
+	///*for(int i = 0; i < ILOSC_CZASTEK; i++)
+	//{*/
+
+
+	//Particle	tablicaCzastek(10,10,10);
+		
+	/*tablicaCzastek.X = 12 + i * 10;
+	tablicaCzastek.Y = 10 + i * 10 ;*/
+	/*tablicaCzastek.Losuj(15,15);
+
+	temp << "#" << 0 << ";" << tablicaCzastek.X << ";" << tablicaCzastek.Y << ";" << tablicaCzastek.Alfa << ";" << tablicaCzastek.Probability << ";";
+		
+*/
+		/*tab[i].X = rand();
+		tab[i].Y = rand();
+		tab[i].Alfa = rand();
+		tab[i].Probability =  (rand()/(double)(RAND_MAX + 1));
+
+		temp << "#" << i << ";" << tab[i].X << ";" << tab[i].Y << ";" << tab[i].Alfa << ";" << tab[i].Probability << ";" << '\0';		
+		
+		client.Send( tmp.c_str(),strlen( tmp.c_str()));*/
+	//}
+
+	//	tmp = temp.str();
+	//client.Send( tmp.c_str());
+
+	//}
+	//int j = 44;
+
+	//double przesuniecieX;
+	//double przesuniecieY;
+	//double przesuniecieAlfa;
+
+	//while(true)
+	//{
+	//	index = 0;
+
+	//	for(int i= 0; i < ILOSC_CZASTEK;i++)
+	//	{
+	//		tablicaCzastek[i].UpdateCountProbability(SkanerLaserowy,ILOSC_POMIAROW_SCENNER); //przeliczamy prawdopodobienstwa
+
+	//		if(tablicaCzastek[i].sMarkToDelete > 0) 
+	//		{
+	//			if((tablicaCzastek[i].Probability < EPSILON) && (tablicaCzastek[i].sMarkToDelete > GENERATION)) //usuwamy te które s¹ poza epsilonem
+	//			{
+	//				WolneMiejscaTablicaCzastek[index] = i;
+	//				index++;
+	//			}
+	//		}
+	//		else
+	//			tablicaCzastek[i].Move(przesuniecieX,przesuniecieY,przesuniecieAlfa);
+	//	}
 
 	/*	for (int i = 0; i < length; i++)
 		{
 
 		}*/
 
-	}
+	//}
 
 
 
@@ -262,6 +329,5 @@ int main(int argc, char* argv[])
 	//tabliczka = cli->Receive();
 
 	//return 0;
-
 }
 
