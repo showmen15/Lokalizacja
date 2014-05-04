@@ -1,11 +1,9 @@
-
 #include <stdio.h>
 #include <sstream>
 #include <math.h>
 #include <iostream>
 #include <conio.h>
 using namespace std;
-
 
 #define M_PI       3.14159265358979323846
 
@@ -18,8 +16,6 @@ private:
 	double MaxRadius;
 	double rMAX;
 public:	
-
-	//Particle();
 
 	Particle(double dMaxX,double dMaxY,double dRMAX)
 	{
@@ -39,7 +35,6 @@ public:
 	short sMarkToDelete;
 
 	void Move(double newX,double newY, double newAlfa);
-
 
 
 	inline void Losuj() //Generuj czastki ograniczone do wielosci mapy 

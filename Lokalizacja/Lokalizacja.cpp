@@ -6,6 +6,8 @@
 #include "Particle.h";
 #include "UdpClient.h";
 
+#include "BoundingBox.h";
+
 #include <stdio.h>
 
 #define ILOSC_POMIAROW_SCENNER 800
@@ -28,6 +30,9 @@
 
 int main(int argc, char* argv[])
 {
+		parseJasonFile("D:\\Moje dokumenty\\Visual Studio 2012\\Projects\\ConsoleApplication4\\ConsoleApplication4\\Debug\\tests\\2ndFloor-rooms.roson");
+
+	
 	double e = 44;
 
 	Particle p(e,e,e);

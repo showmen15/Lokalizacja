@@ -81,12 +81,16 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BoundingBox.cpp" />
+    <ClCompile Include="cJSON.c" />
     <ClCompile Include="D:\Desktop\Nowy folder (8)\frozen-master\frozen-master\frozen.c" />
     <ClCompile Include="Lokalizacja.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="UdpClient.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoundingBox.h" />
+    <ClInclude Include="cJSON.h" />
     <ClInclude Include="D:\Desktop\Nowy folder (8)\frozen-master\frozen-master\frozen.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="UdpClient.h" />
