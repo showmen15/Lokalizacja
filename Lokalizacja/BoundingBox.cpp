@@ -1,4 +1,7 @@
 #include "BoundingBox.h"
+#include "UdpClient.h"
+
+#include <stdio.h>
 
 MazeWall FindWall(MazeWall* wall,int WallsCount,string id)
 {
@@ -167,14 +170,14 @@ int AssignBoundingBox(Room* rooms,int RoomCount,BoundingBox* & box)
 	return tempBox.size();
 }
 
-void parseJasonFile(char *filename)
+int parseJasonFile(char *filename,BoundingBox* & bBox)
 {
 	char* data;
 	cJSON *json;
 	MazeWall* allWalls = NULL;
 	MazeSpaces* allSpaces = NULL;
 	Room* rooms;
-	BoundingBox* bBox;
+	//BoundingBox* bBox;
 
 	int WallsCount;
 	int SpacesCount;
@@ -198,5 +201,6 @@ void parseJasonFile(char *filename)
 	delete [] allSpaces;
 
 	delete [] rooms;
-	delete [] bBox;
+	//delete [] bBox;
+	return BoundingBoxCount;
 }

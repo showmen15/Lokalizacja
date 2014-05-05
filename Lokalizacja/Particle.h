@@ -11,11 +11,31 @@ using namespace std;
 struct Particle 
 {
 private:
+	double MinX;
 	double MaxX;
+	double MinY;
 	double MaxY;
 	double MaxRadius;
 	double rMAX;
 public:	
+
+	Particle()
+	{
+
+	}
+
+	Particle(double dMinX,double dMaxX,double dMinY, double dMaxY,double dRMAX)
+	{
+		MinX = dMinX;
+		MaxX = dMaxX;
+		MinY = dMinY;
+		MaxY = dMaxY;
+		rMAX = dRMAX;
+		MaxRadius = 360;
+
+		Losuj2();
+	}
+
 
 	Particle(double dMaxX,double dMaxY,double dRMAX)
 	{
@@ -40,10 +60,21 @@ public:
 	inline void Losuj() //Generuj czastki ograniczone do wielosci mapy 
 	{
 		X = ((double)rand() / RAND_MAX) * MaxX; 
-		Y = ((double)rand() / RAND_MAX) * MaxY;
+		Y = ( (double)rand() / RAND_MAX) * MaxY;
 		Alfa = ((double)rand() / RAND_MAX) * 360; //kat ograniczony do 360 stopni
 		Probability = 0.0;
 		sMarkToDelete = 0;
+	}
+
+	inline void Losuj2()
+	{
+		X = abs((MaxX - MinX) * ( (double)rand() / (double)RAND_MAX ) + MinX); 	//(MinX + ((double)  rand()) / MaxX);  //X = (MinX +  (double)rand() / RAND_MAX) * MaxX; 
+		Y =  abs((MaxY - MinY) * ( (double)rand() / (double)RAND_MAX ) + MinY); //Y = (MinY + ((double)rand() / MaxY); //Y = (MinY + (double)rand() / RAND_MAX) * MaxY;
+		
+		Alfa = ((double)rand() / RAND_MAX) * 360; //kat ograniczony do 360 stopni
+		Probability = 0.0;
+		sMarkToDelete = 0;
+
 	}
 
 	inline void Losuj(double X0,double Y0) //Generuj czastke w sasiedztwie innej czastki

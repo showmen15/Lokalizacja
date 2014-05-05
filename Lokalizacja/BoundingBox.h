@@ -98,4 +98,4 @@ int GetRooms(MazeWall* wall,int WallsCount,MazeSpaces* spaces,int SpacesCount,Ro
 
 int AssignBoundingBox(Room* rooms,int RoomCount,BoundingBox* & box);
 
-void parseJasonFile(char *filename);
+int  parseJasonFile(char *filename,BoundingBox* & bBox);
