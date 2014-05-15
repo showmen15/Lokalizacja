@@ -1,7 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #define _SCL_SECURE_NO_WARNINGS 1
 
-#include "stdafx.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,6 +10,7 @@
 #include <string.h>
 #include <string>
 #include <vector>
+#include <float.h>
 
 using std::string;
 using namespace std;

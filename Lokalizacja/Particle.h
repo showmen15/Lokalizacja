@@ -2,6 +2,8 @@
 #include <sstream>
 #include <math.h>
 #include <iostream>
+#include <stdlib.h>
+
 using namespace std;
 
 #define M_PI       3.14159265358979323846

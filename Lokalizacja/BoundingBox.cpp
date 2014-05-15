@@ -1,7 +1,9 @@
 #include "BoundingBox.h"
-#include "UdpClient.h"
+
 
 #include <stdio.h>
+
+using namespace std;
 
 MazeWall FindWall(MazeWall* wall,int WallsCount,string id)
 {
