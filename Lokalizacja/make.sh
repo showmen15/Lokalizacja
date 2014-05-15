@@ -1,0 +1,1 @@
+g++ -o lok BoundingBox.cpp cJSON.c frozen.c Lokalizacja.cpp Particle.cpp 
