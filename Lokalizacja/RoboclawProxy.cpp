@@ -57,6 +57,11 @@ int RoboclawProxy::GetSpeed()
 	rearRightSpeed = currentSpeed->rearrightspeed();
 		
 	return (frontLeftSpeed + frontRightSpeed + rearLeftSpeed + rearRightSpeed) / 4;*/
+
+	frontLeftSpeed =   
+	frontRightSpeed =  
+	rearLeftSpeed = 
+	rearRightSpeed = 3;
 	return 2;
 }
 

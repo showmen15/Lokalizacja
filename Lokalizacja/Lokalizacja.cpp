@@ -97,9 +97,13 @@ void SendParticle(Particle *tab,UdpClient client)
 //	}
 //}
 
-BoundingBox* GetBoundingBox(BoundingBox* bBox, double X,double Y)
+BoundingBox* GetBoundingBox(BoundingBox* bBox,int length, double X,double Y)
 {
-
+	for (int i = 0; i < length; i++)
+	{
+		if((bBox[i].X_Left_Top <= X) && (bBox[i].X_Right_Top >= X) && (bBox[i].Y_Left_Bottom <= Y) && (bBox[i].Y_Left_Top >= X))
+			return &(bBox[i]);
+	}
 	return NULL;
 }
 
@@ -146,7 +150,7 @@ int main(int argc, char* argv[])
 		
 		for (int i = 0; i < ILOSC_CZASTEK; i++)
 		{
-			box = GetBoundingBox(bBox,tablicaCzastek[i].X,tablicaCzastek[i].Y); //pobranie informacji w ktrorym BB jest czastka
+			box = GetBoundingBox(bBox,countBox,tablicaCzastek[i].X,tablicaCzastek[i].Y); //pobranie informacji w ktrorym BB jest czastka
 			
 			tablicaCzastek[i].UpdateCountProbability(box, skaner->GetDistances(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
 
