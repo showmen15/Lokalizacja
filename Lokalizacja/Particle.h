@@ -97,9 +97,13 @@ public:
 		sMarkToDelete = 0;
 	}
 
-	inline void UpdateCountProbability(double scanTable[],int length)
+	inline void UpdateCountProbability(BoundingBox* box,int scanTable[],int length)
+	//	inline void UpdateCountProbability(double scanTable[],int length)
 	{
 		double sumProbability = 0.0;
+
+		if(box != NULL)
+		{
 
 		for (int i = 0; i < length; i++)
 		{
@@ -111,10 +115,11 @@ public:
 
 			sumProbability +=  scanTable[i];
 		}
+		}
 	 Probability = sumProbability;
 	}
 
-	inline void ZaktualizujPrzesuniecie(double V,double dt) //liczy droge i aktualizuje przemieszczenie
+	inline void ZaktualizujPrzesuniecie(double V,double alfa,double dt) //liczy droge i aktualizuje przemieszczenie
 	{
 		double s = V * dt;
 

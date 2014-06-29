@@ -3,12 +3,16 @@
 
 //#include "stdafx.h"
 
+#include "BoundingBox.h"
 #include "Particle.h"
 #include "UdpClientWindows.h"
 
-#include "BoundingBox.h"
+
+#include "HokuyoProxy.h"
+#include "RoboclawProxy.h"
 
 #include <stdio.h>
+#include <ctime>
 
 #define ILOSC_POMIAROW_SCENNER 800
 #define ILOSC_CZASTEK 5000
@@ -85,14 +89,19 @@ void SendParticle(Particle *tab,UdpClient client)
 	}
 }
 
-void Przesun(Particle *tab,double V,double t)
-{
-	for (int i = 0; i < ILOSC_CZASTEK; i++)
-	{
-		tab[i].ZaktualizujPrzesuniecie(V,t);
-	}
-}
+//void Przesun(Particle *tab,double V,double t)
+//{
+//	for (int i = 0; i < ILOSC_CZASTEK; i++)
+//	{
+//		tab[i].ZaktualizujPrzesuniecie(V,t);
+//	}
+//}
 
+BoundingBox* GetBoundingBox(BoundingBox* bBox, double X,double Y)
+{
+
+	return NULL;
+}
 
 int main(int argc, char* argv[])
 {
@@ -101,32 +110,91 @@ int main(int argc, char* argv[])
 
 	countBox = parseJasonFile("D:\\Moje dokumenty\\Visual Studio 2012\\Projects\\ConsoleApplication4\\ConsoleApplication4\\Debug\\tests\\2ndFloor-rooms.roson",bBox);
 
-	SendBox(bBox,countBox);
-
 	Particle* tablicaCzastek = new Particle[ILOSC_CZASTEK];
+	int iloscCzastekDoUsuniêcia = 0;
 	InitTablicaCzastek(tablicaCzastek,bBox,countBox,10);
+	HokuyoProxy* skaner = new HokuyoProxy();
+	RoboclawProxy* roboClaw = new RoboclawProxy();
+	int speedRoboClaw;
+	double angleRoboClaw;
+	time_t dtime = 0;
+	double deletaTime;
+	BoundingBox* box;
 
-	int WolneMiejscaTablicaCzastek[ILOSC_CZASTEK];
-	int index;
-	double SkanerLaserowy[ILOSC_POMIAROW_SCENNER];
-
-	UdpClient client("127.0.0.1",1234);
-
-
-	SendParticle(tablicaCzastek,client);
-	
-	int www = -1;
-
-	while(www != 0)
+	while(true)
 	{
-		UdpClient client("127.0.0.1",1234);
+		deletaTime =  difftime(dtime, time(NULL));
+		dtime = time(NULL);
+
+		skaner->GetScan();
+
+		speedRoboClaw = roboClaw->GetSpeed();
+		angleRoboClaw = roboClaw->GetAngle(deletaTime);
+		
+		for (int i = 0; i < ILOSC_CZASTEK; i++)
+		{
+			box = GetBoundingBox(bBox,tablicaCzastek[i].X,tablicaCzastek[i].Y); //pobranie informacji w ktrorym BB jest czastka
+			
+			tablicaCzastek[i].UpdateCountProbability(box, skaner->GetDistances(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
+
+			if(tablicaCzastek[i].sMarkToDelete > GENERATION)
+				iloscCzastekDoUsuniêcia++;
+			else
+			{
+				if(tablicaCzastek[i].Probability < EPSILON)
+					tablicaCzastek[i].sMarkToDelete++;	
+				
+				tablicaCzastek[i].ZaktualizujPrzesuniecie(speedRoboClaw,angleRoboClaw,deletaTime);	
+			}
+		}
+	}
+
+
+		//	for(int i= 0; i < ILOSC_CZASTEK;i++)
+		//{
+		//	tablicaCzastek[i].UpdateCountProbability(SkanerLaserowy,ILOSC_POMIAROW_SCENNER); //przeliczamy prawdopodobienstwa
+
+		//	if(tablicaCzastek[i].sMarkToDelete > 0) 
+		//	{
+		//		if((tablicaCzastek[i].Probability < EPSILON) && (tablicaCzastek[i].sMarkToDelete > GENERATION)) //usuwamy te które s¹ poza epsilonem
+		//		{
+		//			WolneMiejscaTablicaCzastek[index] = i;
+		//			index++;
+		//		}
+		//	}
+		//	else
+		//		tablicaCzastek[i].Move(przesuniecieX,przesuniecieY,przesuniecieAlfa);
+		//	}
+
+	
+	return 0;
+}
+
+
+	//SendBox(bBox,countBox);
+
+
+	//int WolneMiejscaTablicaCzastek[ILOSC_CZASTEK];
+	//int index;
+	//double SkanerLaserowy[ILOSC_POMIAROW_SCENNER];
+
+	//UdpClient client("127.0.0.1",1234);
+
+
+	//SendParticle(tablicaCzastek,client);
+	
+	//int www = -1;
+
+	//while(www != 0)
+	//{
+	/*	UdpClient client("127.0.0.1",1234);
 
 		Przesun(tablicaCzastek,1,1);
 		SendParticle(tablicaCzastek,client);
 		
 		printf("Ready");
 		cin >> www;
-	}
+	}*/
 	
 
 	//stringstream temp;
@@ -142,12 +210,6 @@ int main(int argc, char* argv[])
 
 	//}
 
-
-
-
-	
-	return 0;
-}
 
 //
 //	
@@ -229,21 +291,7 @@ int main(int argc, char* argv[])
 //	//{
 //	//	index = 0;
 //
-//	//	for(int i= 0; i < ILOSC_CZASTEK;i++)
-//	//	{
-//	//		tablicaCzastek[i].UpdateCountProbability(SkanerLaserowy,ILOSC_POMIAROW_SCENNER); //przeliczamy prawdopodobienstwa
-//
-//	//		if(tablicaCzastek[i].sMarkToDelete > 0) 
-//	//		{
-//	//			if((tablicaCzastek[i].Probability < EPSILON) && (tablicaCzastek[i].sMarkToDelete > GENERATION)) //usuwamy te które s¹ poza epsilonem
-//	//			{
-//	//				WolneMiejscaTablicaCzastek[index] = i;
-//	//				index++;
-//	//			}
-//	//		}
-//	//		else
-//	//			tablicaCzastek[i].Move(przesuniecieX,przesuniecieY,przesuniecieAlfa);
-//	//	}
+
 //
 //	/*	for (int i = 0; i < length; i++)
 //		{
