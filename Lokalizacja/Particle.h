@@ -78,7 +78,7 @@ public:
 
 	}
 
-	inline void Losuj(double X0,double Y0) //Generuj czastke w sasiedztwie innej czastki
+	inline void Losuj(double X0,double Y0, double alfa) //Generuj czastke w sasiedztwie innej czastki
 	{
 		double t = ((double)rand() / RAND_MAX) * 360; //kat ograniczony do 360 stopni
 		double R1 =  ((double)rand() / RAND_MAX) * rMAX; //kat ograniczony do 360 stopni 

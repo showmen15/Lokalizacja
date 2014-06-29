@@ -103,6 +103,19 @@ BoundingBox* GetBoundingBox(BoundingBox* bBox, double X,double Y)
 	return NULL;
 }
 
+void UsunWylosujNoweCzastki(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniêcia)
+{
+	for (int i = length - iloscCzastekDoUsuniêcia, j = 1; i < length; i++, j++)
+		tablicaCzastek[i].Losuj(tablicaCzastek[i].X,tablicaCzastek[i].Y,tablicaCzastek[i].Alfa);
+}
+
+int compareMyType (const void * a, const void * b)
+{
+	if ( (*(Particle*)a).Probability <  (*(Particle*)b).Probability ) return -1;
+	if ( (*(Particle*)a).Probability == (*(Particle*)b).Probability ) return 0;
+	if ( (*(Particle*)a).Probability >  (*(Particle*)b).Probability ) return 1;
+}
+
 int main(int argc, char* argv[])
 {
 	BoundingBox* bBox;
@@ -147,7 +160,13 @@ int main(int argc, char* argv[])
 				tablicaCzastek[i].ZaktualizujPrzesuniecie(speedRoboClaw,angleRoboClaw,deletaTime);	
 			}
 		}
+
+		qsort(tablicaCzastek,ILOSC_CZASTEK,sizeof(Particle),compareMyType);
+
+		UsunWylosujNoweCzastki(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniêcia);
+		iloscCzastekDoUsuniêcia = 0;
 	}
+
 
 
 		//	for(int i= 0; i < ILOSC_CZASTEK;i++)
