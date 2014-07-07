@@ -14,12 +14,12 @@
 #include <stdio.h>
 #include <ctime>
 
-#define ILOSC_POMIAROW_SCENNER 800
-#define ILOSC_CZASTEK 5000
-#define THRESHILD 1.222
+#define ILOSC_POMIAROW_SCENNER 10
+#define ILOSC_CZASTEK 10
+//#define THRESHILD 1.222
 #define EPSILON 2
 #define GENERATION 3
-#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 2
+//#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 2
 
 
 //void InitTablicaCzastek(Particle *tablica,double dMaxX,double dMaxY,double dRMAX)
@@ -54,7 +54,6 @@ void InitTablicaCzastek(Particle *tablica,BoundingBox* bBox,int countBox,double 
 			j = 0;
 	}
 }
-
 
 void SendBox(BoundingBox* bBox, int BoundingBoxCount)
 {
@@ -97,15 +96,26 @@ void SendParticle(Particle *tab,UdpClient client)
 //	}
 //}
 
-BoundingBox* GetBoundingBox(BoundingBox* bBox,int length, double X,double Y)
+//BoundingBox* GetBoundingBox(BoundingBox* bBox,int length, double X,double Y)
+//{
+//	for (int i = 0; i < length; i++)
+//	{
+//		if((X >= bBox[i].X_Left_Bottom) && (X <= bBox[i].X_Right_Bottom) && (Y >=  bBox[i].Y_Left_Bottom) && (Y <=  bBox[i].Y_Left_Top))
+//			return &(bBox[i]);
+//	}
+//	return NULL;
+//}
+
+Room* GetRoom(Room* bBox,int length, double X,double Y)
 {
 	for (int i = 0; i < length; i++)
 	{
-		if((bBox[i].X_Left_Top <= X) && (bBox[i].X_Right_Top >= X) && (bBox[i].Y_Left_Bottom <= Y) && (bBox[i].Y_Left_Top >= X))
+		if((X >= bBox[i].Box.X_Left_Bottom) && (X <= bBox[i].Box.X_Right_Bottom) && (Y >=  bBox[i].Box.Y_Left_Bottom) && (Y <=  bBox[i].Box.Y_Left_Top))
 			return &(bBox[i]);
 	}
 	return NULL;
 }
+
 
 void UsunWylosujNoweCzastki(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniêcia)
 {
@@ -116,27 +126,29 @@ void UsunWylosujNoweCzastki(Particle* tablicaCzastek,int length,int iloscCzastek
 int compareMyType (const void * a, const void * b)
 {
 	if ( (*(Particle*)a).Probability <  (*(Particle*)b).Probability ) return -1;
-	if ( (*(Particle*)a).Probability == (*(Particle*)b).Probability ) return 0;
-	if ( (*(Particle*)a).Probability >  (*(Particle*)b).Probability ) return 1;
+	else if ( (*(Particle*)a).Probability == (*(Particle*)b).Probability ) return 0;
+	else return 1;
 }
 
 int main(int argc, char* argv[])
 {
 	BoundingBox* bBox;
-	int countBox;
+	Room*  rooms;
+	//int countBox;
+	int countRoomAndBox;
 
-	countBox = parseJasonFile("D:\\Moje dokumenty\\Visual Studio 2012\\Projects\\ConsoleApplication4\\ConsoleApplication4\\Debug\\tests\\2ndFloor-rooms.roson",bBox);
+	countRoomAndBox = parseJasonFile("D:\\Moje dokumenty\\Visual Studio 2012\\Projects\\ConsoleApplication4\\ConsoleApplication4\\Debug\\tests\\2ndFloor-rooms.roson",bBox,rooms);
 
 	Particle* tablicaCzastek = new Particle[ILOSC_CZASTEK];
 	int iloscCzastekDoUsuniêcia = 0;
-	InitTablicaCzastek(tablicaCzastek,bBox,countBox,10);
+	InitTablicaCzastek(tablicaCzastek,bBox,countRoomAndBox,10);
 	HokuyoProxy* skaner = new HokuyoProxy();
 	RoboclawProxy* roboClaw = new RoboclawProxy();
 	int speedRoboClaw;
 	double angleRoboClaw;
 	time_t dtime = 0;
 	double deletaTime;
-	BoundingBox* box;
+	Room* currentRoom;
 
 	while(true)
 	{
@@ -150,9 +162,9 @@ int main(int argc, char* argv[])
 		
 		for (int i = 0; i < ILOSC_CZASTEK; i++)
 		{
-			box = GetBoundingBox(bBox,countBox,tablicaCzastek[i].X,tablicaCzastek[i].Y); //pobranie informacji w ktrorym BB jest czastka
+			currentRoom = GetRoom(rooms,countRoomAndBox,tablicaCzastek[i].X,tablicaCzastek[i].Y); //pobranie informacji w ktrorym BB jest czastka
 			
-			tablicaCzastek[i].UpdateCountProbability(box, skaner->GetDistances(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
+			tablicaCzastek[i].UpdateCountProbability(currentRoom, skaner->GetDistances(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
 
 			if(tablicaCzastek[i].sMarkToDelete > GENERATION)
 				iloscCzastekDoUsuniêcia++;

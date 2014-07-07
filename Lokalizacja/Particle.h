@@ -92,13 +92,12 @@ public:
 		if(Y > MaxY)
 			Y = MaxY;
 
-		Alfa = ((double)rand() / RAND_MAX) * 360; //kat ograniczony do 360 stopni
+		Alfa =  alfa; //((double)rand() / RAND_MAX) * 360; //kat ograniczony do 360 stopni
 		Probability = 0.0;
 		sMarkToDelete = 0;
 	}
 
-	inline void UpdateCountProbability(BoundingBox* box,int scanTable[],int length)
-	//	inline void UpdateCountProbability(double scanTable[],int length)
+	inline void UpdateCountProbability(Room* box,int scanTable[],int length)
 	{
 		double sumProbability = 0.0;
 
@@ -117,6 +116,12 @@ public:
 		}
 		}
 	 Probability = sumProbability;
+	}
+
+	inline double Distance(Room* box)
+	{
+
+
 	}
 
 	inline void ZaktualizujPrzesuniecie(double V,double alfa,double dt) //liczy droge i aktualizuje przemieszczenie

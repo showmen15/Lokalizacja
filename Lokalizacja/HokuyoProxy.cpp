@@ -28,6 +28,10 @@
 //	distances = new int[ScanLength];
 //}
 
+//HokuyoProxy::HokuyoProxy()
+//{
+//}
+
 HokuyoProxy::~HokuyoProxy()
 {
     delete []angles;

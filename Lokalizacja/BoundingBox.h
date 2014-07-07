@@ -45,10 +45,13 @@ public:
 	}
 };
 
-struct MazeWall 
+class MazeWall 
 {
 
+
+
 public :
+
 	string Type;
 	string		Id;
 	double		Width;
@@ -58,6 +61,15 @@ public :
 	double		From_Y;
 	double		To_X;
 	double		To_Y;
+
+	double A;
+	double B;
+
+	void Calculate()
+	{
+		A = (From_Y - To_Y) / (From_X - To_X);
+		B = ((To_Y * From_X) - (From_X * To_X)) / (From_X - To_X);
+	}
 };
 
 struct MazeSpaces
@@ -98,4 +110,4 @@ int GetRooms(MazeWall* wall,int WallsCount,MazeSpaces* spaces,int SpacesCount,Ro
 
 int AssignBoundingBox(Room* rooms,int RoomCount,BoundingBox* & box);
 
-int  parseJasonFile(char *filename,BoundingBox* & bBox);
+int  parseJasonFile(char *filename,BoundingBox* & bBox,Room* & rooms);

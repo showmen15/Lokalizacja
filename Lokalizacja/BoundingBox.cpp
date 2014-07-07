@@ -80,6 +80,8 @@ int GetMazeWalls(cJSON *json,MazeWall* & tableWalls)
 
 		toY = cJSON_GetObjectItem(to,"y");
 		tableWalls[i].To_Y = toY->valuedouble;
+
+		tableWalls[i].Calculate();
 	}
 
 	return wallsCount;
@@ -172,13 +174,13 @@ int AssignBoundingBox(Room* rooms,int RoomCount,BoundingBox* & box)
 	return tempBox.size();
 }
 
-int parseJasonFile(char *filename,BoundingBox* & bBox)
+int parseJasonFile(char *filename,BoundingBox* & bBox,Room* & rooms)
 {
 	char* data;
 	cJSON *json;
 	MazeWall* allWalls = NULL;
 	MazeSpaces* allSpaces = NULL;
-	Room* rooms;
+	
 	//BoundingBox* bBox;
 
 	int WallsCount;
@@ -199,10 +201,10 @@ int parseJasonFile(char *filename,BoundingBox* & bBox)
 
 	cJSON_Delete(json);
 	free(data);
-	delete [] allWalls;
-	delete [] allSpaces;
+	//delete [] allWalls;
+	//delete [] allSpaces;
 
-	delete [] rooms;
+	//delete [] rooms;
 	//delete [] bBox;
 	return BoundingBoxCount;
 }
