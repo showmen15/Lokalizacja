@@ -68,7 +68,7 @@ public :
 	void Calculate()
 	{
 		A = (From_Y - To_Y) / (From_X - To_X);
-		B = ((To_Y * From_X) - (From_X * To_X)) / (From_X - To_X);
+		B = ((From_X * To_Y) - (To_X * From_Y)) / (From_X - To_X);
 	}
 };
 
