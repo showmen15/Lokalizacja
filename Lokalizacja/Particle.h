@@ -126,22 +126,13 @@ public:
 				gauss =  exp((-1 * pow(scanTable[i] - dist,2)) / ( 2 * ODCHYLENIE * ODCHYLENIE)) / (2 * M_PI * ODCHYLENIE);
 
 				sumProbability +=  scanTable[i];
-
 			}
 			else
-				continue;
-			//
-			//if(sMarkToDelete > 0)
-			//{
-			//	sMarkToDelete++;
-			//	continue;
-			//}
-
-			
+				continue;		
 		}
 			}
 		}
-	 Probability = sumProbability;
+		Probability = sumProbability;
 	}
 
 	inline double Distance(Room* box)
