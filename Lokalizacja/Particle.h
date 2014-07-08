@@ -7,6 +7,7 @@
 using namespace std;
 
 #define M_PI       3.14159265358979323846
+#define ODCHYLENIE 5
 
 
 struct Particle 
@@ -97,23 +98,48 @@ public:
 		sMarkToDelete = 0;
 	}
 
-	inline void UpdateCountProbability(Room* box,int scanTable[],int length)
+	inline void UpdateCountProbability(Room* box,int scanTable[],double angleTable[],int length)
 	{
 		double sumProbability = 0.0;
+		double X;
+		double Y;
+		double dist;
+		double alfa2;
+		double b2;
+		double gauss;
 
 		if(box != NULL)
 		{
-
+			for(int j = 0; j < box->ContainerWall.size(); j++)
+			{
 		for (int i = 0; i < length; i++)
 		{
-			if(sMarkToDelete > 0)
-			{
-				sMarkToDelete++;
-				continue;
-			}
+			alfa2 = tan(angleTable[i]);
+			b2 = this->Y - (alfa2 * this->Y);
 
-			sumProbability +=  scanTable[i];
+			X = (b2 - box->ContainerWall[j].B) / (box->ContainerWall[j].A - alfa2);			
+			Y = ((box->ContainerWall[j].A  * b2) - (alfa2 * box->ContainerWall[j].B)) / (box->ContainerWall[j].A - alfa2);
+			
+			if((box->ContainerWall[j].From_X <= X <= box->ContainerWall[j].To_X) && (box->ContainerWall[j].From_Y <= Y <= box->ContainerWall[j].To_Y))
+			{
+				dist = sqrt(( X - this->X ) * ( X - this->X ) + ( Y - this->Y ) * ( Y - this->Y )); //wartosc oczekiwana
+				gauss =  exp((-1 * pow(scanTable[i] - dist,2)) / ( 2 * ODCHYLENIE * ODCHYLENIE)) / (2 * M_PI * ODCHYLENIE);
+
+				sumProbability +=  scanTable[i];
+
+			}
+			else
+				continue;
+			//
+			//if(sMarkToDelete > 0)
+			//{
+			//	sMarkToDelete++;
+			//	continue;
+			//}
+
+			
 		}
+			}
 		}
 	 Probability = sumProbability;
 	}

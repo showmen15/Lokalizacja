@@ -164,7 +164,7 @@ int main(int argc, char* argv[])
 		{
 			currentRoom = GetRoom(rooms,countRoomAndBox,tablicaCzastek[i].X,tablicaCzastek[i].Y); //pobranie informacji w ktrorym BB jest czastka
 			
-			tablicaCzastek[i].UpdateCountProbability(currentRoom, skaner->GetDistances(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
+			tablicaCzastek[i].UpdateCountProbability(currentRoom, skaner->GetDistances(),skaner->GetAngles(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
 
 			if(tablicaCzastek[i].sMarkToDelete > GENERATION)
 				iloscCzastekDoUsuniêcia++;
