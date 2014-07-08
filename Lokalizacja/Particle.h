@@ -108,6 +108,11 @@ public:
 		double b2;
 		double gauss;
 
+		double W;
+		double Wx;
+		double Wy;
+
+
 		if(box != NULL)
 		{
 			for(int j = 0; j < box->ContainerWall.size(); j++)
@@ -117,9 +122,24 @@ public:
 			alfa2 = tan(angleTable[i]);
 			b2 = this->Y - (alfa2 * this->Y);
 
-			X = (b2 - box->ContainerWall[j].B) / (box->ContainerWall[j].A - alfa2);			
-			Y = ((box->ContainerWall[j].A  * b2) - (alfa2 * box->ContainerWall[j].B)) / (box->ContainerWall[j].A - alfa2);
-			
+		//	X = (b2 - box->ContainerWall[j].B) / (box->ContainerWall[j].A - alfa2);			
+		//	Y = ((box->ContainerWall[j].A  * b2) - (alfa2 * box->ContainerWall[j].B)) / (box->ContainerWall[j].A - alfa2);
+
+			W = alfa2 * box->ContainerWall[j].B + box->ContainerWall[j].A;
+			Wx = b2 * box->ContainerWall[j].B + box->ContainerWall[j].C;
+			Wy = alfa2 * box->ContainerWall[j].C - box->ContainerWall[j].A * b2;
+
+
+			if(W == 0)
+				continue;
+			else
+
+			{
+
+			X = Wx/W;
+			Y = Wy/W;
+
+
 			if((box->ContainerWall[j].From_X <= X <= box->ContainerWall[j].To_X) && (box->ContainerWall[j].From_Y <= Y <= box->ContainerWall[j].To_Y))
 			{
 				dist = sqrt(( X - this->X ) * ( X - this->X ) + ( Y - this->Y ) * ( Y - this->Y )); //wartosc oczekiwana
@@ -129,6 +149,7 @@ public:
 			}
 			else
 				continue;		
+			}
 		}
 			}
 		}

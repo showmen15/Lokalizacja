@@ -132,9 +132,41 @@ int compareMyType (const void * a, const void * b)
 
 int main(int argc, char* argv[])
 {
+			/*double X;
+		double Y;
+		double dist;
+		double alfa2;
+		double b2;
+		double gauss;
+
+		double W;
+		double Wx;
+		double Wy;
+
+	MazeWall wall;
+	wall.From_X = 6;
+		wall.From_Y = 1;
+
+		wall.To_X = 3;
+		wall.To_Y = 3;
+
+		wall.Calculate();
+
+		alfa2 = tan(15);
+			b2 = Y1 - (alfa2 * Y1);
+
+			W = alfa2 * box->ContainerWall[j].B + box->ContainerWall[j].A;
+			Wx = b2 * box->ContainerWall[j].B + box->ContainerWall[j].C;
+			Wy = alfa2 * box->ContainerWall[j].C - box->ContainerWall[j].A * b2;
+
+
+			X = Wx/W;
+			Y = Wy/W;
+*/
+	
 	BoundingBox* bBox;
 	Room*  rooms;
-	//int countBox;
+	int countBox;
 	int countRoomAndBox;
 
 	countRoomAndBox = parseJasonFile("D:\\Moje dokumenty\\Visual Studio 2012\\Projects\\ConsoleApplication4\\ConsoleApplication4\\Debug\\tests\\2ndFloor-rooms.roson",bBox,rooms);
@@ -183,7 +215,7 @@ int main(int argc, char* argv[])
 		iloscCzastekDoUsuniêcia = 0;
 	}
 
-
+	
 
 		//	for(int i= 0; i < ILOSC_CZASTEK;i++)
 		//{
@@ -200,7 +232,7 @@ int main(int argc, char* argv[])
 		//	else
 		//		tablicaCzastek[i].Move(przesuniecieX,przesuniecieY,przesuniecieAlfa);
 		//	}
-
+	//	*/
 	
 	return 0;
 }
