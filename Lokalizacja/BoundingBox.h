@@ -47,10 +47,7 @@ public:
 
 class MazeWall 
 {
-private :
-		double w;
-	    double wa;
-		double wb;
+
 
 
 public :
@@ -67,47 +64,11 @@ public :
 
 	double A;
 	double B;
-	double C;
-
-	
-	//void Calculate()
-	//{
-	//	A = (From_Y - To_Y) / (From_X - To_X);
-	//	B = ((From_X * To_Y) - (To_X * From_Y)) / (From_X - To_X);
-	//}
 
 	void Calculate()
 	{
-		if(From_X == To_X)
-		{
-			A = 1;
-			B = 0;
-			C = From_X;
-		}
-		else if(From_Y == To_Y)
-		{
-			A = 0;
-			B = 1;
-			C = From_Y;
-		}
-		else
-		{
-			A = (From_Y - To_Y) / (From_X - To_X);
-			B =  -1;
-			C = ((From_X * To_Y) - (To_X * From_Y)) / (From_X - To_X);
-		}
-
-		
-		
-		//w = (To_X * From_Y  - From_X  * To_Y);
-		//wa = To_Y - From_Y;
-		//wb = To_X - From_X;
-
-		//if(w == 0)
-		//	;
-
-		//A = wa / w;
-		//B = wb / w;
+		A = (From_Y - To_Y) / (From_X - To_X);
+		B = ((From_X * To_Y) - (To_X * From_Y)) / (From_X - To_X);
 	}
 };
 
