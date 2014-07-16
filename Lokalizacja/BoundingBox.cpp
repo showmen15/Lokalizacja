@@ -1,6 +1,5 @@
 #include "BoundingBox.h"
 
-//to test
 
 #include <stdio.h>
 
