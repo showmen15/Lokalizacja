@@ -5,17 +5,27 @@
 
 #include "BoundingBox.h"
 #include "Particle.h"
-#include "UdpClientWindows.h"
+
+//Linux 1; Windows 0
+/*#define SYSTEM 1
+
+#if SYSTEM == 0
+	#include "ProxyWindows\UdpClientWindows.h"
+	#include "ProxyWindows\HokuyoProxy.h"
+	#include "ProxyWindows\RoboclawProxy.h"
+#elif SYSTEM == 1*/
+#include "Proxy/UdpClientLinux.h"
+#include "Proxy/HokuyoProxy.h"
+#include "Proxy/RoboclawProxy.h"
+//#endif
 
 
-#include "HokuyoProxy.h"
-#include "RoboclawProxy.h"
 
 #include <stdio.h>
 #include <ctime>
 
 #define ILOSC_POMIAROW_SCENNER 10
-#define ILOSC_CZASTEK 10
+#define ILOSC_CZASTEK 32
 //#define THRESHILD 1.222
 #define EPSILON 2
 #define GENERATION 3
@@ -57,7 +67,8 @@ void InitTablicaCzastek(Particle *tablica,BoundingBox* bBox,int countBox,double 
 
 void SendBox(BoundingBox* bBox, int BoundingBoxCount)
 {
-	UdpClient client("127.0.0.1",5555);
+ char* sIP = "127.0.0.1";
+	UdpClient client(sIP,5555,9000);
 	stringstream temp;
 	string tmp;
 
@@ -70,7 +81,7 @@ void SendBox(BoundingBox* bBox, int BoundingBoxCount)
 	}
 
 	tmp = temp.str();
-	client.Send(tmp.c_str());
+	client.Send(tmp.c_str(),temp.str().size());
 }
 
 void SendParticle(Particle *tab,UdpClient client)
@@ -84,7 +95,7 @@ void SendParticle(Particle *tab,UdpClient client)
 			 << tab[i].Y << ";" << tab[i].Alfa << ";" << tab[i].Probability << ";";
 
 		tmp = temp.str();
-		client.Send(tmp.c_str());
+		client.Send(tmp.c_str(),temp.str().size());
 	}
 }
 
@@ -117,9 +128,9 @@ Room* GetRoom(Room* bBox,int length, double X,double Y)
 }
 
 
-void UsunWylosujNoweCzastki(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniêcia)
+void UsunWylosujNoweCzastki(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniecia)
 {
-	for (int i = length - iloscCzastekDoUsuniêcia, j = 1; i < length; i++, j++)
+	for (int i = length - iloscCzastekDoUsuniecia, j = 1; i < length; i++, j++)
 		tablicaCzastek[i].Losuj(tablicaCzastek[i].X,tablicaCzastek[i].Y,tablicaCzastek[i].Alfa);
 }
 
@@ -130,19 +141,105 @@ int compareMyType (const void * a, const void * b)
 	else return 1;
 }
 
-int main(int argc, char* argv[])
+
+//inline double getDistnace(MazeWall *wall,double X2,double Y2,double a2)
+//{	
+//	double W;
+//	double Wx;
+//	double Wy;
+//	double dist = 0.0;
+//	double X;
+//	double Y;
+//	double a1 = wall->A;
+//	double b1 = wall->B;
+//	double c1 = wall->C;
+//
+//	double b2 = -1;
+//	double c2 =  Y2 - (a2 * Y2);
+//
+//	W = a1 * b2 - b1 * a2;
+//	
+//	if(W != 0)
+//	{
+//		Wx = c1 * b2 - b1 * c2;
+//		Wy = a1 * c2 - c1 * a2;
+//
+//		X = Wx / W;
+//		Y = Wy / W;
+//
+//		if((wall->From_X <= X <= wall->To_X) && (wall->From_Y <= Y <= wall->To_Y))
+//			dist = sqrt(pow(X - X2 ,2) + pow( Y - Y2,2)); //wartosc oczekiwana
+//	}
+//
+//	return dist;
+//}
+
+
+inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
+{	
+	double W;
+	double Wx;
+	double Wy;
+	double dist = 0.0;
+	double X;
+	double Y;
+	double a1 = wall->A;
+	double b1 = wall->B;
+	double c1 = wall->C;
+
+	double a2 = tan( alfa * M_PI / 180.0);
+	double b2 = -1;
+ 	double c2 =  Y2 - (a2 * Y2);
+
+	W = a1 * b2 - b1 * a2;
+	
+	if(W != 0)
+	{
+		Wx = c1 * b2 - b1 * c2;
+		Wy = a1 * c2 - c1 * a2;
+
+		X = Wx / W;
+		Y = Wy / W;
+
+		if((wall->From_X <= X <= wall->To_X) && (wall->From_Y <= Y <= wall->To_Y))
+			dist = sqrt(pow(X - X2 ,2) + pow( Y - Y2,2)); //wartosc oczekiwana
+	}
+
+	return dist;
+}
+
+int main1(int argc, char* argv[])
 {
-			/*double X;
+		MazeWall wall;
+
+		wall.From_X = 1;
+		wall.From_Y = 7;
+		wall.To_X = 7;
+		wall.To_Y = 7;
+
+		wall.Calculate();
+
+		Particle part;
+		part.X = 0;
+		part.Y = 0;
+	    
+		double dist = getDistnace(&wall,45,part.X,part.Y);
+
+
+
+	
+	/*double X;
 		double Y;
 		double dist;
 		double alfa2;
 		double b2;
-		double gauss;
+		double gauss;*/
 
-		double W;
-		double Wx;
-		double Wy;
+		
 
+
+
+		/*
 	MazeWall wall;
 	wall.From_X = 6;
 		wall.From_Y = 1;
@@ -161,21 +258,87 @@ int main(int argc, char* argv[])
 
 
 			X = Wx/W;
-			Y = Wy/W;
-*/
-	
+			Y = Wy/W;*/
+		return 0;
+
+}
+
+inline double Gauss(double prop,double real)
+{
+	return (1/ODCHYLENIE * sqrt(2 * M_PI)) * (exp(-1 * pow(prop - real,2)/(2 * ODCHYLENIE * ODCHYLENIE)));
+		//exp((-1 * pow(scanTable[i] - dist,2)) / ( 2 * ODCHYLENIE * ODCHYLENIE)) / (2 * M_PI * ODCHYLENIE); 
+}
+
+
+inline double Gauss2(double prop,double real)
+{
+double a,b,c,d;
+double x = prop;
+double delta = sqrt(0.5);
+double ni = real;
+
+a = 1 / (delta  *sqrt(2 * M_PI));
+b = ni;
+c = delta;
+d = 0;
+
+return (a * exp( pow(x - b,2) / (-2 * pow(c,2)))) + d; 
+}
+
+int main0()
+{
+	double 	gauss = Gauss2(100,100);
+
+	return 0;
+}
+
+
+
+int main4(int argc, char* argv[])
+{
+	Particle* tablicaCzastek = new Particle[1];
+	tablicaCzastek[0].X = 12;
+	tablicaCzastek[0].Y = 5;
+
+	//Room r;
 	BoundingBox* bBox;
 	Room*  rooms;
 	int countBox;
 	int countRoomAndBox;
+	Room *currentRoom;
+	const int ScanLength = 5;
+	int scanTable[ScanLength] = {20,45,55,66,77 };
+	double angleTable[ScanLength] = {10,33,55,66,77};
 
 	countRoomAndBox = parseJasonFile("D:\\Moje dokumenty\\Visual Studio 2012\\Projects\\ConsoleApplication4\\ConsoleApplication4\\Debug\\tests\\2ndFloor-rooms.roson",bBox,rooms);
 
+	for (int i = 0; i < 1; i++)
+		{
+			currentRoom = GetRoom(rooms,countRoomAndBox,tablicaCzastek[i].X,tablicaCzastek[i].Y); //pobranie informacji w ktrorym BB jest czastka
+			
+			tablicaCzastek[i].UpdateCountProbability(currentRoom, scanTable,angleTable,ScanLength); //przeliczamy prawdopodobienstwa
+		}
+	return 0;
+}
+
+
+int main(int argc, char* argv[])
+{
+	char* amberUdp = "192.168.2.203";
+	UdpClient clinetAmber(amberUdp,26233,9000);
+	BoundingBox* bBox;
+	Room*  rooms;
+	int countBox;
+	int countRoomAndBox;
+	int pause;
+
+	countRoomAndBox = parseJasonFile(".\\Debug\\tests\\2ndFloor-rooms.roson",bBox,rooms);
+
 	Particle* tablicaCzastek = new Particle[ILOSC_CZASTEK];
-	int iloscCzastekDoUsuniêcia = 0;
+	int iloscCzastekDoUsuniacia = 0;
 	InitTablicaCzastek(tablicaCzastek,bBox,countRoomAndBox,10);
-	HokuyoProxy* skaner = new HokuyoProxy();
-	RoboclawProxy* roboClaw = new RoboclawProxy();
+	HokuyoProxy* skaner = new HokuyoProxy(&clinetAmber);
+	RoboclawProxy* roboClaw = new RoboclawProxy(&clinetAmber);
 	int speedRoboClaw;
 	double angleRoboClaw;
 	time_t dtime = 0;
@@ -199,7 +362,7 @@ int main(int argc, char* argv[])
 			tablicaCzastek[i].UpdateCountProbability(currentRoom, skaner->GetDistances(),skaner->GetAngles(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
 
 			if(tablicaCzastek[i].sMarkToDelete > GENERATION)
-				iloscCzastekDoUsuniêcia++;
+				iloscCzastekDoUsuniacia++;
 			else
 			{
 				if(tablicaCzastek[i].Probability < EPSILON)
@@ -211,9 +374,15 @@ int main(int argc, char* argv[])
 
 		qsort(tablicaCzastek,ILOSC_CZASTEK,sizeof(Particle),compareMyType);
 
-		UsunWylosujNoweCzastki(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniêcia);
-		iloscCzastekDoUsuniêcia = 0;
+		UsunWylosujNoweCzastki(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia);
+		iloscCzastekDoUsuniacia = 0;
+
+		scanf("%d",&pause);
 	}
+	return 0;
+}
+
+
 
 	
 
@@ -223,7 +392,7 @@ int main(int argc, char* argv[])
 
 		//	if(tablicaCzastek[i].sMarkToDelete > 0) 
 		//	{
-		//		if((tablicaCzastek[i].Probability < EPSILON) && (tablicaCzastek[i].sMarkToDelete > GENERATION)) //usuwamy te które s¹ poza epsilonem
+		//		if((tablicaCzastek[i].Probability < EPSILON) && (tablicaCzastek[i].sMarkToDelete > GENERATION)) //usuwamy te ktï¿½re sï¿½ poza epsilonem
 		//		{
 		//			WolneMiejscaTablicaCzastek[index] = i;
 		//			index++;
@@ -233,10 +402,6 @@ int main(int argc, char* argv[])
 		//		tablicaCzastek[i].Move(przesuniecieX,przesuniecieY,przesuniecieAlfa);
 		//	}
 	//	*/
-	
-	return 0;
-}
-
 
 	//SendBox(bBox,countBox);
 

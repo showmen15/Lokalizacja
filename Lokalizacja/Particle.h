@@ -7,7 +7,12 @@
 using namespace std;
 
 #define M_PI       3.14159265358979323846
-#define ODCHYLENIE 5
+#define ODCHYLENIE 0.5
+#define NEW_MIN 0
+#define NEW_MAX 1
+
+//bierzemy co 10 pomiar skanera
+#define PRZLIECZENIE_DLA_POMIARU_SKANERA 10 
 
 
 struct Particle 
@@ -98,8 +103,86 @@ public:
 		sMarkToDelete = 0;
 	}
 
+		inline double Normalize(double value,double min,double max) //normalizacja min max
+	{
+		return (((value - min) * (NEW_MAX - NEW_MIN)) / (max - min)) + NEW_MIN;
+	}
+
+		inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
+{	
+	double W;
+	double Wx;
+	double Wy;
+	double dist = -1.0;
+	double X;
+	double Y;
+	double a1 = wall->A;
+	double b1 = wall->B;
+	double c1 = wall->C;
+
+	double a2 = tan( alfa * M_PI / 180.0);
+	double b2 = -1;
+ 	double c2 =  Y2 - (a2 * Y2);
+
+	W = a1 * b2 - b1 * a2;
+	
+	if(W != 0)
+	{
+		Wx = c1 * b2 - b1 * c2;
+		Wy = a1 * c2 - c1 * a2;
+
+		X = Wx / W;
+		Y = Wy / W;
+
+		if((wall->From_X <= X) && (X <= wall->To_X) && (wall->From_Y <= Y) && (Y <= wall->To_Y))
+			dist = sqrt(pow(X - X2 ,2) + pow( Y - Y2,2)); //wartosc oczekiwana
+	}
+
+	return dist;
+}
+
 	inline void UpdateCountProbability(Room* box,int scanTable[],double angleTable[],int length)
 	{
+		double dist;
+		double gauss;
+		double sumProbability = 0.0;
+
+		for (int i = 0; i < length; i + PRZLIECZENIE_DLA_POMIARU_SKANERA)
+		{
+			for (int j = 0; j < box->ContainerWall.size(); j++)
+			{
+				dist =  getDistnace(&box->ContainerWall[j],angleTable[i],this->X,this->Y); //wartosc oczekiwana
+
+				if(dist > 0)
+				{
+				gauss =  Gauss2(scanTable[i],dist); //exp((-1 * pow(scanTable[i] - dist,2)) / ( 2 * ODCHYLENIE * ODCHYLENIE)) / (2 * M_PI * ODCHYLENIE);  
+				
+				sumProbability +=  gauss;//Normalize(gauss,0,dist); 
+				}
+			}
+		}
+
+		Probability = sumProbability;
+	}
+		
+
+	inline double Gauss2(double prop,double real)
+{
+double a,b,c,d;
+double x = prop;
+double delta = sqrt(ODCHYLENIE);
+double ni = real;
+
+a = 1 / (delta  *sqrt(2 * M_PI));
+b = ni;
+c = delta;
+d = 0;
+
+return (a * exp( pow(x - b,2) / (-2 * pow(c,2)))) + d; 
+}
+		
+		
+		/*
 		double sumProbability = 0.0;
 		double X;
 		double Y;
@@ -119,48 +202,55 @@ public:
 			{
 		for (int i = 0; i < length; i++)
 		{
-			alfa2 = tan(angleTable[i]);
-			b2 = this->Y - (alfa2 * this->Y);
+			/*alfa2 = tan(angleTable[i]);
+			b2 = this->Y - (alfa2 * this->Y);*/
 
 		//	X = (b2 - box->ContainerWall[j].B) / (box->ContainerWall[j].A - alfa2);			
 		//	Y = ((box->ContainerWall[j].A  * b2) - (alfa2 * box->ContainerWall[j].B)) / (box->ContainerWall[j].A - alfa2);
 
-			W = alfa2 * box->ContainerWall[j].B + box->ContainerWall[j].A;
+		/*	W = alfa2 * box->ContainerWall[j].B + box->ContainerWall[j].A;
 			Wx = b2 * box->ContainerWall[j].B + box->ContainerWall[j].C;
 			Wy = alfa2 * box->ContainerWall[j].C - box->ContainerWall[j].A * b2;
 
 
 			if(W == 0)
 				continue;
-			else
+			else*/
 
-			{
+			/*{
 
 			X = Wx/W;
-			Y = Wy/W;
+			Y = Wy/W;*/
 
 
-			if((box->ContainerWall[j].From_X <= X <= box->ContainerWall[j].To_X) && (box->ContainerWall[j].From_Y <= Y <= box->ContainerWall[j].To_Y))
+			/*if((box->ContainerWall[j].From_X <= X <= box->ContainerWall[j].To_X) && (box->ContainerWall[j].From_Y <= Y <= box->ContainerWall[j].To_Y))
 			{
-				dist = sqrt(( X - this->X ) * ( X - this->X ) + ( Y - this->Y ) * ( Y - this->Y )); //wartosc oczekiwana
-				gauss =  exp((-1 * pow(scanTable[i] - dist,2)) / ( 2 * ODCHYLENIE * ODCHYLENIE)) / (2 * M_PI * ODCHYLENIE);
-
-				sumProbability +=  scanTable[i];
+				dist =  getDistnace(&box->ContainerWall[j],angleTable[i],this->X,this->Y); //wartosc oczekiwana
+					
+					
+					//sqrt(( X - this->X ) * ( X - this->X ) + ( Y - this->Y ) * ( Y - this->Y )); //wartosc oczekiwana
+				gauss =  exp((-1 * pow(scanTable[i] - dist,2)) / ( 2 * ODCHYLENIE * ODCHYLENIE)) / (2 * M_PI * ODCHYLENIE);  
+				
+				sumProbability +=  Normalize(gauss,0,dist); 
 			}
 			else
-				continue;		
+	/*			continue;		
 			}
 		}
 			}
 		}
 		Probability = sumProbability;
-	}
 
-	inline double Distance(Room* box)
-	{
+		
+	}*/
 
 
-	}
+
+	//inline double Distance(Room* box)
+	//{
+
+
+	//}
 
 	inline void ZaktualizujPrzesuniecie(double V,double alfa,double dt) //liczy droge i aktualizuje przemieszczenie
 	{
