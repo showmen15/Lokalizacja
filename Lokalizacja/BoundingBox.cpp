@@ -6,6 +6,7 @@
 
 using namespace std;
 
+
 MazeWall FindWall(MazeWall* wall,int WallsCount,string id)
 {
 	for (int i = 0; i < WallsCount; i++)
