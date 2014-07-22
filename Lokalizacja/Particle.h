@@ -7,7 +7,7 @@
 using namespace std;
 
 #define M_PI       3.14159265358979323846
-#define ODCHYLENIE 0.5
+#define ODCHYLENIE 0.9
 #define NEW_MIN 0
 #define NEW_MAX 1
 
@@ -146,16 +146,21 @@ public:
 		double dist;
 		double gauss;
 		double sumProbability = 0.0;
+		int iloscScian = box->ContainerWallCount();
 
-		for (int i = 0; i < length; i + PRZLIECZENIE_DLA_POMIARU_SKANERA)
+		for (int i = 0; i < length; i = i + PRZLIECZENIE_DLA_POMIARU_SKANERA)
 		{
-			for (int j = 0; j < box->ContainerWall.size(); j++)
+			int test = 0;
+			test++;
+
+			for (int j = 0; j < iloscScian; j++)
 			{
-				dist =  getDistnace(&box->ContainerWall[j],angleTable[i],this->X,this->Y); //wartosc oczekiwana
+				dist =  getDistnace(&box->ContainerWallTable[j],angleTable[i],this->X,this->Y); //wartosc oczekiwana
 
 				if(dist > 0)
 				{
-				gauss =  Gauss2(scanTable[i],dist); //exp((-1 * pow(scanTable[i] - dist,2)) / ( 2 * ODCHYLENIE * ODCHYLENIE)) / (2 * M_PI * ODCHYLENIE);  
+					double scan = (((double) scanTable[i]) / 1000);
+				gauss =  Gauss2(scan,dist); //exp((-1 * pow(scanTable[i] - dist,2)) / ( 2 * ODCHYLENIE * ODCHYLENIE)) / (2 * M_PI * ODCHYLENIE);
 				
 				sumProbability +=  gauss;//Normalize(gauss,0,dist); 
 				}
@@ -256,23 +261,26 @@ return (a * exp( pow(x - b,2) / (-2 * pow(c,2)))) + d;
 	{
 		double s = V * dt;
 
-		ZaktualizujPrzesuniecie(s);
+		ZaktualizujPrzesuniecie(s,alfa);
 	}
 	
-	inline void ZaktualizujPrzesuniecie(double s) 
+	inline void ZaktualizujPrzesuniecie(double s,double  alfa)
 	{
-			X += s * cos((Alfa * M_PI) / 180 ); // A'= [x + Sx, ...]
-			Y += s * cos(((90 - Alfa) * M_PI) / 180); // A' [... ,y + Sy]
+			X += s * cos((alfa * M_PI) / 180 ); // A'= [x + Sx, ...]
+			Y += s * cos(((90 - alfa) * M_PI) / 180); // A' [... ,y + Sy]
+
+			Alfa += alfa;
 	}
 
 
-	inline void ObrotCzastkiKat(double alfaNew)
-	{
-		X = X * cos((alfaNew * M_PI) / 180) - Y * sin((alfaNew * M_PI) / 180);
-		Y = X * sin((alfaNew * M_PI) / 180) + Y * cos((alfaNew * M_PI) / 180);
+//	inline void ObrotCzastkiKat(double alfaNew)
+//	{
+//		X = X * cos((alfaNew * M_PI) / 180) - Y * sin((alfaNew * M_PI) / 180);
+	//	Y = X * sin((alfaNew * M_PI) / 180) + Y * cos((alfaNew * M_PI) / 180);
 
-		Alfa += alfaNew;
-	}
+	//	Alfa += alfaNew;
+
+//	}
 
 
 	//const char* TransmitParticle(int index)

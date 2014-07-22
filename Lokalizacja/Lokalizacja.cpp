@@ -84,20 +84,25 @@ void SendBox(BoundingBox* bBox, int BoundingBoxCount)
 	client.Send(tmp.c_str(),temp.str().size());
 }
 
-void SendParticle(Particle *tab,UdpClient client)
+const char* SendParticle(string *diagnostic,Particle *tab,int *size)
 {
+	//string tmp;
+	diagnostic->clear();
 	for(int i = 0; i < ILOSC_CZASTEK; i++)
 	{
-	stringstream temp;
-	string tmp;
+		stringstream temp;
 
-		temp << "#" << i << ";" << tab[i].X << ";" 
-			 << tab[i].Y << ";" << tab[i].Alfa << ";" << tab[i].Probability << ";";
+		temp << "#" << i << ";" << tab[i].X << ";"  << tab[i].Y << ";" << tab[i].Alfa << ";" << tab[i].Probability << ";";
 
-		tmp = temp.str();
-		client.Send(tmp.c_str(),temp.str().size());
+		(*diagnostic) = (*diagnostic) + temp.str();
 	}
+
+	//(*size) = tmp.size();
+	//return tmp.c_str();
+	return NULL;
 }
+
+
 
 //void Przesun(Particle *tab,double V,double t)
 //{
@@ -322,9 +327,10 @@ int main4(int argc, char* argv[])
 }
 
 
-int main(int argc, char* argv[])
+
+int mainMAIN(int argc, char* argv[])
 {
-	char* amberUdp = "192.168.2.203";
+	char* amberUdp = "192.168.0.203"; //przerobic aby bral lokalny adres z robota
 	UdpClient clinetAmber(amberUdp,26233,9000);
 	BoundingBox* bBox;
 	Room*  rooms;
@@ -332,7 +338,7 @@ int main(int argc, char* argv[])
 	int countRoomAndBox;
 	int pause;
 
-	countRoomAndBox = parseJasonFile(".\\Debug\\tests\\2ndFloor-rooms.roson",bBox,rooms);
+	countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//2ndFloor-rooms.roson",bBox,rooms);
 
 	Particle* tablicaCzastek = new Particle[ILOSC_CZASTEK];
 	int iloscCzastekDoUsuniacia = 0;
@@ -345,20 +351,123 @@ int main(int argc, char* argv[])
 	double deletaTime;
 	Room* currentRoom;
 
+	time(&dtime);
+
 	while(true)
 	{
-		deletaTime =  difftime(dtime, time(NULL));
-		dtime = time(NULL);
+		deletaTime =  difftime(time(NULL),dtime);
+		time(&dtime);
 
 		skaner->GetScan();
 
 		speedRoboClaw = roboClaw->GetSpeed();
+		angleRoboClaw = roboClaw->GetAngle(deletaTime);
+
+		for (int i = 0; i < ILOSC_CZASTEK; i++)
+		{
+			currentRoom = GetRoom(rooms,countRoomAndBox,tablicaCzastek[i].X,tablicaCzastek[i].Y); //pobranie informacji w ktrorym BB jest czastka
+
+			tablicaCzastek[i].UpdateCountProbability(currentRoom, skaner->GetDistances(),skaner->GetAngles(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
+
+			if(tablicaCzastek[i].sMarkToDelete > GENERATION)
+				iloscCzastekDoUsuniacia++;
+			else
+			{
+				if(tablicaCzastek[i].Probability < EPSILON)
+					tablicaCzastek[i].sMarkToDelete++;
+
+				tablicaCzastek[i].ZaktualizujPrzesuniecie(speedRoboClaw,angleRoboClaw,deletaTime);
+			}
+		}
+
+		qsort(tablicaCzastek,ILOSC_CZASTEK,sizeof(Particle),compareMyType);
+
+		UsunWylosujNoweCzastki(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia);
+		iloscCzastekDoUsuniacia = 0;
+
+		scanf("%d",&pause);
+	}
+	return 0;
+}
+
+
+
+int mainObrotCzastkiKat(int argc, char* argv[]) //test ObrotCzastkiKat
+{
+	double alfaNew = 45;
+	double X = 1;
+	double Y = 0;
+	double Alfa = 20;
+
+	X = X * cos((alfaNew * M_PI) / 180) - Y * sin((alfaNew * M_PI) / 180);
+		Y = X * sin((alfaNew * M_PI) / 180) + Y * cos((alfaNew * M_PI) / 180);
+
+		Alfa += alfaNew;
+
+}
+
+
+int main(int argc, char* argv[])
+{
+	/////// Diagnostic ////////////////
+	char* IPPart = "192.168.0.100"; //przerobic aby bral lokalny adres z robota
+	UdpClient clientParticle(IPPart,1234,9000);
+	string diagnostic;
+
+	//////////////////////////////////
+
+	char* amberUdp = "192.168.0.203"; //przerobic aby bral lokalny adres z robota
+	UdpClient clinetAmber(amberUdp,26233,9000);
+	BoundingBox* bBox;
+	Room*  rooms;
+	int countBox;
+	int countRoomAndBox;
+	char pause;
+
+
+	countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//2ndFloor-rooms.roson",bBox,rooms);
+
+	Particle* tablicaCzastek = new Particle[ILOSC_CZASTEK];
+	int iloscCzastekDoUsuniacia = 0;
+	InitTablicaCzastek(tablicaCzastek,bBox,countRoomAndBox,10);
+	HokuyoProxy* skaner = new HokuyoProxy(&clinetAmber);
+	RoboclawProxy* roboClaw = new RoboclawProxy(&clinetAmber);
+	double speedRoboClaw;
+	double angleRoboClaw;
+	time_t dtime = 0;
+	double deletaTime;
+	Room* currentRoom;
+    int size;
+	const char* wys;
+	int petla = 0;
+
+	time(&dtime);
+
+	SendParticle(&diagnostic,tablicaCzastek,&size);
+	wys = diagnostic.c_str();
+	size = diagnostic.size();
+	clientParticle.Send(wys,size);
+
+
+	while(true)
+	{
+		deletaTime = 1; // difftime(time(NULL),dtime); // czas w sekundach
+		time(&dtime);
+
+		skaner->GetScan();
+
+		speedRoboClaw = roboClaw->GetSpeed(); //droga w metrach
 		angleRoboClaw = roboClaw->GetAngle(deletaTime);
 		
 		for (int i = 0; i < ILOSC_CZASTEK; i++)
 		{
 			currentRoom = GetRoom(rooms,countRoomAndBox,tablicaCzastek[i].X,tablicaCzastek[i].Y); //pobranie informacji w ktrorym BB jest czastka
 			
+			//if(currentRoom == NULL)
+		//	{
+			// continue;
+		//	}
+
 			tablicaCzastek[i].UpdateCountProbability(currentRoom, skaner->GetDistances(),skaner->GetAngles(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
 
 			if(tablicaCzastek[i].sMarkToDelete > GENERATION)
@@ -372,12 +481,24 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		qsort(tablicaCzastek,ILOSC_CZASTEK,sizeof(Particle),compareMyType);
+		SendParticle(&diagnostic,tablicaCzastek,&size);
+		wys = diagnostic.c_str();
+		size = diagnostic.size();
+		clientParticle.Send(wys,size);
 
-		UsunWylosujNoweCzastki(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia);
-		iloscCzastekDoUsuniacia = 0;
+		//qsort(tablicaCzastek,ILOSC_CZASTEK,sizeof(Particle),compareMyType);
 
-		scanf("%d",&pause);
+		//UsunWylosujNoweCzastki(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia);
+		//iloscCzastekDoUsuniacia = 0;
+
+		SendParticle(&diagnostic,tablicaCzastek,&size);
+		wys = diagnostic.c_str();
+		size = diagnostic.size();
+		clientParticle.Send(wys,size);
+
+		printf("Podaj licze %dSpeed: %f",petla,speedRoboClaw);
+		scanf("%c",&pause);
+		petla++;
 	}
 	return 0;
 }

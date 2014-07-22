@@ -40,9 +40,10 @@ int RoboclawProxy::RearRightSpeed()
 	return rearRightSpeed;
 }
 	
-int RoboclawProxy::GetSpeed()
+double RoboclawProxy::GetSpeed()
 {
 	char *packetBytes;
+	double speed;
 	amber::roboclaw_proto::MotorsSpeed* currentSpeed;
 
 	udp->Send(requestScan,requestScanLength);
@@ -55,7 +56,10 @@ int RoboclawProxy::GetSpeed()
 	rearLeftSpeed = currentSpeed->rearleftspeed();
 	rearRightSpeed = currentSpeed->rearrightspeed();
 		
-	return (frontLeftSpeed + frontRightSpeed + rearLeftSpeed + rearRightSpeed) / 4;
+	speed = ((frontLeftSpeed + frontRightSpeed + rearLeftSpeed + rearRightSpeed) / 4);
+	speed = (speed / 1000);
+
+	return speed;
 }
 
 amber::roboclaw_proto::MotorsSpeed* RoboclawProxy::motorsSpeedRequest(char* packetBytes)

@@ -139,6 +139,11 @@ int GetRooms(MazeWall* wall,int WallsCount,MazeSpaces* spaces,int SpacesCount,Ro
 			temp[index].ContainerWall.push_back(FindWall(wall,WallsCount,spaces[i].WallId));
 	}
 
+	for(unsigned int i = 0; i < temp.size();i++)
+	{
+		temp[i].CreateContainerWall();
+	}
+
 	rooms = new Room[temp.size()];
 
 	copy(temp.begin(),temp.end(),rooms);

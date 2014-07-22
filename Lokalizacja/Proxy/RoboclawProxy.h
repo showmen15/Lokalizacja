@@ -30,7 +30,7 @@ public:
 	int RearLeftSpeed();
 	int RearRightSpeed();
 	
-    int GetSpeed();
+    double GetSpeed();
 
     double GetAngle(double time);
 };
