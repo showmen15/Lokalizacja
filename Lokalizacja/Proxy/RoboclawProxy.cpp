@@ -75,5 +75,8 @@ amber::roboclaw_proto::MotorsSpeed* RoboclawProxy::motorsSpeedRequest(char* pack
 
 double RoboclawProxy::GetAngle(double time)
 {
-return ((((frontRightSpeed + rearRightSpeed) / 2) - ((frontLeftSpeed + rearLeftSpeed) / 2)) * time) / wheelTrack;
+	double tmpRight = (double) (frontRightSpeed +  rearRightSpeed);
+	double tmpLeftS = (double)(frontLeftSpeed + rearLeftSpeed);
+
+return ((((tmpRight) / 2) - ((tmpLeftS) / 2)) * time) / wheelTrack;
 }
