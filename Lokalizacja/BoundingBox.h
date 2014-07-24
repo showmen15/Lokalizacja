@@ -121,17 +121,28 @@ public:
 
 struct Room
 {
+private:
+	int iContainerWallCount;
+
 
 public:
 	string SpaceId;
 
 	vector<MazeWall> ContainerWall;
+	MazeWall *ContainerWallTable;
 
 	BoundingBox Box; 
 
+	void CreateContainerWall()
+	{
+		iContainerWallCount = ContainerWall.size();
+		ContainerWallTable = new MazeWall[iContainerWallCount];
+		copy(ContainerWall.begin(),ContainerWall.end(),ContainerWallTable);
+	}
+
 	int ContainerWallCount()
 	{
-		return ContainerWall.size();
+		return iContainerWallCount;
 	}
 };
 
