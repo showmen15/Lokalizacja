@@ -5,7 +5,7 @@ class RoboclawProxy
 {
 private:
 
-	static const int wheelTrack = 280; //rozstaw pomiedzy kolami w [mm]
+
 
 	UdpClient* udp;
 	
@@ -22,6 +22,7 @@ private:
 	
 public:
 
+	static const double wheelTrack = 0.280; //rozstaw pomiedzy kolami w [m]
 	RoboclawProxy(UdpClient* client_udp);
 	~RoboclawProxy();
 	

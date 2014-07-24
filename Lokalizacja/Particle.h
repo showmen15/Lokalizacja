@@ -4,6 +4,9 @@
 #include <iostream>
 #include <stdlib.h>
 
+#define TEST 1
+#define PROMIEN 0.4
+
 using namespace std;
 
 #define M_PI       3.14159265358979323846
@@ -73,6 +76,30 @@ public:
 		sMarkToDelete = 0;
 	}
 
+	inline double fRand(double fMin, double fMax)
+	{
+	    double f = (double)rand() / RAND_MAX;
+	    return fMin + f * (fMax - fMin);
+	}
+
+	inline void LosujPozycje(double X1,double X2,double Y1, double Y2)
+	{
+		X = fRand(X1,X2);
+		Y = fRand(Y1,Y2);
+
+		#if TEST == 1
+			if(X < 0)
+				printf("LosujPozycje X UJEMNE,X1%e,X2%e,Y1%eY2%e",X1,X2,Y1,Y2);
+			if(Y < 0)
+				printf("LosujPozycje Y UJEMNE,X1%e,X2%e,Y1%eY2%e",X1,X2,Y1,Y2);
+			fflush(NULL);
+		#endif
+
+		Alfa =  fRand(0,360);
+		Probability = 0.0;
+		sMarkToDelete = 0;
+	}
+
 	inline void Losuj2()
 	{
 		X = abs((MaxX - MinX) * ( (double)rand() / (double)RAND_MAX ) + MinX); 	//(MinX + ((double)  rand()) / MaxX);  //X = (MinX +  (double)rand() / RAND_MAX) * MaxX; 
@@ -102,6 +129,34 @@ public:
 		Probability = 0.0;
 		sMarkToDelete = 0;
 	}
+
+	inline void LosujSasiada(double X0,double Y0, double alfa) //Generuj czastke w sasiedztwie innej czastki
+	{
+		double t = fRand(0,360);  //kat ograniczony do 360 stopni
+		double R1 =  fRand(0,PROMIEN);  //kat ograniczony do 360 stopni
+
+		X =  X0 + R1 * cos(t);
+		Y = Y0 + R1 * sin(t);
+
+		if(X < 0)
+			X *= -1;
+
+		if(Y < 0)
+			Y *= -1;
+
+		#if TEST == 1
+			if(X < 0)
+				printf("LosujPozycje X UJEMNE,%e",X);
+			if(Y < 0)
+				printf("LosujPozycje Y UJEMNE,%e",Y);
+			fflush(NULL);
+		#endif
+
+		Alfa =  alfa; // //kat ograniczony do 360 stopni
+		Probability = 0.0;
+		sMarkToDelete = 0;
+	}
+
 
 		inline double Normalize(double value,double min,double max) //normalizacja min max
 	{
@@ -256,6 +311,33 @@ return (a * exp( pow(x - b,2) / (-2 * pow(c,2)))) + d;
 
 
 	//}
+
+	inline void ZaktualizujPrzesuniecie2(double wheelTrack,int frontRightSpeed, int  rearRightSpeed, int frontLeftSpeed, int rearLeftSpeed ,double time)
+	{
+		double Vr = ((double) (frontRightSpeed +  rearRightSpeed)) / 2000 ;
+	   double Vl = ((double)(frontLeftSpeed + rearLeftSpeed)) / 2000;
+
+			double sr = Vr * time;
+			double sl = Vl * time;
+
+			double s = (sr + sl) / 2;
+
+			double alfa = ((sr - sl) / wheelTrack);
+			alfa += this->Alfa;
+
+
+			this->X = s * cos((alfa * M_PI) / 180) + this->X;
+		    this->Y = s * sin((alfa * M_PI) / 180) + this->Y;
+
+		    Alfa = alfa;
+
+			printf("X%f\nY%f",X,Y);
+		    fflush(NULL);
+
+
+
+	}
+
 
 	inline void ZaktualizujPrzesuniecie(double V,double alfa,double dt) //liczy droge i aktualizuje przemieszczenie
 	{
