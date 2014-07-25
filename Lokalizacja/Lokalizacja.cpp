@@ -613,7 +613,7 @@ int main(int argc, char* argv[])
 	const char* wys;
 	//////////////////////////////////
 
-	char* amberUdp = "192.168.2.202"; //przerobic aby bral lokalny adres z robota
+	char* amberUdp = "192.168.2.201"; //przerobic aby bral lokalny adres z robota
 	UdpClient clinetAmber(amberUdp,26233,9000);
 	BoundingBox* bBox;
 	Room*  rooms;
