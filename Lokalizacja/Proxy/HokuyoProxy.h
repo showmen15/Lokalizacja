@@ -9,6 +9,10 @@
 class HokuyoProxy 
 {
 private:
+
+	static const int DEVICE_TYPE = 4;
+	static const int DEVICE_ID = 0;
+
 	UdpClient* udp;
         double *angles;
 	int *distances;
@@ -18,6 +22,12 @@ private:
 	amber::hokuyo_proto::Scan* scanRequest(char* packetBytes);
 	amber::DriverMsg *message;
 	
+	amber::DriverHdr  buildHeader();
+	amber::DriverMsg* buildMsg(int synNum);
+	void buildSendMessage(amber::DriverHdr header, amber::DriverMsg* message);
+
+	int synNum;
+
 public:
 
 	HokuyoProxy(UdpClient* client_udp);

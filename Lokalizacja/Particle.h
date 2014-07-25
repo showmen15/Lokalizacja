@@ -226,6 +226,90 @@ public:
 	}
 		
 
+	inline void UpdateCountProbability1(Room* box,int scanTable[],double angleTable[],int length)
+	{
+		double dist;
+		double gauss;
+		double sumProbability = 0.0;
+		int iloscScian = box->ContainerWallCount();
+
+		for (int i = 0; i < length; i = i + PRZLIECZENIE_DLA_POMIARU_SKANERA)
+		{
+			printf("ID: %d Kat: %f Odleglosc: %d\n",i,angleTable[i],scanTable[i]);
+
+			int test = 0;
+			test++;
+
+			for (int j = 3; j < iloscScian; )
+			{
+				double scan = 0;
+				dist =  getDistnace(&box->ContainerWallTable[j],angleTable[i],this->X,this->Y); //wartosc oczekiwana
+
+				if(dist > 0)
+				{
+				scan = (((double) scanTable[i]) / 1000);
+				gauss =  Gauss2(scan,dist); //exp((-1 * pow(scanTable[i] - dist,2)) / ( 2 * ODCHYLENIE * ODCHYLENIE)) / (2 * M_PI * ODCHYLENIE);
+
+				sumProbability +=  gauss;//Normalize(gauss,0,dist);
+				}
+
+
+			/*	for(int w = 0; w < iloscScian; w++)
+				{
+					printf("X %f, Y %f\n",(&box->ContainerWallTable[w])->From_X, (&box->ContainerWallTable[w])->From_Y);
+					fflush(NULL);
+				}*/
+
+
+				/*if((&box->ContainerWallTable[j])->From_X == (&box->ContainerWallTable[j])->To_X)
+				{
+					int eee;
+
+					eee = 00;
+
+					;
+
+				}
+
+*/
+
+			}
+		}
+
+		Probability = sumProbability;
+	}
+
+
+	inline void UpdateCountProbability3(Room* box,int scanTable[],double angleTable[],int length)
+	{
+		double dist;
+		double gauss;
+		double sumProbability = 0.0;
+		int iloscScian = box->ContainerWallCount();
+
+		for (int i = 0; i < length; i = i + PRZLIECZENIE_DLA_POMIARU_SKANERA)
+		{
+			int test = 0;
+			test++;
+
+			for (int j = 0; j < iloscScian; j++)
+			{
+				dist =  getDistnace(&box->ContainerWallTable[j],this->Alfa + angleTable[i],this->X,this->Y); //wartosc oczekiwana
+
+				if(dist > 0)
+				{
+					double scan = (((double) scanTable[i]) / 1000);
+				gauss =  Gauss2(scan,dist); //exp((-1 * pow(scanTable[i] - dist,2)) / ( 2 * ODCHYLENIE * ODCHYLENIE)) / (2 * M_PI * ODCHYLENIE);
+
+				sumProbability +=  gauss;//Normalize(gauss,0,dist);
+				}
+			}
+		}
+
+		Probability = sumProbability;
+	}
+
+
 	inline double Gauss2(double prop,double real)
 {
 double a,b,c,d;

@@ -518,17 +518,17 @@ int maintest(int argc, char* argv[])
 
 }
 
-int mainTEST(int argc, char* argv[])
+int mainM3(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
-	char* IPPart = "192.168.2.100"; //przerobic aby bral lokalny adres z robota
+	char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
 	UdpClient clientParticle(IPPart,1234,9000);
 	string diagnostic;
     int size;
 	const char* wys;
 	//////////////////////////////////
 
-	char* amberUdp = "192.168.2.203"; //przerobic aby bral lokalny adres z robota
+	char* amberUdp = "192.168.2.202"; //przerobic aby bral lokalny adres z robota
 	UdpClient clinetAmber(amberUdp,26233,9000);
 	BoundingBox* bBox;
 	Room*  rooms;
@@ -572,17 +572,29 @@ int mainTEST(int argc, char* argv[])
 	{
 		deletaTime = 1; //difftime(time(NULL),dtime); // czas w sekundach
 
-		roboClaw->GetSpeed();
+		skaner->GetScan();
 
-		for (int i = 0; i < ILOSC_CZASTEK; i++)
-		{
-			tablicaCzastek[i].ZaktualizujPrzesuniecie2(roboClaw->wheelTrack,roboClaw->FrontRightSpeed(),roboClaw->RearRightSpeed(),roboClaw->FrontLeftSpeed(), roboClaw->RearLeftSpeed(),deletaTime);
-		}
+		tablicaCzastek[0].X = 0.3;
+		tablicaCzastek[0].Y = 0.3;
+		tablicaCzastek[0].Alfa = 0.0;
 
 		SendParticle(&diagnostic,tablicaCzastek,&size);
 		wys = diagnostic.c_str();
 		size = diagnostic.size();
 		clientParticle.Send(wys,size);
+
+
+		//for (int i = 0; i < ILOSC_CZASTEK; i++)
+
+
+
+			currentRoom = &rooms[0]; // GetRoom(rooms,countRoomAndBox,tablicaCzastek[i].X,tablicaCzastek[i].Y); //pobranie informacji w ktrorym BB jest czastka
+
+
+					tablicaCzastek[0].UpdateCountProbability3(currentRoom, skaner->GetDistances(),skaner->GetAngles(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
+			//	}
+
+
 
 		sleep(2);
 	}
@@ -594,7 +606,7 @@ int mainTEST(int argc, char* argv[])
 int main(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
-	char* IPPart = "192.168.2.100"; //przerobic aby bral lokalny adres z robota
+	char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
 	UdpClient clientParticle(IPPart,1234,9000);
 	string diagnostic;
     int size;
@@ -627,8 +639,10 @@ int main(int argc, char* argv[])
 	double speedRoboClaw;
 	double angleRoboClaw;
 
-	//speedRoboClaw = roboClaw->GetSpeed();
 
+
+
+	speedRoboClaw = roboClaw->GetSpeed();
 
 
 	HokuyoProxy* skaner = new HokuyoProxy(&clinetAmber);
@@ -658,7 +672,7 @@ int main(int argc, char* argv[])
 		speedRoboClaw = roboClaw->GetSpeed(); //droga w metrach
 		angleRoboClaw = roboClaw->GetAngle(deletaTime);
 		
-		printf("Czas: %e Kat: %e\n", deletaTime,angleRoboClaw);
+		//printf("Czas: %e Kat: %e\n", deletaTime,angleRoboClaw);
 
 		for (int i = 0; i < ILOSC_CZASTEK; i++)
 		{
@@ -671,7 +685,7 @@ int main(int argc, char* argv[])
 			 continue;
 			}
 
-			tablicaCzastek[i].UpdateCountProbability(currentRoom, skaner->GetDistances(),skaner->GetAngles(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
+			tablicaCzastek[i].UpdateCountProbability3(currentRoom, skaner->GetDistances(),skaner->GetAngles(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
 
 /*			if(tablicaCzastek[i].sMarkToDelete > GENERATION)
 				iloscCzastekDoUsuniacia++;
