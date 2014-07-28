@@ -422,6 +422,95 @@ return (a * exp( pow(x - b,2) / (-2 * pow(c,2)))) + d;
 
 	}
 
+	inline double KatLuku(double l,double r)
+	{
+		return ((360 * l) / ( 2 * M_PI * r));
+	}
+
+
+	inline void ZaktualizujPrzesuniecie3(double wheelTrack,double frontRightSpeed, double  rearRightSpeed, double frontLeftSpeed, double rearLeftSpeed ,double time)
+	{
+		double Vr = ((double) (frontRightSpeed +  rearRightSpeed)) / 2 ;
+	   double Vl = ((double)(frontLeftSpeed + rearLeftSpeed)) / 2;
+	   double s;
+
+	   if(Vr == Vl) //ok
+	   {
+		   s = ((Vr + Vl) / 2) * time; //droga w mm
+		   s = s / 1000; //droga w m
+
+		   X += s * cos((Alfa * M_PI) / 180 ); // A'= [x + Sx, ...]
+		   Y += s * cos(((90 - Alfa) * M_PI) / 180); // A' [... ,y + Sy]
+	   }
+	   else if((Vr != 0) && (Vl == 0))
+	   {
+		   double r = wheelTrack;
+		   double sr =  Vr * time; // droga ww mm
+		   sr = sr / 1000; // droga w m
+		   	double kat =   KatLuku(sr,r);
+
+		    X += sr * cos(((Alfa + kat) * M_PI) / 180 ); // A'= [x + Sx, ...]
+		 	Y += sr * cos(((90 - (Alfa + kat)) * M_PI) / 180); // A' [... ,y + Sy]
+
+		 	Alfa += kat;
+
+		 	if(Alfa > 360)
+ 		 		Alfa -= 360;
+
+	   }
+	   else if((Vr == 0) && (Vl != 0))
+	   {
+		   double r = wheelTrack;
+		 		   double sl =  Vl * time; // droga ww mm
+		 		   sl = sl / 1000; // droga w m
+		 		   	double kat =   KatLuku(-sl,r);
+
+		 		    X += sl * cos(((Alfa + kat) * M_PI) / 180 ); // A'= [x + Sx, ...]
+		 		 	Y += sl * cos(((90 - (Alfa + kat)) * M_PI) / 180); // A' [... ,y + Sy]
+		 		 	Alfa += kat;
+
+		 		 	if(Alfa > 360)
+		 		 		Alfa -= 360;
+	   }
+	   else
+	   {
+		   double sr =  Vr * time; // droga ww mm
+		    sr = sr / 1000; // droga w m
+		  double sl =  Vl * time; // droga ww mm
+		 	sl = sl / 1000; // droga w m
+
+
+			 double x;
+
+
+		 	if(Vl > Vr)
+		 	{
+		 		x = (sr * wheelTrack) / (sl - sr);
+		 	}
+		 	else
+		 	{
+		 		x = (sl * wheelTrack) / (sr - sl);
+		 	}
+
+		 	  double r = x + wheelTrack;
+		 	double s = (sr + sl) / 2;
+
+
+
+		 		double kat =   KatLuku(s,r);
+
+		    X += s * cos(((Alfa + kat) * M_PI) / 180 ); // A'= [x + Sx, ...]
+		 	Y += s * cos(((90 - (Alfa + kat)) * M_PI) / 180); // A' [... ,y + Sy]
+
+		 	Alfa += kat;
+
+		 	if(Alfa > 360)
+ 		 		Alfa -= 360;
+	   }
+
+	}
+
+
 
 	inline void ZaktualizujPrzesuniecie(double V,double alfa,double dt) //liczy droge i aktualizuje przemieszczenie
 	{

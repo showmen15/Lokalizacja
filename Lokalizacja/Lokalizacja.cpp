@@ -518,7 +518,7 @@ int maintest(int argc, char* argv[])
 
 }
 
-int mainM3(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
 	char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
@@ -528,7 +528,7 @@ int mainM3(int argc, char* argv[])
 	const char* wys;
 	//////////////////////////////////
 
-	char* amberUdp = "192.168.2.202"; //przerobic aby bral lokalny adres z robota
+	char* amberUdp = "192.168.2.203"; //przerobic aby bral lokalny adres z robota
 	UdpClient clinetAmber(amberUdp,26233,9000);
 	BoundingBox* bBox;
 	Room*  rooms;
@@ -567,43 +567,51 @@ int mainM3(int argc, char* argv[])
 	size = diagnostic.size();
 	clientParticle.Send(wys,size);
 
+	tablicaCzastek[0].X = 3;
+	tablicaCzastek[0].Y = 3;
+	tablicaCzastek[0].Alfa = 0.0;
+
+
 
 	while(true)
 	{
-		deletaTime = 1; //difftime(time(NULL),dtime); // czas w sekundach
+		deletaTime = difftime(time(NULL),dtime); // czas w sekundach
+		time(&dtime);
 
-		skaner->GetScan();
 
-		tablicaCzastek[0].X = 0.3;
-		tablicaCzastek[0].Y = 0.3;
-		tablicaCzastek[0].Alfa = 0.0;
+
+		roboClaw->GetSpeed();
+
+		//SendParticle(&diagnostic,tablicaCzastek,&size);
+	//	wys = diagnostic.c_str();
+//		size = diagnostic.size();
+//		clientParticle.Send(wys,size);
+
+	//	double speedR = 1000;
+	//	double speedL = 0;
+
+
+		tablicaCzastek[0].ZaktualizujPrzesuniecie3(roboClaw->wheelTrack,roboClaw->FrontRightSpeed(),roboClaw->RearRightSpeed(),roboClaw->FrontLeftSpeed(), roboClaw->RearLeftSpeed(),deletaTime);
+
+	//	tablicaCzastek[0].ZaktualizujPrzesuniecie3(roboClaw->wheelTrack,speedR,speedR,speedL, speedL,deletaTime);
+
+	//	tablicaCzastek[0].Alfa;
+	//	tablicaCzastek[0].X;
+	//	tablicaCzastek[0].Y;
 
 		SendParticle(&diagnostic,tablicaCzastek,&size);
 		wys = diagnostic.c_str();
 		size = diagnostic.size();
 		clientParticle.Send(wys,size);
 
-
-		//for (int i = 0; i < ILOSC_CZASTEK; i++)
-
-
-
-			currentRoom = &rooms[0]; // GetRoom(rooms,countRoomAndBox,tablicaCzastek[i].X,tablicaCzastek[i].Y); //pobranie informacji w ktrorym BB jest czastka
-
-
-					tablicaCzastek[0].UpdateCountProbability3(currentRoom, skaner->GetDistances(),skaner->GetAngles(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
-			//	}
-
-
-
-		sleep(2);
+		sleep(1);
 	}
 	return 0;
 }
 
 
 
-int main(int argc, char* argv[])
+int mainMAIN(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
 	char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
