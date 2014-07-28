@@ -571,43 +571,31 @@ int main(int argc, char* argv[])
 	tablicaCzastek[0].Y = 3;
 	tablicaCzastek[0].Alfa = 0.0;
 
-
-
+	sleep(1);
 	while(true)
 	{
 		deletaTime = difftime(time(NULL),dtime); // czas w sekundach
 		time(&dtime);
 
-
-
 		roboClaw->GetSpeed();
 
-		//SendParticle(&diagnostic,tablicaCzastek,&size);
-	//	wys = diagnostic.c_str();
-//		size = diagnostic.size();
-//		clientParticle.Send(wys,size);
-
-	//	double speedR = 1000;
-	//	double speedL = 0;
-
-
-		tablicaCzastek[0].ZaktualizujPrzesuniecie3(roboClaw->wheelTrack,roboClaw->FrontRightSpeed(),roboClaw->RearRightSpeed(),roboClaw->FrontLeftSpeed(), roboClaw->RearLeftSpeed(),deletaTime);
-
-	//	tablicaCzastek[0].ZaktualizujPrzesuniecie3(roboClaw->wheelTrack,speedR,speedR,speedL, speedL,deletaTime);
-
-	//	tablicaCzastek[0].Alfa;
-	//	tablicaCzastek[0].X;
-	//	tablicaCzastek[0].Y;
+		tablicaCzastek[0].ZaktualizujPrzesuniecie3(roboClaw->wheelTrack,roboClaw->FrontRightSpeed(),roboClaw->RearRightSpeed(),-roboClaw->FrontLeftSpeed(), -roboClaw->RearLeftSpeed(),deletaTime);
 
 		SendParticle(&diagnostic,tablicaCzastek,&size);
 		wys = diagnostic.c_str();
 		size = diagnostic.size();
 		clientParticle.Send(wys,size);
 
-		sleep(1);
+		sleep(2);
 	}
 	return 0;
 }
+
+
+
+
+
+
 
 
 
