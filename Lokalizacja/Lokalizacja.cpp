@@ -19,6 +19,7 @@
 #include "Proxy/UdpClientLinux.h"
 #include "Proxy/HokuyoProxy.h"
 #include "Proxy/RoboclawProxy.h"
+#include "Proxy/LocationProxy.h"
 //#endif
 
 
@@ -521,6 +522,31 @@ int maintest(int argc, char* argv[])
 }
 
 int main(int argc, char* argv[])
+{
+	char* IPPart = "192.168.2.101";
+	UdpClient clientParticle(IPPart,1234,9000);
+	string diagnostic;
+    int size;
+	const char* wys;
+
+	char* amberUdp = "192.168.2.203"; //przerobic aby bral lokalny adres z robota
+	UdpClient clinetAmber(amberUdp,26233,9000);
+
+	LocationProxy* location = new LocationProxy(&clinetAmber);
+
+	double x,y;
+
+	location->GetLocation();
+
+	x = location->X();
+	y = location->Y();
+
+	return 0;
+}
+
+
+
+int mainPrzesuniecie(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
 	char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
