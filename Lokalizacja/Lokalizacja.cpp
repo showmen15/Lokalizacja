@@ -541,6 +541,8 @@ int main(int argc, char* argv[])
 	x = location->X();
 	y = location->Y();
 
+	printf("X: %f Y: %f\n",x,y);
+
 	return 0;
 }
 
