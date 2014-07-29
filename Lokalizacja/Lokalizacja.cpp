@@ -523,11 +523,11 @@ int maintest(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-	char* IPPart = "192.168.2.101";
-	UdpClient clientParticle(IPPart,1234,9000);
-	string diagnostic;
-    int size;
-	const char* wys;
+	//char* IPPart = "192.168.2.101";
+	//UdpClient clientParticle(IPPart,1234,9000);
+//	string diagnostic;
+    //int size;
+	//const char* wys;
 
 	char* amberUdp = "192.168.2.203"; //przerobic aby bral lokalny adres z robota
 	UdpClient clinetAmber(amberUdp,26233,9000);
