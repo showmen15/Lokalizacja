@@ -6,8 +6,13 @@ import "drivermsg.proto";
 
 extend amber.DriverMsg {
     optional bool get_location = 30;
+	optional Location currentLocation = 31;
 
-    optional double x = 31;
-    optional double y = 32;
 }
+
+message Location {
+    optional double x = 1;
+    optional double y = 2;
+}
+
 
