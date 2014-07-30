@@ -27,10 +27,10 @@
 #include <stdio.h>
 #include <ctime>
 
-#define ILOSC_POMIAROW_SCENNER 10
-#define ILOSC_CZASTEK 10
+#define ILOSC_POMIAROW_SCENNER 1
+#define ILOSC_CZASTEK 30
 //#define THRESHILD 1.222
-#define EPSILON 0.01
+#define EPSILON 3
 #define GENERATION 3
 #define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 2
 #define TEST 1
@@ -143,8 +143,11 @@ Room* GetRoom(Room* bBox,int length, double X,double Y)
 
 inline int wylosujBB(int fMin, int fMax)
 {
-	    int f = rand() / RAND_MAX;
-	    return fMin + f * (fMax - fMin);
+	    int f =  rand() %  fMax;
+
+	    //f /= RAND_MAX;
+
+	    return  f; //  fMin + f * (fMax - fMin);
 }
 
 void UsunWylosujNoweCzastki(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniecia,BoundingBox* bBox,unsigned int BoundingBoxCount)
@@ -521,7 +524,49 @@ int maintest(int argc, char* argv[])
 
 }
 
-int main(int argc, char* argv[])
+
+void przesuniecie(double x0,double y0, double Vl,double Vr,double dt,double b)
+{
+	double alfaNew = (((Vr - Vl) * dt) / b);
+	double alfaOld = 0;
+
+
+	x0 += (b * (Vr + Vl)) / (2*(Vr - Vl)) * (sin(alfaNew + alfaOld) - sin(alfaOld));
+	y0 -= (b * (Vr + Vl)) / (2*(Vr - Vl)) * (cos(alfaNew + alfaOld) - cos(alfaOld));
+
+
+
+}
+
+int mainZaktualizujPrzesuniecie(int argc, char* argv[])
+{
+	//char* amberUdp = "192.168.2.203";
+	//UdpClient clinetAmber(amberUdp,26233,9000);
+
+	double l = ((double)45/360) * 2 *  M_PI * 2 * sqrt(2);
+	double dt = 1;
+
+	//double x0 = 0;//sqrt(2);
+	//double y0 = 0;
+	double Vl =	0;
+	double Vr = l * dt;
+
+	double b  = sqrt(2);
+
+	//przesuniecie(x0,y0,Vl,Vr,dt,b);
+
+	Particle* p = new Particle();
+	p->X = 0;
+	p->Y = 0;
+	p->Alfa = 0;
+
+	p->ZaktualizujPrzesuniecie4(b,Vl,Vr,dt);
+
+	return 0;
+}
+
+
+int mainLocationProxy(int argc, char* argv[])
 {
 	//char* IPPart = "192.168.2.101";
 	//UdpClient clientParticle(IPPart,1234,9000);
@@ -623,13 +668,7 @@ int mainPrzesuniecie(int argc, char* argv[])
 
 
 
-
-
-
-
-
-
-int mainMAIN(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
 	char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
@@ -639,13 +678,15 @@ int mainMAIN(int argc, char* argv[])
 	const char* wys;
 	//////////////////////////////////
 
-	char* amberUdp = "192.168.2.201"; //przerobic aby bral lokalny adres z robota
+	char* amberUdp = "192.168.2.202"; //przerobic aby bral lokalny adres z robota
 	UdpClient clinetAmber(amberUdp,26233,9000);
 	BoundingBox* bBox;
 	Room*  rooms;
 	int countBox;
 	int countRoomAndBox;
 	char pause;
+
+	srand(10);
 
 
 	//countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//2ndFloor-rooms.roson",bBox,rooms);
@@ -665,11 +706,7 @@ int mainMAIN(int argc, char* argv[])
 	double speedRoboClaw;
 	double angleRoboClaw;
 
-
-
-
 	speedRoboClaw = roboClaw->GetSpeed();
-
 
 	HokuyoProxy* skaner = new HokuyoProxy(&clinetAmber);
 
@@ -692,6 +729,7 @@ int mainMAIN(int argc, char* argv[])
 	{
 		deletaTime = difftime(time(NULL),dtime); // czas w sekundach
 		time(&dtime);
+
 
 		skaner->GetScan();
 
@@ -717,7 +755,7 @@ int mainMAIN(int argc, char* argv[])
 				iloscCzastekDoUsuniacia++;
 			else
 			{*/
-				if(tablicaCzastek[i].Probability < EPSILON)
+				if(tablicaCzastek[i].Probability < ((double) EPSILON))
 				{
 					tablicaCzastek[i].sMarkToDelete++;
 					iloscCzastekDoUsuniacia++;
@@ -726,7 +764,11 @@ int mainMAIN(int argc, char* argv[])
 				
 				//inline void ZaktualizujPrzesuniecie2(double wheelTrack,int frontRightSpeed, int  rearRightSpeed, int frontLeftSpeed, int rearLeftSpeed ,double time)
 				//tablicaCzastek[i].ZaktualizujPrzesuniecie(speedRoboClaw,angleRoboClaw,deletaTime);
-				tablicaCzastek[i].ZaktualizujPrzesuniecie2(roboClaw->wheelTrack,roboClaw->FrontRightSpeed(),roboClaw->RearRightSpeed(),roboClaw->FrontLeftSpeed(), roboClaw->RearLeftSpeed(),deletaTime);
+				//tablicaCzastek[i].ZaktualizujPrzesuniecie2(roboClaw->wheelTrack,roboClaw->FrontRightSpeed(),roboClaw->RearRightSpeed(),roboClaw->FrontLeftSpeed(), roboClaw->RearLeftSpeed(),deletaTime);
+
+				//inline void ZaktualizujPrzesuniecie4(double wheelTrack,double Vl, double  Vr, double dt)
+				tablicaCzastek[i].ZaktualizujPrzesuniecie4(roboClaw->wheelTrack,roboClaw->Vl,roboClaw->Vr,deletaTime);
+
 		//	}
 		}
 
@@ -750,6 +792,8 @@ int mainMAIN(int argc, char* argv[])
 		//scanf("%c",&pause);
 		petla++;
 		sleep(1);
+
+		printf("Czas:%e\n",deletaTime);
 	}
 	return 0;
 }

@@ -27,6 +27,10 @@ private:
 	double MaxY;
 	double MaxRadius;
 	double rMAX;
+
+
+	double alfaNew;
+	double d;
 public:	
 
 	Particle()
@@ -60,6 +64,7 @@ public:
 	double X;
 	double Y;
 	double Alfa;
+	double AlfaStopnie;
 	double Probability;
 
 	short sMarkToDelete;
@@ -95,7 +100,8 @@ public:
 			fflush(NULL);
 		#endif
 
-		Alfa =  fRand(0,360);
+		Alfa = fRand(0,2 * M_PI);
+		AlfaStopnie = 0.0;
 		Probability = 0.0;
 		sMarkToDelete = 0;
 	}
@@ -153,6 +159,7 @@ public:
 		#endif
 
 		Alfa =  alfa; // //kat ograniczony do 360 stopni
+		AlfaStopnie = Alfa * (180 / M_PI);
 		Probability = 0.0;
 		sMarkToDelete = 0;
 	}
@@ -294,7 +301,7 @@ public:
 
 			for (int j = 0; j < iloscScian; j++)
 			{
-				dist =  getDistnace(&box->ContainerWallTable[j],this->Alfa + angleTable[i],this->X,this->Y); //wartosc oczekiwana
+				dist =  getDistnace(&box->ContainerWallTable[j],this->AlfaStopnie + angleTable[i],this->X,this->Y); //wartosc oczekiwana
 
 				if(dist > 0)
 				{
@@ -510,7 +517,26 @@ return (a * exp( pow(x - b,2) / (-2 * pow(c,2)))) + d;
 
 	}
 
+	inline void ZaktualizujPrzesuniecie4(double wheelTrack,double Vl, double  Vr, double dt)
+	{
+		if(Vl != Vr)
+		{
+			alfaNew = (((Vr - Vl) * dt) / wheelTrack);
 
+			X += (wheelTrack * (Vr + Vl)) / (2*(Vr - Vl)) * (sin(alfaNew + Alfa) - sin(Alfa));
+			Y -= (wheelTrack * (Vr + Vl)) / (2*(Vr - Vl)) * (cos(alfaNew + Alfa) - cos(Alfa));
+
+			Alfa += alfaNew;
+
+		}
+		else
+		{
+			d = ((Vr + Vl) / 2) * dt;
+
+			X += d * cos(d);
+			Y += d * sin(d);
+		}
+	}
 
 	inline void ZaktualizujPrzesuniecie(double V,double alfa,double dt) //liczy droge i aktualizuje przemieszczenie
 	{

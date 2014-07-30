@@ -1,6 +1,8 @@
 #include "UdpClientLinux.h"
 #include "RoboclawProxy.h"
 
+#define ROBOT_MAX_SPEED 5000
+
 RoboclawProxy::RoboclawProxy(UdpClient *client_udp)
 {
 	udp = client_udp;
@@ -93,6 +95,8 @@ double RoboclawProxy::GetSpeed()
 	double speed;
 	amber::roboclaw_proto::MotorsSpeed* currentSpeed;
 
+	do
+	{
 	udp->Send(requestScan,requestScanLength);
 	packetBytes = udp->Receive();
 	
@@ -102,11 +106,36 @@ double RoboclawProxy::GetSpeed()
 	frontRightSpeed =  currentSpeed->frontrightspeed();
 	rearLeftSpeed = currentSpeed->rearleftspeed();
 	rearRightSpeed = currentSpeed->rearrightspeed();
-		
+
+	}
+	while(!isSpeedOK(frontLeftSpeed,frontRightSpeed, rearLeftSpeed, rearRightSpeed));
+
+	Vr = (double) (frontRightSpeed + rearRightSpeed) / 2000;
+	Vl = (double) (frontLeftSpeed + rearLeftSpeed) / 2000;
+
 	speed = ((frontLeftSpeed + frontRightSpeed + rearLeftSpeed + rearRightSpeed) / 4);
 	speed = (speed / 1000);
 
 	return speed;
+}
+
+bool RoboclawProxy::isSpeedOK(int frontLeftSpeed,int frontRightSpeed, int rearLeftSpeed,int rearRightSpeed)
+{
+	bool result = true;
+
+	if((frontLeftSpeed < (-ROBOT_MAX_SPEED)) || (frontLeftSpeed > (ROBOT_MAX_SPEED)))
+		result = false;
+
+	if((frontRightSpeed < (-ROBOT_MAX_SPEED)) || (frontRightSpeed > (ROBOT_MAX_SPEED)))
+		result = false;
+
+	if((rearLeftSpeed < (-ROBOT_MAX_SPEED)) || (rearLeftSpeed > (ROBOT_MAX_SPEED)))
+		result = false;
+
+	if((rearRightSpeed < (-ROBOT_MAX_SPEED)) || (rearRightSpeed > (ROBOT_MAX_SPEED)))
+		result = false;
+
+	return result;
 }
 
 amber::roboclaw_proto::MotorsSpeed* RoboclawProxy::motorsSpeedRequest(char* packetBytes)

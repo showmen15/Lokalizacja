@@ -18,6 +18,7 @@ private:
 	int rearLeftSpeed;
 	int rearRightSpeed;
 
+
 	char* requestScan;
 	int requestScanLength;
 
@@ -27,6 +28,8 @@ private:
 	amber::DriverHdr  buildHeader();
 	amber::DriverMsg* buildMsg(int synNum);
 	void buildSendMessage(amber::DriverHdr header, amber::DriverMsg* message);
+
+	bool isSpeedOK(int frontLeftSpeed,int frontRightSpeed, int rearLeftSpeed,int rearRightSpeed);
 
 public:
 
@@ -42,4 +45,7 @@ public:
     double GetSpeed();
 
     double GetAngle(double time);
+
+	double Vr;
+	double Vl;
 };
