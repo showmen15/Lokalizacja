@@ -5,17 +5,24 @@
 #include <stdlib.h>
 
 #define TEST 1
-#define PROMIEN 0.4
+#define PROMIEN 0.1
 
 using namespace std;
 
 #define M_PI       3.14159265358979323846
-#define ODCHYLENIE 0.9
+#define ODCHYLENIE 0.05
 #define NEW_MIN 0
 #define NEW_MAX 1
 
 //bierzemy co 10 pomiar skanera
-#define PRZLIECZENIE_DLA_POMIARU_SKANERA 10 
+#define PRZLIECZENIE_DLA_POMIARU_SKANERA 1
+
+struct Point
+{
+	public:
+		double X;
+		double Y;
+};
 
 
 struct Particle 
@@ -164,13 +171,21 @@ public:
 		sMarkToDelete = 0;
 	}
 
-
-		inline double Normalize(double value,double min,double max) //normalizacja min max
+	/*inline Point getIntersection(double A,double B,double C,double X0,double Y0,double Alfa)
 	{
-		return (((value - min) * (NEW_MAX - NEW_MIN)) / (max - min)) + NEW_MIN;
-	}
+		Point p;
+		double A0 = tan(Alfa);
+		double B1 = -1;
+		double C1 = Y0 - (A0 * X0);
 
-		inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
+		double W;
+
+		W =
+
+
+	}*/
+
+inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 {	
 	double W;
 	double Wx;
@@ -182,9 +197,9 @@ public:
 	double b1 = wall->B;
 	double c1 = wall->C;
 
-	double a2 = tan( alfa * M_PI / 180.0);
-	double b2 = -1;
- 	double c2 =  Y2 - (a2 * Y2);
+	double a2 = - tan( (alfa * M_PI) / 180.0);
+	double b2 = 1;
+ 	double c2 =  Y2 + (a2 * X2);
 
 	W = a1 * b2 - b1 * a2;
 	
@@ -203,6 +218,81 @@ public:
 	return dist;
 }
 
+		inline void ZaktualizujPrzesuniecie4(double wheelTrack,double Vl, double  Vr, double dt)
+		{
+			if(Vl != Vr)
+			{
+				alfaNew = (((Vr - Vl) * dt) / wheelTrack);
+
+				X += (wheelTrack * (Vr + Vl)) / (2*(Vr - Vl)) * (sin(alfaNew + Alfa) - sin(Alfa));
+				Y -= (wheelTrack * (Vr + Vl)) / (2*(Vr - Vl)) * (cos(alfaNew + Alfa) - cos(Alfa));
+
+				Alfa += alfaNew;
+
+			}
+			else
+			{
+				d = ((Vr + Vl) / 2) * dt;
+
+				X += d * cos(d);
+				Y += d * sin(d);
+			}
+		}
+
+
+		inline void UpdateCountProbability3(Room* box,int scanTable[],double angleTable[],int length)
+		{
+			double dist;
+			double gauss;
+			double sumProbability = 0.0;
+			Probability = 0.0;
+			int iloscScian = box->ContainerWallCount();
+
+			for (int i = 0; i < length; i = i + PRZLIECZENIE_DLA_POMIARU_SKANERA)
+			{
+				int test = 0;
+				test++;
+
+				for (int j = 0; j < iloscScian; j++)
+				{
+					dist =  getDistnace(&box->ContainerWallTable[j],this->AlfaStopnie + angleTable[i],this->X,this->Y); //wartosc oczekiwana
+
+					if(dist > 0)
+					{
+						double scan = (((double) scanTable[i]) / 1000);
+						gauss =  Gauss2(dist,scan); //exp((-1 * pow(scanTable[i] - dist,2)) / ( 2 * ODCHYLENIE * ODCHYLENIE)) / (2 * M_PI * ODCHYLENIE);
+
+					sumProbability +=  gauss;//Normalize(gauss,0,dist);
+					}
+				}
+			}
+
+			Probability = sumProbability;
+		}
+
+
+	inline double Gauss2(double prop,double real)
+	{
+	double a,b,c,d;
+	double x = prop;
+	double delta = sqrt(ODCHYLENIE);
+	double ni = real;
+
+	a = 1 / (delta  *sqrt(2 * M_PI));
+	b = ni;
+	c = delta;
+	d = 0;
+
+	return (a * exp( pow(x - b,2) / (-2 * pow(c,2)))) + d;
+	}
+};
+
+		/*inline double Normalize(double value,double min,double max) //normalizacja min max
+	{
+		return (((value - min) * (NEW_MAX - NEW_MIN)) / (max - min)) + NEW_MIN;
+	}*/
+
+/*
 	inline void UpdateCountProbability(Room* box,int scanTable[],double angleTable[],int length)
 	{
 		double dist;
@@ -231,8 +321,9 @@ public:
 
 		Probability = sumProbability;
 	}
+	*/
 		
-
+/*
 	inline void UpdateCountProbability1(Room* box,int scanTable[],double angleTable[],int length)
 	{
 		double dist;
@@ -278,60 +369,14 @@ public:
 
 				}
 
+			}
+		}
+
+		Probability = sumProbability;
+	}
 */
 
-			}
-		}
 
-		Probability = sumProbability;
-	}
-
-
-	inline void UpdateCountProbability3(Room* box,int scanTable[],double angleTable[],int length)
-	{
-		double dist;
-		double gauss;
-		double sumProbability = 0.0;
-		int iloscScian = box->ContainerWallCount();
-
-		for (int i = 0; i < length; i = i + PRZLIECZENIE_DLA_POMIARU_SKANERA)
-		{
-			int test = 0;
-			test++;
-
-			for (int j = 0; j < iloscScian; j++)
-			{
-				dist =  getDistnace(&box->ContainerWallTable[j],this->AlfaStopnie + angleTable[i],this->X,this->Y); //wartosc oczekiwana
-
-				if(dist > 0)
-				{
-					double scan = (((double) scanTable[i]) / 1000);
-				gauss =  Gauss2(scan,dist); //exp((-1 * pow(scanTable[i] - dist,2)) / ( 2 * ODCHYLENIE * ODCHYLENIE)) / (2 * M_PI * ODCHYLENIE);
-
-				sumProbability +=  gauss;//Normalize(gauss,0,dist);
-				}
-			}
-		}
-
-		Probability = sumProbability;
-	}
-
-
-	inline double Gauss2(double prop,double real)
-{
-double a,b,c,d;
-double x = prop;
-double delta = sqrt(ODCHYLENIE);
-double ni = real;
-
-a = 1 / (delta  *sqrt(2 * M_PI));
-b = ni;
-c = delta;
-d = 0;
-
-return (a * exp( pow(x - b,2) / (-2 * pow(c,2)))) + d; 
-}
-		
 		
 		/*
 		double sumProbability = 0.0;
@@ -403,7 +448,7 @@ return (a * exp( pow(x - b,2) / (-2 * pow(c,2)))) + d;
 
 	//}
 
-	inline void ZaktualizujPrzesuniecie2(double wheelTrack,int frontRightSpeed, int  rearRightSpeed, int frontLeftSpeed, int rearLeftSpeed ,double time)
+/*	inline void ZaktualizujPrzesuniecie2(double wheelTrack,int frontRightSpeed, int  rearRightSpeed, int frontLeftSpeed, int rearLeftSpeed ,double time)
 	{
 		double Vr = ((double) (frontRightSpeed +  rearRightSpeed)) / 2000 ;
 	   double Vl = ((double)(frontLeftSpeed + rearLeftSpeed)) / 2000;
@@ -515,43 +560,22 @@ return (a * exp( pow(x - b,2) / (-2 * pow(c,2)))) + d;
  		 		Alfa -= 360;
 	   }
 
-	}
+	} */
 
-	inline void ZaktualizujPrzesuniecie4(double wheelTrack,double Vl, double  Vr, double dt)
-	{
-		if(Vl != Vr)
-		{
-			alfaNew = (((Vr - Vl) * dt) / wheelTrack);
-
-			X += (wheelTrack * (Vr + Vl)) / (2*(Vr - Vl)) * (sin(alfaNew + Alfa) - sin(Alfa));
-			Y -= (wheelTrack * (Vr + Vl)) / (2*(Vr - Vl)) * (cos(alfaNew + Alfa) - cos(Alfa));
-
-			Alfa += alfaNew;
-
-		}
-		else
-		{
-			d = ((Vr + Vl) / 2) * dt;
-
-			X += d * cos(d);
-			Y += d * sin(d);
-		}
-	}
-
-	inline void ZaktualizujPrzesuniecie(double V,double alfa,double dt) //liczy droge i aktualizuje przemieszczenie
+/*	inline void ZaktualizujPrzesuniecie(double V,double alfa,double dt) //liczy droge i aktualizuje przemieszczenie
 	{
 		double s = V * dt;
 
 		ZaktualizujPrzesuniecie(s,alfa);
-	}
+	}*/
 	
-	inline void ZaktualizujPrzesuniecie(double s,double  alfa)
+	/*inline void ZaktualizujPrzesuniecie(double s,double  alfa)
 	{
 			X += s * cos((alfa * M_PI) / 180 ); // A'= [x + Sx, ...]
 			Y += s * cos(((90 - alfa) * M_PI) / 180); // A' [... ,y + Sy]
 
 			Alfa += alfa;
-	}
+	}*/
 
 
 //	inline void ObrotCzastkiKat(double alfaNew)
@@ -576,4 +600,4 @@ return (a * exp( pow(x - b,2) / (-2 * pow(c,2)))) + d;
 	//	//return tmp.c_str();
 	//	return tmp.c_str();
 	//}
-};
+

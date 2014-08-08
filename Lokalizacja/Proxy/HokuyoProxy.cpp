@@ -70,6 +70,69 @@ void HokuyoProxy::GetScan()
 	}
 }
 
+/*
+
+double obliczA(double X1,double Y1,double X2,double Y2)
+{
+	return ((Y2 - Y1) / (X2 - X1));
+}
+
+double obliczB(double A,double X1,double Y1,double X2,double Y2)
+{
+	return Y2 - (A * X2);
+}
+
+double odleglosc(double x0,double y0,double A,double B,double C)
+{
+	double d;
+	d = (A * x0 + B * y0 + C) / sqrt(A * A + B * B);
+
+	if(d < 0)
+		d *= -1;
+
+	return d;
+}
+
+void HokuyoProxy::GetScan2(double X0,double Y0)
+{
+	double A166 = obliczA(3.1,3.3,3.1,4.9);
+	double B166 = obliczB(A166,3.1,3.3,3.1,4.9);
+
+	double A167 = obliczA(2.1,3.3,3.1,3.3);
+	double B167 = obliczB(A167,2.1,3.3,3.1,3.3);
+
+	double A168 = obliczA(2.1,3.3,2.1,3.6);
+	double B168 = obliczB(A168,2.1,3.3,2.1,3.6);
+
+	double A170 = obliczA(2.1,4.9,3.1,4.9);
+	double B170 = obliczB(A170,2.1,4.9,3.1,4.9);
+
+	angles[0] = 180;
+	distances[0] = odleglosc(X0,Y0,);
+
+	angles[1] = 90;
+	distances[1] = ;
+
+	angles[2] = 0;
+	distances[2] = ;
+
+	angles[3] = -90;
+	distances[3] = ;
+
+
+
+
+
+
+		angles[i] = tmp_scan->angles(i);
+		distances[i] = tmp_scan->distances(i);
+
+}
+
+
+
+*/
+
 amber::hokuyo_proto::Scan* HokuyoProxy::scanRequest(char* packetBytes)
 {
 	int headerLen = (packetBytes[0] << 8) + (packetBytes[1] & 0xff);
