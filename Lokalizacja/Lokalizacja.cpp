@@ -28,11 +28,11 @@
 #include <ctime>
 
 #define ILOSC_POMIAROW_SCENNER 1
-#define ILOSC_CZASTEK 10
+#define ILOSC_CZASTEK 20
 //#define THRESHILD 1.222
-#define EPSILON 1.75
+#define EPSILON 5.5
 #define GENERATION 3
-#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 0
+#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 8
 #define TEST 1
 
 
@@ -152,15 +152,31 @@ inline int wylosujBB(int fMin, int fMax)
 
 void UsunWylosujNoweCzastki(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniecia,BoundingBox* bBox,unsigned int BoundingBoxCount)
 {
+	if(iloscCzastekDoUsuniecia == length)
+		iloscCzastekDoUsuniecia--;
+
 	int zakres = length - iloscCzastekDoUsuniecia;
 
 	//powiel czastki
-	for(int i = zakres, j = 0; i < length;i++, j = (j + 1) % zakres)
+	for(int i = zakres, j = 0; i < length - ILOSC_LOSOWANYCH_NOWYCH_CZASTEK;i++, j = (j + 1) % zakres)
 	{
 		tablicaCzastek[i].LosujSasiada(tablicaCzastek[j].X,tablicaCzastek[j].Y,tablicaCzastek[j].Alfa);
 	}
 
 
+	for(int index = length - ILOSC_LOSOWANYCH_NOWYCH_CZASTEK; index < length; index++)
+	{
+		#if TEST == 1
+			if(index < 0)
+				printf("UsunWylosujNoweCzastki index,%d",index);
+			fflush(NULL);
+		#endif
+
+		int p = wylosujBB(0,BoundingBoxCount);
+
+		tablicaCzastek[index].LosujPozycje(bBox[p].X_Left_Bottom,bBox[p].X_Right_Bottom,bBox[p].Y_Left_Bottom,bBox[p].Y_Left_Top);
+
+	}
 
 	//powiel czastki
 	/*for(int i = 0, j = length - 1; i < (iloscCzastekDoUsuniecia - ILOSC_LOSOWANYCH_NOWYCH_CZASTEK); i++, j-- )
@@ -824,9 +840,9 @@ int main(int argc, char* argv[])
 
 	//HokuyoProxy* skaner = new HokuyoProxy(&clinetAmber);
 
-	tablicaCzastek[0].X = 2.5;
-	tablicaCzastek[0].Y = 4.0;
-	tablicaCzastek[0].Alfa = 0,0000001;
+	//tablicaCzastek[0].X = 2.5;
+	//tablicaCzastek[0].Y = 4.0;
+	//tablicaCzastek[0].Alfa = 0,0000001;
 
 	time_t dtime = 0;
 	double deletaTime;
@@ -838,9 +854,9 @@ int main(int argc, char* argv[])
 
 
 
-	int GetDistances[] = {700,600,900};
-	double GetAngles[] = {90.1,0.1,-90.1};
-	int ScanLength = 3;
+	int GetDistances[] = {1600,600};
+	double GetAngles[] = {0.1,-90.1};
+	int ScanLength = 2;
 
 	SendParticle(&diagnostic,tablicaCzastek,&size);
 	wys = diagnostic.c_str();
@@ -855,7 +871,7 @@ int main(int argc, char* argv[])
 
 		//skaner->GetScan();
 
-		speedRoboClaw = 0.1; // roboClaw->GetSpeed(); //droga w metrach
+		speedRoboClaw = 0.01; // roboClaw->GetSpeed(); //droga w metrach
 		angleRoboClaw = 0; //roboClaw->GetAngle(deletaTime);
 
 		//printf("Czas: %e Kat: %e\n", deletaTime,angleRoboClaw);
@@ -902,6 +918,10 @@ int main(int argc, char* argv[])
 
 		qsort(tablicaCzastek,ILOSC_CZASTEK,sizeof(Particle),compareMyType);
 
+		SendParticle(&diagnostic,tablicaCzastek,&size);
+		wys = diagnostic.c_str();
+		size = diagnostic.size();
+		clientParticle.Send(wys,size);
 
 		UsunWylosujNoweCzastki(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
 		iloscCzastekDoUsuniacia = 0;
@@ -917,7 +937,7 @@ int main(int argc, char* argv[])
 		//sleep(1);
 
 		printf("Czas:%e\n",deletaTime);
-		GetDistances[1] -= 10;
+		GetDistances[0] -= 10;
 	}
 	return 0;
 }

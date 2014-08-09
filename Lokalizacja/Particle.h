@@ -108,7 +108,7 @@ public:
 		#endif
 
 		Alfa = fRand(0,2 * M_PI);
-		AlfaStopnie = 0.0;
+		AlfaStopnie = Alfa * (180 / M_PI);;
 		Probability = 0.0;
 		sMarkToDelete = 0;
 	}
