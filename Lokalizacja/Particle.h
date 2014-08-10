@@ -234,8 +234,8 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 			{
 				d = ((Vr + Vl) / 2) * dt;
 
-				X += d * cos(d);
-				Y += d * sin(d);
+				X += d * cos(Alfa);
+				Y += d * sin(Alfa);
 			}
 		}
 

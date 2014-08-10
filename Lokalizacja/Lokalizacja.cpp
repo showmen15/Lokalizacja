@@ -28,11 +28,11 @@
 #include <ctime>
 
 #define ILOSC_POMIAROW_SCENNER 1
-#define ILOSC_CZASTEK 20
+#define ILOSC_CZASTEK 10
 //#define THRESHILD 1.222
-#define EPSILON 5.5
+#define EPSILON 3.2
 #define GENERATION 3
-#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 8
+#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 1
 #define TEST 1
 
 
@@ -840,9 +840,10 @@ int main(int argc, char* argv[])
 
 	//HokuyoProxy* skaner = new HokuyoProxy(&clinetAmber);
 
-	//tablicaCzastek[0].X = 2.5;
-	//tablicaCzastek[0].Y = 4.0;
-	//tablicaCzastek[0].Alfa = 0,0000001;
+	tablicaCzastek[0].X = 0.7;
+	tablicaCzastek[0].Y = 3.4;
+	//tablicaCzastek[0].Alfa = 4,7123;
+	tablicaCzastek[0].AlfaStopnie = -90.01;
 
 	time_t dtime = 0;
 	double deletaTime;
@@ -852,10 +853,8 @@ int main(int argc, char* argv[])
 
 	time(&dtime);
 
-
-
-	int GetDistances[] = {1600,600};
-	double GetAngles[] = {0.1,-90.1};
+	int GetDistances[] = {1550,600};
+	double GetAngles[] = {0.01,-90.01};
 	int ScanLength = 2;
 
 	SendParticle(&diagnostic,tablicaCzastek,&size);
@@ -871,7 +870,7 @@ int main(int argc, char* argv[])
 
 		//skaner->GetScan();
 
-		speedRoboClaw = 0.01; // roboClaw->GetSpeed(); //droga w metrach
+		speedRoboClaw = 0.1; // roboClaw->GetSpeed(); //droga w metrach
 		angleRoboClaw = 0; //roboClaw->GetAngle(deletaTime);
 
 		//printf("Czas: %e Kat: %e\n", deletaTime,angleRoboClaw);
@@ -937,7 +936,7 @@ int main(int argc, char* argv[])
 		//sleep(1);
 
 		printf("Czas:%e\n",deletaTime);
-		GetDistances[0] -= 10;
+		GetDistances[0] -= 100;
 	}
 	return 0;
 }
