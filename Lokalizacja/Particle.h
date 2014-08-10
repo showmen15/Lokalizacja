@@ -15,7 +15,7 @@ using namespace std;
 #define NEW_MAX 1
 
 //bierzemy co 10 pomiar skanera
-#define PRZLIECZENIE_DLA_POMIARU_SKANERA 1
+#define PRZLIECZENIE_DLA_POMIARU_SKANERA 60
 
 struct Point
 {
@@ -239,6 +239,10 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 			}
 		}
 
+		inline double Normalize(double value,double min,double max) //normalizacja min max
+		{
+			return (((value - min) * (NEW_MAX - NEW_MIN)) / (max - min)) + NEW_MIN;
+		}
 
 		inline void UpdateCountProbability3(Room* box,int scanTable[],double angleTable[],int length)
 		{
@@ -247,6 +251,12 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 			double sumProbability = 0.0;
 			Probability = 0.0;
 			int iloscScian = box->ContainerWallCount();
+			double norm;
+			double tablicaOdleglosci[length];
+			double tablicaKatow[length];
+			double tablicaSkan[length];
+			double tablicaGauss[length];
+			int index = 0;
 
 			for (int i = 0; i < length; i = i + PRZLIECZENIE_DLA_POMIARU_SKANERA)
 			{
@@ -259,15 +269,38 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 
 					if(dist > 0)
 					{
+
+
+
 						double scan = (((double) scanTable[i]) / 1000);
 						gauss =  Gauss2(dist,scan); //exp((-1 * pow(scanTable[i] - dist,2)) / ( 2 * ODCHYLENIE * ODCHYLENIE)) / (2 * M_PI * ODCHYLENIE);
 
-					sumProbability +=  gauss;//Normalize(gauss,0,dist);
+						tablicaOdleglosci[index] = dist;
+						tablicaKatow[index] = angleTable[i];
+						tablicaSkan[index] = scan;
+						tablicaGauss[index] = gauss;
+						index++;
+
+
+						//Normalize(gauss,0,Gauss2(10,10)); //gauss;
+
+
+					sumProbability += gauss;
 					}
 				}
 			}
 
-			Probability = sumProbability;
+
+			/*for(int i = 0; i < index;i++)
+			{
+				printf("Obliczone: %f Kat: %f Skan: %f Gaus: %f\n",tablicaOdleglosci[i],tablicaKatow[i],tablicaSkan[i],tablicaGauss[i]);
+			}
+
+			fflush(NULL);
+*/
+
+			double yy = ((double) index) * Gauss2(1,1);
+			Probability =  Normalize(sumProbability,0,yy);  //(sumProbability / index);  /// (length / PRZLIECZENIE_DLA_POMIARU_SKANERA)); //sumProbability
 		}
 
 
@@ -287,10 +320,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 	}
 };
 
-		/*inline double Normalize(double value,double min,double max) //normalizacja min max
-	{
-		return (((value - min) * (NEW_MAX - NEW_MIN)) / (max - min)) + NEW_MIN;
-	}*/
+
 
 /*
 	inline void UpdateCountProbability(Room* box,int scanTable[],double angleTable[],int length)
