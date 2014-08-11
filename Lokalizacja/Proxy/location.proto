@@ -7,7 +7,6 @@ import "drivermsg.proto";
 extend amber.DriverMsg {
     optional bool get_location = 30;
 	optional Location currentLocation = 31;
-
 }
 
 message Location {
