@@ -510,7 +510,8 @@ void RozmiescCzastki(BoundingBox* bBox,unsigned int BoundingBoxCount,Particle* t
 	Particle tempRef;
 	tempRef.X = 0.3;
 	tempRef.Y = 3.35;
-	tempRef.Alfa = 0;
+	tempRef.Alfa = M_PI / 2;
+	tempRef.AlfaStopnie = 90;
 
 	for(unsigned int i = 0, p = 0; i < 4; i++, p++)
 	{
@@ -529,9 +530,9 @@ void RozmiescCzastki(BoundingBox* bBox,unsigned int BoundingBoxCount,Particle* t
 		tempRef.Y += 0.4;
 	}
 
-	tempRef.X = 0.3;
+	tempRef.X = 0.3 + 0.4;
 	tempRef.Y = 3.35;
-	tempRef.Alfa = 0;
+	//tempRef.Alfa = 0;
 
 
 	for(unsigned int i = 4, p = 4; i < 8; i++, p++)
@@ -1288,6 +1289,10 @@ int main(int argc, char* argv[])
 
 				tablicaCzastek[i].ZaktualizujPrzesuniecie4(roboClaw->wheelTrack,roboClaw->Vl,roboClaw->Vr,deletaTime);
 
+				printf("Wartosci %f,%f",roboClaw->Vl,roboClaw->Vr);
+
+				fflush(NULL);
+
 		//	}
 		}
 
@@ -1304,8 +1309,8 @@ int main(int argc, char* argv[])
 		size = diagnostic.size();
 		clientParticle.Send(wys,size);
 
-		iloscCzastekDoUsuniacia /= 2;
-		UsunWylosujNoweCzastki2(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
+		//iloscCzastekDoUsuniacia /= 2;
+		//UsunWylosujNoweCzastki2(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
 		iloscCzastekDoUsuniacia = 0;
 
 		SendParticle(&diagnostic,tablicaCzastek,&size);

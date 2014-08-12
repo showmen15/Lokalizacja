@@ -15,7 +15,7 @@ using namespace std;
 #define NEW_MAX 1
 
 //bierzemy co 10 pomiar skanera
-#define PRZLIECZENIE_DLA_POMIARU_SKANERA 60
+#define PRZLIECZENIE_DLA_POMIARU_SKANERA 2
 
 struct Point
 {
@@ -291,7 +291,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 			}
 
 
-			/*for(int i = 0; i < index;i++)
+		/*	for(int i = 0; i < index;i++)
 			{
 				printf("Obliczone: %f Kat: %f Skan: %f Gaus: %f\n",tablicaOdleglosci[i],tablicaKatow[i],tablicaSkan[i],tablicaGauss[i]);
 			}
