@@ -28,7 +28,7 @@
 #include <ctime>
 
 //#define ILOSC_POMIAROW_SCENNER 10
-#define ILOSC_CZASTEK 10
+#define ILOSC_CZASTEK 104
 //#define THRESHILD 1.222
 #define EPSILON 0.9
 #define GENERATION 1
@@ -509,27 +509,44 @@ void RozmiescCzastki(BoundingBox* bBox,unsigned int BoundingBoxCount,Particle* t
 {
 	Particle tempRef;
 	tempRef.X = 0.3;
-	tempRef.Y = 3.35;
+	tempRef.Y = 0.2;
 	tempRef.Alfa = M_PI / 2;
 	tempRef.AlfaStopnie = 90;
+	double przesuniecie = 0.0;
 
-	for(unsigned int i = 0, p = 0; i < 4; i++, p++)
+
+	for(unsigned int i = 0; i < ParticleCount; i++)
 	{
-		Particle temp;
-		temp.X = tempRef.X;
-		temp.Y = tempRef.Y;
+		for(unsigned int j = 0; j < 8; j++)
+		{
+			//Particle *temp = new Particle();
+			/*temp->X = tempRef.X;
+			temp->Y = tempRef.Y + przesuniecie;
 
-		temp.Alfa = tempRef.Alfa;
+			temp->Alfa = tempRef.Alfa;
+			temp->AlfaStopnie = tempRef.AlfaStopnie;
+			temp->Probability = 0.0;
 
-		//temp.LosujPozycje(bBox[p].X_Left_Bottom,bBox[p].X_Right_Bottom,bBox[p].Y_Left_Bottom,bBox[p].Y_Left_Top);
-		tablicaCzastek[i] = temp;
+			tablicaCzastek[i] = temp;
+			*/
+			tablicaCzastek[i].X = tempRef.X;
+			tablicaCzastek[i].Y = tempRef.Y;
 
-		if((p + 1) == BoundingBoxCount)
-			p = -1;
+			tablicaCzastek[i].Alfa = tempRef.Alfa;
+			tablicaCzastek[i].AlfaStopnie = tempRef.AlfaStopnie;
+			tablicaCzastek[i].Probability = 0.0;
+			i++;
+			przesuniecie = 0.4;
+			tempRef.X += przesuniecie;
 
+		}
+
+		tempRef.X = 0.3;
 		tempRef.Y += 0.4;
+		i--;
 	}
 
+	/*
 	tempRef.X = 0.3 + 0.4;
 	tempRef.Y = 3.35;
 	//tempRef.Alfa = 0;
@@ -551,6 +568,7 @@ void RozmiescCzastki(BoundingBox* bBox,unsigned int BoundingBoxCount,Particle* t
 
 		tempRef.X += 0.4;
 	}
+	*/
 }
 void aktualizuj(double wheelTrack, int frontRightSpeed, int  rearRightSpeed, int frontLeftSpeed, int rearLeftSpeed ,double time,double alfa1)
 {
@@ -1041,7 +1059,8 @@ int main7(int argc, char* argv[])
 int main99(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
-	char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
+	//char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
+	char* IPPart = "192.168.56.1";
 	UdpClient clientParticle(IPPart,1234,9000);
 	string diagnostic;
     int size;
@@ -1185,7 +1204,8 @@ int main99(int argc, char* argv[])
 int main(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
-	char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
+	//char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
+	char* IPPart = "192.168.56.1"; //przerobic aby bral lokalny adres z robota
 	UdpClient clientParticle(IPPart,1234,9000);
 	string diagnostic;
     int size;
