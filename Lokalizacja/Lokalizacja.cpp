@@ -1204,8 +1204,8 @@ int main99(int argc, char* argv[])
 int main(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
-	//char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
-	char* IPPart = "192.168.56.1"; //przerobic aby bral lokalny adres z robota
+	char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
+//	char* IPPart = "192.168.56.1"; //przerobic aby bral lokalny adres z robota
 	UdpClient clientParticle(IPPart,1234,9000);
 	string diagnostic;
     int size;
