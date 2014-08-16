@@ -5,6 +5,8 @@
 //#include "UdpClientLinux.h"
 
 #include <stdio.h>
+#define PRZLIECZENIE_DLA_POMIARU_SKANERA 2
+
 
 class HokuyoProxy 
 {
@@ -33,8 +35,10 @@ public:
 	HokuyoProxy(UdpClient* client_udp);
 	~HokuyoProxy();
 	
-	int ScanLength;	
-        double Angle(int index);	
+	int ScanLengthAll;
+	int ScanLength;
+
+	double Angle(int index);
 	int Distance(int index);
 	
     void GetScan();

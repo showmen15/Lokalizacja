@@ -29,10 +29,10 @@ HokuyoProxy::HokuyoProxy(UdpClient *client_udp)
 	
 	tmp_scan = scanRequest(packetBytes);
 	
-	ScanLength = tmp_scan->distances_size();
+	ScanLengthAll = tmp_scan->distances_size();
 
-	angles = new double[ScanLength];
-	distances = new int[ScanLength];
+	angles = new double[ScanLengthAll];
+	distances = new int[ScanLengthAll];
 }
 
 HokuyoProxy::~HokuyoProxy()
@@ -63,10 +63,12 @@ void HokuyoProxy::GetScan()
 	
 	tmp_scan = scanRequest(packetBytes);
 	
-	for(int i = 0; i < ScanLength;i++)
+	for(int i = 0,index = 0; i < ScanLengthAll;i += PRZLIECZENIE_DLA_POMIARU_SKANERA,index++)
 	{
-		angles[i] = tmp_scan->angles(i);
-		distances[i] = tmp_scan->distances(i);
+		angles[index] = tmp_scan->angles(i);
+		distances[index] = tmp_scan->distances(i);
+
+		ScanLength = index;
 	}
 }
 
