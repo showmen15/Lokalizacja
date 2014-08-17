@@ -28,11 +28,11 @@
 #include <ctime>
 
 //#define ILOSC_POMIAROW_SCENNER 10
-#define ILOSC_CZASTEK 104
+#define ILOSC_CZASTEK 50
 //#define THRESHILD 1.222
-#define EPSILON 0.9
+#define EPSILON 0.7
 #define GENERATION 1
-#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 2
+#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 20
 #define TEST 1
 
 
@@ -1310,9 +1310,9 @@ int main(int argc, char* argv[])
 
 				tablicaCzastek[i].ZaktualizujPrzesuniecie4(roboClaw->wheelTrack,roboClaw->Vl,roboClaw->Vr,deletaTime);
 
-				printf("Wartosci %f,%f",roboClaw->Vl,roboClaw->Vr);
+//				printf("Wartosci %f,%f",roboClaw->Vl,roboClaw->Vr);
 
-				fflush(NULL);
+		//		fflush(NULL);
 
 		//	}
 		}
@@ -1330,8 +1330,8 @@ int main(int argc, char* argv[])
 		size = diagnostic.size();
 		clientParticle.Send(wys,size);
 
-		//iloscCzastekDoUsuniacia /= 2;
-		//UsunWylosujNoweCzastki2(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
+		iloscCzastekDoUsuniacia /= 2;
+		UsunWylosujNoweCzastki2(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
 		iloscCzastekDoUsuniacia = 0;
 
 		SendParticle(&diagnostic,tablicaCzastek,&size);
@@ -1345,6 +1345,7 @@ int main(int argc, char* argv[])
 		sleep(1);
 
 		printf("Czas:%e\n",deletaTime);
+		fflush(NULL);
 	}
 	return 0;
 }
