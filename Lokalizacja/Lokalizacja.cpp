@@ -28,11 +28,11 @@
 #include <ctime>
 
 //#define ILOSC_POMIAROW_SCENNER 10
-#define ILOSC_CZASTEK 50
+#define ILOSC_CZASTEK 104
 //#define THRESHILD 1.222
 #define EPSILON 0.7
 #define GENERATION 1
-#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 20
+#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 10
 #define TEST 1
 
 
@@ -912,7 +912,8 @@ int main55(int argc, char* argv[])
 
 
 	//countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//2ndFloor-rooms.roson",bBox,rooms);
-	countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//lab.roson",bBox,rooms);
+	//countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//lab.roson",bBox,rooms);
+	countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//labNowe.roson",bBox,rooms);
 
 	Particle* tablicaCzastek = new Particle[ILOSC_CZASTEK];
 	int iloscCzastekDoUsuniacia = 0;
@@ -1014,8 +1015,8 @@ int main55(int argc, char* argv[])
 		size = diagnostic.size();
 		clientParticle.Send(wys,size);
 
-		UsunWylosujNoweCzastki2(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
-		iloscCzastekDoUsuniacia = 0;
+		//UsunWylosujNoweCzastki2(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
+		//iloscCzastekDoUsuniacia = 0;
 
 		SendParticle(&diagnostic,tablicaCzastek,&size);
 		wys = diagnostic.c_str();
@@ -1205,7 +1206,7 @@ int main99(int argc, char* argv[])
 int main(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
-	char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
+	char* IPPart = "192.168.2.100"; //przerobic aby bral lokalny adres z robota
 //	char* IPPart = "192.168.56.1"; //przerobic aby bral lokalny adres z robota
 	UdpClient clientParticle(IPPart,1234,9000);
 	string diagnostic;
@@ -1225,7 +1226,8 @@ int main(int argc, char* argv[])
 
 
 	//countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//2ndFloor-rooms.roson",bBox,rooms);
-	countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//lab.roson",bBox,rooms);
+	//countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//lab.roson",bBox,rooms);
+	countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//labNowe.roson",bBox,rooms);
 
 	Particle* tablicaCzastek = new Particle[ILOSC_CZASTEK];
 	int iloscCzastekDoUsuniacia = 0;
