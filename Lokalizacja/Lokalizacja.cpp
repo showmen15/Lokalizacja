@@ -28,11 +28,11 @@
 #include <ctime>
 
 //#define ILOSC_POMIAROW_SCENNER 10
-#define ILOSC_CZASTEK 104
+#define ILOSC_CZASTEK 20
 //#define THRESHILD 1.222
 #define EPSILON 0.7
 #define GENERATION 1
-#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 10
+#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 2
 #define TEST 1
 
 
@@ -1201,12 +1201,10 @@ int main99(int argc, char* argv[])
 	return 0;
 }
 
-
-
 int main(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
-	char* IPPart = "192.168.2.100"; //przerobic aby bral lokalny adres z robota
+	char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
 //	char* IPPart = "192.168.56.1"; //przerobic aby bral lokalny adres z robota
 	UdpClient clientParticle(IPPart,1234,9000);
 	string diagnostic;
@@ -1310,7 +1308,7 @@ int main(int argc, char* argv[])
 				//inline void ZaktualizujPrzesuniecie4(double wheelTrack,double Vl, double  Vr, double dt)
 
 
-				tablicaCzastek[i].ZaktualizujPrzesuniecie4(roboClaw->wheelTrack,roboClaw->Vl,roboClaw->Vr,deletaTime);
+				tablicaCzastek[i].ZaktualizujPrzesuniecie4(roboClaw->wheelTrack,roboClaw->Vr,roboClaw->Vl,deletaTime);
 
 //				printf("Wartosci %f,%f",roboClaw->Vl,roboClaw->Vr);
 
