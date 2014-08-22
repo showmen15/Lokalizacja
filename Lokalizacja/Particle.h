@@ -320,91 +320,6 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 		}
 
 
-		inline void UpdateCountProbability4(Room* box,int scanTable[],double angleTable[],int length)
-		{
-			double dist;
-			double gauss;
-			double sumProbability = 0.0;
-			Probability = 0.0;
-			int iloscScian = box->ContainerWallCount();
-			double norm;
-			double tablicaOdleglosci[length];
-			double tablicaKatow[length];
-			double tablicaSkan[length];
-			double tablicaGauss[length];
-			std::string tablicaScien[length];
-			int www = 0;
-			int ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa = 0;
-
-
-			double sumScann = 0.0;
-			double sumCount = -1;
-
-			for (int i = 0; i < length; i++)
-			{
-				int test = 0;
-				test++;
-
-				tablicaOdleglosci[i] = -1;
-				tablicaKatow[i] = angleTable[i];
-				tablicaSkan[i] = (((double) scanTable[i]) / 1000);
-				tablicaGauss[i] = -1;
-
-				for (int j = 0; j < iloscScian; j++)
-				{
-
-					//if(canCountDistance(&box->ContainerWallTable[j],this->X,this->Y,this->AlfaStopnie + angleTable[i],this->AlfaStopnie + angleTable[0],this->AlfaStopnie + angleTable[length -1]))
-						dist =  getDistnace(&box->ContainerWallTable[j],this->AlfaStopnie + angleTable[i],this->X,this->Y); //wartosc oczekiwana
-					//else
-					//	dist = -1;
-
-					if(dist > 0)
-					{
-
-
-
-						double scan = (((double) scanTable[i]) / 1000);
-						//gauss =  Gauss2(dist,scan); //exp((-1 * pow(scanTable[i] - dist,2)) / ( 2 * ODCHYLENIE * ODCHYLENIE)) / (2 * M_PI * ODCHYLENIE);
-
-						sumScann += scan;
-						sumCount += dist;
-
-
-						//tablicaOdleglosci[i] = dist;
-						//tablicaKatow[i] = angleTable[i];
-						//tablicaSkan[i] = scan;
-						//tablicaGauss[i] = gauss;
-
-						tablicaScien[i] = (&box->ContainerWallTable[j])->Id;
-						ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa++;
-
-						//www++;
-
-
-						//Normalize(gauss,0,Gauss2(10,10)); //gauss;
-
-
-					//sumProbability += gauss;
-					}
-				}
-			}
-
-
-			/*for(int i = 0; i < length;i++)
-			{
-				printf("ID: %d Obliczone: %f Kat: %f Skan: %f Gaus: %fSciana: %s\n",i, tablicaOdleglosci[i],tablicaKatow[i],tablicaSkan[i],tablicaGauss[i],tablicaScien[i].c_str());
-			}
-
-			fflush(NULL);
-*/
-
-			//double yy = ((double) ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa) * Gauss2(1,1);
-			//Probability =  Normalize(sumProbability,0,yy);  //(sumProbability / index);  /// (length / PRZLIECZENIE_DLA_POMIARU_SKANERA)); //sumProbability
-
-			Probability = Normalize(Gauss2(sumScann,sumCount),0,Gauss2(1,1));
-		}
-
-
 		inline void UpdateCountProbability3(Room* box,int scanTable[],double angleTable[],int length)
 		{
 			double dist;
@@ -467,13 +382,13 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 			}
 
 
-			for(int i = 0; i < length;i++)
+			/*for(int i = 0; i < length;i++)
 			{
 				printf("ID: %d Obliczone: %f Kat: %f Skan: %f Gaus: %fSciana: %s\n",i, tablicaOdleglosci[i],tablicaKatow[i],tablicaSkan[i],tablicaGauss[i],tablicaScien[i].c_str());
 			}
 
 			fflush(NULL);
-
+*/
 
 			double yy = ((double) ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa) * Gauss2(1,1);
 			Probability =  Normalize(sumProbability,0,yy);  //(sumProbability / index);  /// (length / PRZLIECZENIE_DLA_POMIARU_SKANERA)); //sumProbability
