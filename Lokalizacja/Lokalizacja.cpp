@@ -8,6 +8,10 @@
 #include "BoundingBox.h"
 #include "Particle.h"
 
+
+
+
+
 //Linux 1; Windows 0
 /*#define SYSTEM 1
 
@@ -26,13 +30,16 @@
 
 #include <stdio.h>
 #include <ctime>
+#include <sys/time.h>
+#include <stdio.h>
+#include <unistd.h>
 
 //#define ILOSC_POMIAROW_SCENNER 10
-#define ILOSC_CZASTEK 20
+#define ILOSC_CZASTEK 104
 //#define THRESHILD 1.222
-#define EPSILON 0.7
+#define EPSILON 0.9
 #define GENERATION 1
-#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 2
+#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 3
 #define TEST 1
 
 
@@ -1201,6 +1208,55 @@ int main99(int argc, char* argv[])
 	return 0;
 }
 
+/*int main(int argc, char* argv[])
+{
+	struct timeval start, end;
+
+	while(true)
+	{
+
+
+
+	}
+
+
+
+
+
+
+
+	    long seconds, useconds;
+	    double  mtime,sectime;
+
+
+	    gettimeofday(&start, NULL);
+
+	   // sleep(1);
+	    usleep(900000);
+
+
+	    gettimeofday(&end, NULL);
+
+	    seconds  = end.tv_sec  - start.tv_sec;
+	    useconds = end.tv_usec - start.tv_usec;
+
+	  //  sectime = ((seconds) + (useconds / 1000000));
+	    sectime = ((end.tv_sec  - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec)/1000.0) / 1000;
+
+	    sectime = ((seconds) * 1000 + useconds/1000.0) / 1000;
+
+	    //sectime = mtime / 1000;
+
+
+	   printf("seconds: %d,useconds: %d,sectime: %f",seconds,useconds,sectime);
+
+	   fflush(NULL);
+
+	return 0;
+
+}
+*/
+
 int main(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
@@ -1246,13 +1302,16 @@ int main(int argc, char* argv[])
 	HokuyoProxy* skaner = new HokuyoProxy(&clinetAmber);
 
 
-	time_t dtime = 0;
+	//time_t dtime = 0;
+	struct timeval start,end;
+	gettimeofday(&start, NULL);
+
 	double deletaTime;
 	Room* currentRoom;
 
 	int petla = 0;
 
-	time(&dtime);
+	//time(&dtime);
 
 	SendParticle(&diagnostic,tablicaCzastek,&size);
 	wys = diagnostic.c_str();
@@ -1262,8 +1321,13 @@ int main(int argc, char* argv[])
 
 	while(true)
 	{
-		deletaTime = difftime(time(NULL),dtime); // czas w sekundach
-		time(&dtime);
+
+		gettimeofday(&end, NULL);
+
+		deletaTime =  ((end.tv_sec  - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec)/1000.0) / 1000; //difftime(time(NULL),dtime); // czas w sekundach
+
+		gettimeofday(&start, NULL);
+				//time(&dtime);
 		//deletaTime =
 
 
@@ -1330,8 +1394,8 @@ int main(int argc, char* argv[])
 		size = diagnostic.size();
 		clientParticle.Send(wys,size);
 
-		iloscCzastekDoUsuniacia /= 2;
-		UsunWylosujNoweCzastki2(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
+		//iloscCzastekDoUsuniacia /= 2;
+		//UsunWylosujNoweCzastki2(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
 		iloscCzastekDoUsuniacia = 0;
 
 		SendParticle(&diagnostic,tablicaCzastek,&size);
@@ -1342,9 +1406,9 @@ int main(int argc, char* argv[])
 		//printf("Podaj licze %dSpeed: %f",petla,speedRoboClaw);
 		//scanf("%c",&pause);
 		petla++;
-		sleep(1);
+		//sleep(1);
 
-		printf("Czas:%e\n",deletaTime);
+		printf("Czas:%f[s]\n",deletaTime);
 		fflush(NULL);
 	}
 	return 0;
