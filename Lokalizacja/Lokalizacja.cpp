@@ -37,9 +37,9 @@
 //#define ILOSC_POMIAROW_SCENNER 10
 #define ILOSC_CZASTEK 104
 //#define THRESHILD 1.222
-#define EPSILON 0.9
+#define EPSILON 0.87
 #define GENERATION 1
-#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 3
+#define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 10
 #define TEST 1
 
 
@@ -51,6 +51,20 @@
 //		tablica[i] = temp;
 //	}
 //}
+
+void InitTablicaCzastekLosowo(Particle *tablica,BoundingBox* bBox,int countBox,double dRMAX)
+{
+	for (int i = 0, j = 0; i < ILOSC_CZASTEK; i++, j++)
+	{
+		Particle temp(0,3,0,5,5);
+		temp.Losuj33(3,5);
+
+		tablica[i] = temp;
+
+	}
+}
+
+
 
 void InitTablicaCzastek(Particle *tablica,BoundingBox* bBox,int countBox,double dRMAX)
 {
@@ -526,7 +540,7 @@ void RozmiescCzastki(BoundingBox* bBox,unsigned int BoundingBoxCount,Particle* t
 	{
 		for(unsigned int j = 0; j < 8; j++)
 		{
-			//Particle *temp = new Particle();
+			/*Particle *temp = new Particle();
 			/*temp->X = tempRef.X;
 			temp->Y = tempRef.Y + przesuniecie;
 
@@ -536,6 +550,7 @@ void RozmiescCzastki(BoundingBox* bBox,unsigned int BoundingBoxCount,Particle* t
 
 			tablicaCzastek[i] = temp;
 			*/
+
 			tablicaCzastek[i].X = tempRef.X;
 			tablicaCzastek[i].Y = tempRef.Y;
 
@@ -1260,7 +1275,7 @@ int main99(int argc, char* argv[])
 int main(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
-	char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
+	char* IPPart = "192.168.2.100"; //przerobic aby bral lokalny adres z robota
 //	char* IPPart = "192.168.56.1"; //przerobic aby bral lokalny adres z robota
 	UdpClient clientParticle(IPPart,1234,9000);
 	string diagnostic;
@@ -1286,7 +1301,8 @@ int main(int argc, char* argv[])
 	Particle* tablicaCzastek = new Particle[ILOSC_CZASTEK];
 	int iloscCzastekDoUsuniacia = 0;
 
-	RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,ILOSC_CZASTEK); //InitTablicaCzastek(tablicaCzastek,bBox,countRoomAndBox,10);
+	//RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,ILOSC_CZASTEK); //
+	InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox,10);
 
 	SendParticle(&diagnostic,tablicaCzastek,&size);
 	wys = diagnostic.c_str();
@@ -1337,7 +1353,8 @@ int main(int argc, char* argv[])
 		speedRoboClaw = roboClaw->GetSpeed(); //droga w metrach
 		angleRoboClaw = roboClaw->GetAngle(deletaTime);
 
-		//printf("Czas: %e Kat: %e\n", deletaTime,angleRoboClaw);
+		//if(speedRoboClaw != 0) // licz gdy robot sie porusza
+		{
 
 		for (int i = 0; i < ILOSC_CZASTEK; i++)
 		{
@@ -1352,7 +1369,7 @@ int main(int argc, char* argv[])
 
 			tablicaCzastek[i].UpdateCountProbability3(currentRoom, skaner->GetDistances(),skaner->GetAngles(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
 
-/*			if(tablicaCzastek[i].sMarkToDelete > GENERATION)
+			/*if(tablicaCzastek[i].sMarkToDelete > GENERATION)
 				iloscCzastekDoUsuniacia++;
 			else
 			{*/
@@ -1394,8 +1411,8 @@ int main(int argc, char* argv[])
 		size = diagnostic.size();
 		clientParticle.Send(wys,size);
 
-		//iloscCzastekDoUsuniacia /= 2;
-		//UsunWylosujNoweCzastki2(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
+		iloscCzastekDoUsuniacia /= 2;
+		UsunWylosujNoweCzastki2(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
 		iloscCzastekDoUsuniacia = 0;
 
 		SendParticle(&diagnostic,tablicaCzastek,&size);
@@ -1410,6 +1427,7 @@ int main(int argc, char* argv[])
 
 		printf("Czas:%f[s]\n",deletaTime);
 		fflush(NULL);
+		}
 	}
 	return 0;
 }

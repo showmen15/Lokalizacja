@@ -144,6 +144,17 @@ public:
 		sMarkToDelete = 0;
 	}
 
+	inline void Losuj33(double maxX,double maxY) //Generuj czastke w sasiedztwie innej czastki
+	{
+			X =  fRand(0,maxX);
+			Y = fRand(0,maxY);
+
+			Alfa =  fRand(0,360); // //kat ograniczony do 360 stopni
+			AlfaStopnie = Alfa * (180 / M_PI);
+			Probability = 0.0;
+			sMarkToDelete = 0;
+	}
+
 	inline void LosujSasiada(double X0,double Y0, double alfa) //Generuj czastke w sasiedztwie innej czastki
 	{
 		double t = fRand(0,360);  //kat ograniczony do 360 stopni
