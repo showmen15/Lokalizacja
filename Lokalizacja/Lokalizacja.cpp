@@ -37,7 +37,7 @@
 //#define ILOSC_POMIAROW_SCENNER 10
 #define ILOSC_CZASTEK 104
 //#define THRESHILD 1.222
-#define EPSILON 0.87
+#define EPSILON 0.81
 #define GENERATION 1
 #define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 10
 #define TEST 1
@@ -56,8 +56,8 @@ void InitTablicaCzastekLosowo(Particle *tablica,BoundingBox* bBox,int countBox,d
 {
 	for (int i = 0, j = 0; i < ILOSC_CZASTEK; i++, j++)
 	{
-		Particle temp(0,3,0,5,5);
-		temp.Losuj33(3,5);
+		Particle temp(0,36,0,51,5);
+		temp.Losuj33(36,51);
 
 		tablica[i] = temp;
 
@@ -1275,7 +1275,7 @@ int main99(int argc, char* argv[])
 int main(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
-	char* IPPart = "192.168.2.100"; //przerobic aby bral lokalny adres z robota
+	char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
 //	char* IPPart = "192.168.56.1"; //przerobic aby bral lokalny adres z robota
 	UdpClient clientParticle(IPPart,1234,9000);
 	string diagnostic;
@@ -1296,7 +1296,8 @@ int main(int argc, char* argv[])
 
 	//countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//2ndFloor-rooms.roson",bBox,rooms);
 	//countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//lab.roson",bBox,rooms);
-	countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//labNowe.roson",bBox,rooms);
+	//countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//labNowe.roson",bBox,rooms);
+	countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//labNowe2.roson",bBox,rooms);
 
 	Particle* tablicaCzastek = new Particle[ILOSC_CZASTEK];
 	int iloscCzastekDoUsuniacia = 0;
