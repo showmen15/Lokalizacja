@@ -1275,7 +1275,7 @@ int main99(int argc, char* argv[])
 int main(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
-	char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
+	char* IPPart = "192.168.2.100"; //przerobic aby bral lokalny adres z robota
 //	char* IPPart = "192.168.56.1"; //przerobic aby bral lokalny adres z robota
 	UdpClient clientParticle(IPPart,1234,9000);
 	string diagnostic;
@@ -1297,13 +1297,25 @@ int main(int argc, char* argv[])
 	//countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//2ndFloor-rooms.roson",bBox,rooms);
 	//countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//lab.roson",bBox,rooms);
 	//countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//labNowe.roson",bBox,rooms);
-	countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//labNowe2.roson",bBox,rooms);
+	//countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//labNowe2.roson",bBox,rooms);
+	countRoomAndBox = parseJasonFile("/home/szsz//git//Lokalizacja//Lokalizacja//Debug//labNowe2.roson",bBox,rooms);
 
 	Particle* tablicaCzastek = new Particle[ILOSC_CZASTEK];
 	int iloscCzastekDoUsuniacia = 0;
 
-	//RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,ILOSC_CZASTEK); //
-	InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox,10);
+	RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,ILOSC_CZASTEK); //
+	//InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox,10);
+
+	/*int qqq = rooms[7].ContainerWallCount();
+
+	for(int i = 0; i < qqq; i++)
+	{
+		printf("%s\n",rooms[7].ContainerWall[i].Id.c_str());
+
+		fflush(NULL);
+	}
+*/
+
 
 	SendParticle(&diagnostic,tablicaCzastek,&size);
 	wys = diagnostic.c_str();

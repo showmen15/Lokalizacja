@@ -5,7 +5,7 @@
 //#include "UdpClientLinux.h"
 
 #include <stdio.h>
-#define PRZLIECZENIE_DLA_POMIARU_SKANERA 2
+#define PRZLIECZENIE_DLA_POMIARU_SKANERA 1
 
 
 class HokuyoProxy 
