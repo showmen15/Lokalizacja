@@ -78,7 +78,11 @@ public :
 
 	void Calculate()
 	{
-		if(From_X == To_X)
+		A = (From_Y - To_Y);
+		B = (To_X - From_X);
+		C = (From_X * To_Y) - (From_Y * To_X);
+
+		/*if(From_X == To_X)
 		{
 			A = 1;
 			B = 0;
@@ -97,7 +101,7 @@ public :
 			C = ((From_X * To_Y) - (To_X * From_Y)) / (From_X - To_X);
 		}
 
-		
+		*/
 		
 		//w = (To_X * From_Y  - From_X  * To_Y);
 		//wa = To_Y - From_Y;

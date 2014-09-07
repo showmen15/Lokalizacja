@@ -65,11 +65,17 @@ void HokuyoProxy::GetScan()
 	
 	for(int i = 0,index = 0; i < ScanLengthAll;i += PRZLIECZENIE_DLA_POMIARU_SKANERA,index++)
 	{
-		angles[index] = tmp_scan->angles(i);
+		//angles[index] = tmp_scan->angles(i);
+		angles[index] =  ConvertToRadian(tmp_scan->angles(i));
 		distances[index] = tmp_scan->distances(i);
 
 		ScanLength = index;
 	}
+}
+
+inline double HokuyoProxy::ConvertToRadian(double degree)
+{
+	return ((degree * M_PI) / 180);
 }
 
 /*

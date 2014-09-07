@@ -37,7 +37,7 @@ private:
 	double rMAX;
 
 
-	double alfaNew;
+	double alfaNew; //zmienna pomocnicza
 	double d;
 public:	
 
@@ -72,7 +72,7 @@ public:
 	double X;
 	double Y;
 	double Alfa;
-	double AlfaStopnie;
+	//double AlfaStopnie;
 	double Probability;
 
 	short sMarkToDelete;
@@ -109,7 +109,7 @@ public:
 		#endif
 
 		Alfa = fRand(0,2 * M_PI);
-		AlfaStopnie = Alfa * (180 / M_PI);;
+		//AlfaStopnie = Alfa * (180 / M_PI);;
 		Probability = 0.0;
 		sMarkToDelete = 0;
 	}
@@ -150,7 +150,7 @@ public:
 			Y = fRand(0,maxY);
 
 			Alfa =  fRand(0,360); // //kat ograniczony do 360 stopni
-			AlfaStopnie = Alfa * (180 / M_PI);
+			//AlfaStopnie = Alfa * (180 / M_PI);
 			Probability = 0.0;
 			sMarkToDelete = 0;
 	}
@@ -178,7 +178,7 @@ public:
 		#endif
 
 		Alfa =  alfa; // //kat ograniczony do 360 stopni
-		AlfaStopnie = Alfa * (180 / M_PI);
+		//AlfaStopnie = Alfa * (180 / M_PI);
 		Probability = 0.0;
 		sMarkToDelete = 0;
 	}
@@ -202,7 +202,7 @@ public:
 		bool result = false;
 		double Y = YPrzeciecia - YCzastki;
 
-		if((Alfa_Czastki >= 0) && (Alfa_Czastki <= 180))
+		if((Alfa_Czastki >= 0) && (Alfa_Czastki <= M_PI))
 		{
 			if(Y > 0)
 				result = true;
@@ -215,6 +215,21 @@ public:
 
 		return result;
 	}
+
+inline void getLine(double X,double Y,double alfa,double *A,double *B,double *C)
+{
+	//double a2 = - tan( alfa);
+		//double b2 = 1;
+	 	//double c2 =  Y2 + (a2 * X2);
+
+	/*(*A) = - tan(alfa);
+	(*B) = 1;
+	(*C) = (Y + ((*A) * X));
+*/
+	(*A) = tan(alfa);
+	(*B) = -1;
+	(*C) = (Y - ((*A) * X));
+}
 
 
 inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
@@ -230,9 +245,31 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 	double b1 = wall->B;
 	double c1 = wall->C;
 
-	double a2 = - tan( (alfa * M_PI) / 180.0);
-	double b2 = 1;
- 	double c2 =  Y2 + (a2 * X2);
+	//double a2 = - tan( (alfa * M_PI) / 180.0);
+	//double a2 = - tan( alfa);
+	//double b2 = 1;
+ 	//double c2 =  Y2 + (a2 * X2);
+	double a2,b2,c2;
+	double prawie_zero;
+
+	getLine(X2,Y2,alfa,&a2,&b2,&c2);
+
+	prawie_zero = (X2 * a2 + Y2 * b2 + c2);
+
+	if( (prawie_zero) >  0.0001)
+		prawie_zero = 0.0;
+
+
+	double prawie_zeroDlasciany = (a1 * wall->From_X + b1 * wall->From_Y + c1);
+
+	if(prawie_zeroDlasciany > 0.0001)
+		prawie_zeroDlasciany = 0.0;
+
+	prawie_zeroDlasciany = (a1 * wall->To_X + b1 * wall->To_Y + c1);
+
+	if(prawie_zeroDlasciany > 0.0001)
+			prawie_zeroDlasciany = 0.0;
+
 
 	W = a1 * b2 - b1 * a2;
 	
@@ -243,6 +280,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 
 		X = Wx / W;
 		Y = Wy / W;
+
 
 		if(canCountDistanceToWall(alfa,Y2,Y) && (wall->From_X <= X) && (X <= wall->To_X) && (wall->From_Y <= Y) && (Y <= wall->To_Y))
 			dist = sqrt(pow(X - X2 ,2) + pow( Y - Y2,2)); //wartosc oczekiwana
@@ -276,7 +314,10 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 
 		inline double Normalize(double value,double min,double max) //normalizacja min max
 		{
-			return (((value - min) * (NEW_MAX - NEW_MIN)) / (max - min)) + NEW_MIN;
+			if(max > 0)
+				return (((value - min) * (NEW_MAX - NEW_MIN)) / (max - min)) + NEW_MIN;
+			else
+				return 0;
 		}
 
 		inline bool canCountDistance1 (MazeWall *wall,double X2,double Y2, double alfaMin, double alfaMax)
@@ -353,7 +394,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 				test++;
 
 				tablicaOdleglosci[i] = -1;
-				tablicaKatow[i] = angleTable[i];
+				tablicaKatow[i] = this->Alfa + angleTable[i];
 				tablicaSkan[i] = (((double) scanTable[i]) / 1000);
 				tablicaGauss[i] = -1;
 
@@ -361,7 +402,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 				{
 
 					//if(canCountDistance(&box->ContainerWallTable[j],this->X,this->Y,this->AlfaStopnie + angleTable[i],this->AlfaStopnie + angleTable[0],this->AlfaStopnie + angleTable[length -1]))
-						dist =  getDistnace(&box->ContainerWallTable[j],this->AlfaStopnie + angleTable[i],this->X,this->Y); //wartosc oczekiwana
+						dist =  getDistnace(&box->ContainerWallTable[j],this->Alfa + angleTable[i],this->X,this->Y); //wartosc oczekiwana
 					//else
 					//	dist = -1;
 
@@ -399,7 +440,6 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 			}
 
 			fflush(NULL);
-
 
 			double yy = ((double) ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa) * Gauss2(1,1);
 			Probability =  Normalize(sumProbability,0,yy);  //(sumProbability / index);  /// (length / PRZLIECZENIE_DLA_POMIARU_SKANERA)); //sumProbability

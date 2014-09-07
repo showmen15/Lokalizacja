@@ -37,7 +37,7 @@
 //#define ILOSC_POMIAROW_SCENNER 10
 #define ILOSC_CZASTEK 104
 //#define THRESHILD 1.222
-#define EPSILON 0.81
+#define EPSILON 0.92
 #define GENERATION 1
 #define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 10
 #define TEST 1
@@ -532,7 +532,7 @@ void RozmiescCzastki(BoundingBox* bBox,unsigned int BoundingBoxCount,Particle* t
 	tempRef.X = 0.3;
 	tempRef.Y = 0.2;
 	tempRef.Alfa = M_PI / 2;
-	tempRef.AlfaStopnie = 90;
+	//tempRef.AlfaStopnie = 90;
 	double przesuniecie = 0.0;
 
 
@@ -555,7 +555,7 @@ void RozmiescCzastki(BoundingBox* bBox,unsigned int BoundingBoxCount,Particle* t
 			tablicaCzastek[i].Y = tempRef.Y;
 
 			tablicaCzastek[i].Alfa = tempRef.Alfa;
-			tablicaCzastek[i].AlfaStopnie = tempRef.AlfaStopnie;
+			//tablicaCzastek[i].AlfaStopnie = tempRef.AlfaStopnie;
 			tablicaCzastek[i].Probability = 0.0;
 			i++;
 			przesuniecie = 0.4;
@@ -958,7 +958,7 @@ int main55(int argc, char* argv[])
 	tablicaCzastek[0].X = 0.7;
 	tablicaCzastek[0].Y = 3.4;
 	//tablicaCzastek[0].Alfa = 4,7123;
-	tablicaCzastek[0].AlfaStopnie = -90.01;
+	//tablicaCzastek[0].AlfaStopnie = -90.01;
 
 	time_t dtime = 0;
 	double deletaTime;
@@ -1275,7 +1275,7 @@ int main99(int argc, char* argv[])
 int main(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
-	char* IPPart = "192.168.2.100"; //przerobic aby bral lokalny adres z robota
+	char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
 //	char* IPPart = "192.168.56.1"; //przerobic aby bral lokalny adres z robota
 	UdpClient clientParticle(IPPart,1234,9000);
 	string diagnostic;
@@ -1409,6 +1409,8 @@ int main(int argc, char* argv[])
 		//		fflush(NULL);
 
 		//	}
+
+				printf("Propability: %f\n",tablicaCzastek[i].Probability);
 		}
 
 		SendParticle(&diagnostic,tablicaCzastek,&size);
@@ -1424,8 +1426,8 @@ int main(int argc, char* argv[])
 		size = diagnostic.size();
 		clientParticle.Send(wys,size);
 
-		iloscCzastekDoUsuniacia /= 2;
-		UsunWylosujNoweCzastki2(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
+		//iloscCzastekDoUsuniacia /= 2;
+	//	UsunWylosujNoweCzastki2(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
 		iloscCzastekDoUsuniacia = 0;
 
 		SendParticle(&diagnostic,tablicaCzastek,&size);
