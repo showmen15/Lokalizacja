@@ -37,7 +37,7 @@
 //#define ILOSC_POMIAROW_SCENNER 10
 #define ILOSC_CZASTEK 104
 //#define THRESHILD 1.222
-#define EPSILON 0.92
+#define EPSILON 0.96
 #define GENERATION 1
 #define ILOSC_LOSOWANYCH_NOWYCH_CZASTEK 10
 #define TEST 1
@@ -220,6 +220,7 @@ void UsunWylosujNoweCzastki(Particle* tablicaCzastek,int length,int iloscCzastek
 
 void UsunWylosujNoweCzastki2(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniecia,BoundingBox* bBox,unsigned int BoundingBoxCount)
 {
+
 	iloscCzastekDoUsuniecia = 0;
 
 	for(int i = 0; i < length;i++)
@@ -232,7 +233,10 @@ void UsunWylosujNoweCzastki2(Particle* tablicaCzastek,int length,int iloscCzaste
 	{
 
 	if(iloscCzastekDoUsuniecia == length)
+	{
 			iloscCzastekDoUsuniecia--;
+			InitTablicaCzastekLosowo(tablicaCzastek,bBox,BoundingBoxCount,10);
+	}
 
 		int zakres = length - iloscCzastekDoUsuniecia;
 
@@ -1303,8 +1307,8 @@ int main(int argc, char* argv[])
 	Particle* tablicaCzastek = new Particle[ILOSC_CZASTEK];
 	int iloscCzastekDoUsuniacia = 0;
 
-	RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,ILOSC_CZASTEK); //
-	//InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox,10);
+	//RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,ILOSC_CZASTEK); //
+	InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox,10);
 
 	/*int qqq = rooms[7].ContainerWallCount();
 
@@ -1426,8 +1430,8 @@ int main(int argc, char* argv[])
 		size = diagnostic.size();
 		clientParticle.Send(wys,size);
 
-		//iloscCzastekDoUsuniacia /= 2;
-	//	UsunWylosujNoweCzastki2(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
+		iloscCzastekDoUsuniacia /= 2;
+		UsunWylosujNoweCzastki2(tablicaCzastek,ILOSC_CZASTEK,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
 		iloscCzastekDoUsuniacia = 0;
 
 		SendParticle(&diagnostic,tablicaCzastek,&size);

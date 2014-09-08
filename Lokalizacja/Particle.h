@@ -275,8 +275,11 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 	
 	if(W != 0)
 	{
-		Wx = c1 * b2 - b1 * c2;
-		Wy = a1 * c2 - c1 * a2;
+		//Wx = c1 * b2 - b1 * c2;
+		//Wy = a1 * c2 - c1 * a2;
+
+		Wx =  b1 * c2 - c1 * b2;
+		Wy = c1 * a2 - a1 * c2;
 
 		X = Wx / W;
 		Y = Wy / W;
@@ -434,10 +437,10 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 			}
 
 
-			for(int i = 0; i < length;i++)
+			/*for(int i = 0; i < length;i++)
 			{
 				printf("ID: %d Obliczone: %f Kat: %f Skan: %f Gaus: %fSciana: %s\n",i, tablicaOdleglosci[i],tablicaKatow[i],tablicaSkan[i],tablicaGauss[i],tablicaScien[i].c_str());
-			}
+			}*/
 
 			fflush(NULL);
 
