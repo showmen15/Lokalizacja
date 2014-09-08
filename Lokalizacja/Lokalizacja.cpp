@@ -1307,8 +1307,8 @@ int main(int argc, char* argv[])
 	Particle* tablicaCzastek = new Particle[ILOSC_CZASTEK];
 	int iloscCzastekDoUsuniacia = 0;
 
-	//RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,ILOSC_CZASTEK); //
-	InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox,10);
+	RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,ILOSC_CZASTEK); //
+	//InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox,10);
 
 	/*int qqq = rooms[7].ContainerWallCount();
 
