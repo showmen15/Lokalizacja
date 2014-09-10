@@ -1,4 +1,5 @@
 #include "UdpClientLinux.h"
+#define TIMEOUT_MS      1     /* Seconds between retransmits */
 
 
 UdpClient::UdpClient(char* sIP,unsigned short portNo,unsigned int bufforSize)
@@ -18,6 +19,13 @@ UdpClient::UdpClient(char* sIP,unsigned short portNo,unsigned int bufforSize)
     server.sin_family = AF_INET;
     server.sin_port = htons(port);
     server.sin_addr = *((struct in_addr*) host->h_addr);
+
+    //set timer for recv_socket
+
+   /* static int timeout = TIMEOUT_MS;
+
+    setsockopt(s, SOL_SOCKET, SO_RCVTIMEO,(char*)&timeout,sizeof(timeout));
+    */
 }
 
 UdpClient::~UdpClient()

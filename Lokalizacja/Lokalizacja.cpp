@@ -95,9 +95,9 @@ void InitTablicaCzastek(Particle *tablica,BoundingBox* bBox,int countBox,double 
 	}
 }
 
-void SendBox(BoundingBox* bBox, int BoundingBoxCount)
+void SendBox(char  *sIP, BoundingBox* bBox, int BoundingBoxCount)
 {
- char* sIP = "127.0.0.1";
+ //char* sIP = "127.0.0.1";
 	UdpClient client(sIP,5555,9000);
 	stringstream temp;
 	string tmp;
@@ -1279,7 +1279,7 @@ int main99(int argc, char* argv[])
 int main(int argc, char* argv[])
 {
 	/////// Diagnostic ////////////////
-	char* IPPart = "192.168.2.101"; //przerobic aby bral lokalny adres z robota
+	char* IPPart = "192.168.2.100"; //przerobic aby bral lokalny adres z robota
 //	char* IPPart = "192.168.56.1"; //przerobic aby bral lokalny adres z robota
 	UdpClient clientParticle(IPPart,1234,9000);
 	string diagnostic;
@@ -1302,13 +1302,16 @@ int main(int argc, char* argv[])
 	//countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//lab.roson",bBox,rooms);
 	//countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//labNowe.roson",bBox,rooms);
 	//countRoomAndBox = parseJasonFile("/home/ubuntu//git//Lokalizacja//Lokalizacja//Debug//labNowe2.roson",bBox,rooms);
-	countRoomAndBox = parseJasonFile("/home/szsz//git//Lokalizacja//Lokalizacja//Debug//labNowe2.roson",bBox,rooms);
+	countRoomAndBox = parseJasonFile("/home/szsz//git//Lokalizacja//Lokalizacja//Debug//labNowe3.roson",bBox,rooms);
+
+
+	//SendBox(IPPart,bBox,countRoomAndBox); //show BB
 
 	Particle* tablicaCzastek = new Particle[ILOSC_CZASTEK];
 	int iloscCzastekDoUsuniacia = 0;
 
-	RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,ILOSC_CZASTEK); //
-	//InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox,10);
+	//RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,ILOSC_CZASTEK); //
+	InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox,10);
 
 	/*int qqq = rooms[7].ContainerWallCount();
 
@@ -1414,7 +1417,7 @@ int main(int argc, char* argv[])
 
 		//	}
 
-				printf("Propability: %f\n",tablicaCzastek[i].Probability);
+				//printf("Propability: %f\n",tablicaCzastek[i].Probability);
 		}
 
 		SendParticle(&diagnostic,tablicaCzastek,&size);

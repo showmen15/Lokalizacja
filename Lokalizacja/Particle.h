@@ -437,10 +437,10 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 			}
 
 
-			/*for(int i = 0; i < length;i++)
+			for(int i = 0; i < length;i++)
 			{
 				printf("ID: %d Obliczone: %f Kat: %f Skan: %f Gaus: %fSciana: %s\n",i, tablicaOdleglosci[i],tablicaKatow[i],tablicaSkan[i],tablicaGauss[i],tablicaScien[i].c_str());
-			}*/
+			}
 
 			fflush(NULL);
 
