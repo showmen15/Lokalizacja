@@ -1,8 +1,10 @@
-#include <stdio.h>
-#include <sstream>
-#include <math.h>
-#include <iostream>
-#include <stdlib.h>
+//#include <stdio.h>
+//#include <sstream>
+//#include <math.h>
+#include <cmath>
+#include <algorithm>
+//#include <iostream>
+//#include <stdlib.h>
 
 #define TEST 1
 #define PROMIEN 0.1
@@ -26,7 +28,7 @@ struct Point
 };
 
 
-struct Particle 
+class Particle
 {
 private:
 	double MinX;
@@ -39,14 +41,24 @@ private:
 
 	double alfaNew; //zmienna pomocnicza
 	double d;
+
+	double maxX;
+	double maxY;
+
 public:	
 
 	Particle()
-	{
+{
 
+}
+
+	Particle(double xMax,double yMax)
+	{
+		maxX = xMax;
+		maxY = yMax;
 	}
 
-	Particle(double dMinX,double dMaxX,double dMinY, double dMaxY,double dRMAX)
+	/*Particle(double dMinX,double dMaxX,double dMinY, double dMaxY,double dRMAX)
 	{
 		MinX = dMinX;
 		MaxX = dMaxX;
@@ -56,7 +68,7 @@ public:
 		MaxRadius = 360;
 
 		Losuj2();
-	}
+	}*/
 
 
 	Particle(double dMaxX,double dMaxY,double dRMAX)
@@ -144,21 +156,29 @@ public:
 		sMarkToDelete = 0;
 	}
 
-	inline void Losuj33(double maxX,double maxY) //Generuj czastke w sasiedztwie innej czastki
+	//ok
+	/*inline void Losuj33(double maxX,double maxY) //Generuj czastke losowa na mapie
 	{
 			X =  fRand(0,maxX);
 			Y = fRand(0,maxY);
-
-			Alfa =  fRand(0,360); // //kat ograniczony do 360 stopni
-			//AlfaStopnie = Alfa * (180 / M_PI);
+			Alfa =  fRand(0,2 * M_PI);
 			Probability = 0.0;
 			sMarkToDelete = 0;
-	}
+	}*/
+
+	inline void Losuj22() //Generuj czastke losowa na mapie
+		{
+				X =  fRand(0,maxX);
+				Y = fRand(0,maxY);
+				Alfa =  fRand(0,2 * M_PI);
+				Probability = 0.0;
+				sMarkToDelete = 0;
+		}
 
 	inline void LosujSasiada(double X0,double Y0, double alfa) //Generuj czastke w sasiedztwie innej czastki
 	{
-		double t = fRand(0,360);  //kat ograniczony do 360 stopni
-		double R1 =  fRand(0,PROMIEN);  //kat ograniczony do 360 stopni
+		double t = fRand(0,2 * M_PI);
+		double R1 =  fRand(0,PROMIEN);
 
 		X =  X0 + R1 * cos(t);
 		Y = Y0 + R1 * sin(t);
@@ -169,16 +189,15 @@ public:
 		if(Y < 0)
 			Y *= -1;
 
-		#if TEST == 1
+#if DIAGNOSTIC == 1
 			if(X < 0)
 				printf("LosujPozycje X UJEMNE,%e",X);
 			if(Y < 0)
 				printf("LosujPozycje Y UJEMNE,%e",Y);
 			fflush(NULL);
-		#endif
+#endif
 
-		Alfa =  alfa; // //kat ograniczony do 360 stopni
-		//AlfaStopnie = Alfa * (180 / M_PI);
+		Alfa =  alfa;
 		Probability = 0.0;
 		sMarkToDelete = 0;
 	}
