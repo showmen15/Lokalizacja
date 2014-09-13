@@ -42,8 +42,8 @@ Location::~Location()
 
 void Location::RunLocation()
 {
-	//RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,NumberParticles);
-	InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox);
+	RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,NumberParticles);
+	//InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox);
 
 #if DIAGNOSTIC == 1
 	SendParticle(&diagnostic,tablicaCzastek,&size);
@@ -73,7 +73,7 @@ void Location::RunLocation()
 		speedRoboClaw = roboClaw->GetSpeed(); //droga w metrach
 		angleRoboClaw = roboClaw->GetAngle(deletaTime);
 
-		for (int i = 0; i < NumberParticles; i++)
+		for (unsigned int i = 0; i < NumberParticles; i++)
 		{
 			currentRoom = GetRoom(rooms,countRoomAndBox,tablicaCzastek[i].X,tablicaCzastek[i].Y); //pobranie informacji w ktrorym BB jest czastka
 
@@ -84,7 +84,7 @@ void Location::RunLocation()
 				continue;
 			}
 
-			tablicaCzastek[i].UpdateCountProbability3(currentRoom, skaner->GetDistances(),skaner->GetAngles(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
+			tablicaCzastek[i].UpdateCountProbability4(currentRoom, skaner->GetDistances(),skaner->GetAngles(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
 
 			/*if(tablicaCzastek[i].sMarkToDelete > GENERATION)
 			iloscCzastekDoUsuniacia++;
@@ -119,7 +119,7 @@ void Location::RunLocation()
 #endif
 
 		//iloscCzastekDoUsuniacia /= 2;
-		UsunWylosujNoweCzastki2(tablicaCzastek,NumberParticles,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
+		//UsunWylosujNoweCzastki2(tablicaCzastek,NumberParticles,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
 		iloscCzastekDoUsuniacia = 0;
 
 #if DIAGNOSTIC == 1

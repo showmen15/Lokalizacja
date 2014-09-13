@@ -6,11 +6,11 @@
 #include <stdlib.h>
 #include "cJSON.h"
 
-#include <stdio.h>
 #include <string.h>
 #include <string>
 #include <vector>
 #include <float.h>
+#include <math.h>
 
 using std::string;
 using namespace std;
@@ -79,39 +79,13 @@ public :
 	void Calculate()
 	{
 		A = (From_Y - To_Y);
+		A = round(A * 10000) / 10000;
+
 		B = (To_X - From_X);
-		C = (From_X * To_Y) - (From_Y * To_X);
+		B = round(B * 10000) / 10000;
 
-		/*if(From_X == To_X)
-		{
-			A = 1;
-			B = 0;
-			C = From_X;
-		}
-		else if(From_Y == To_Y)
-		{
-			A = 0;
-			B = 1;
-			C = From_Y;
-		}
-		else
-		{
-			A = (From_Y - To_Y) / (From_X - To_X);
-			B =  -1;
-			C = ((From_X * To_Y) - (To_X * From_Y)) / (From_X - To_X);
-		}
-
-		*/
-		
-		//w = (To_X * From_Y  - From_X  * To_Y);
-		//wa = To_Y - From_Y;
-		//wb = To_X - From_X;
-
-		//if(w == 0)
-		//	;
-
-		//A = wa / w;
-		//B = wb / w;
+		C =  (From_X * To_Y) - (From_Y * To_X);
+ 		C = round(C * 10000) / 10000;
 	}
 };
 

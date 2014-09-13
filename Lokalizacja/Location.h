@@ -5,17 +5,20 @@
 #include <unistd.h>
 #include <sstream>
 
+#include "common.h"
 
 #include "Proxy/UdpClientLinux.h"
 #include "Proxy/HokuyoProxy.h"
 #include "Proxy/RoboclawProxy.h"
 #include "Proxy/LocationProxy.h"
+
 #include "BoundingBox.h"
 #include "Particle.h"
 
+
 #define M_PI 3.14159265358979323846
 
-#define DIAGNOSTIC 1
+//#define DIAGNOSTIC 1
 
 using namespace std;
 
