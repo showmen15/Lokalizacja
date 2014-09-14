@@ -8,12 +8,12 @@ Location::Location(char* mapPath,unsigned int numberParticles,double epsilon,int
 	clientParticle = new UdpClient(IPPart,1234,9000); //wizualizacja
 #endif
 
-	amberUdp = "192.168.2.202"; //przerobic aby bral lokalny adres z robota
+	amberUdp = "192.168.2.202";  //getRobotIPAdress(); //przerobic aby bral lokalny adres z robota
 	clinetAmber = new UdpClient(amberUdp,26233,9000);
 
 	srand(10);
 
-	countRoomAndBox = parseJasonFile(mapPath,bBox,rooms);
+	//countRoomAndBox = parseJasonFile(mapPath,bBox,rooms);
 
 	NumberParticles = numberParticles;
 	tablicaCzastek = new Particle[NumberParticles];
@@ -292,3 +292,24 @@ int f = rand() % fMax;
 //f /= RAND_MAX;
 return f; // fMin + f * (fMax - fMin);
 }
+
+char* Location::getRobotIPAdress()
+{
+	int fd;
+	struct ifreq ifr;
+
+	fd = socket(AF_INET, SOCK_DGRAM, 0);
+
+	 /* I want to get an IPv4 IP address */
+	 ifr.ifr_addr.sa_family = AF_INET;
+
+	 /* I want IP address attached to "eth0" */
+	 strncpy(ifr.ifr_name, "eth0", IFNAMSIZ-1);
+
+	 ioctl(fd, SIOCGIFADDR, &ifr);
+
+	 close(fd);
+
+	 return inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr);
+}
+

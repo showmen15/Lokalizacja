@@ -1,7 +1,6 @@
 
 #include "Location.h"
 
-
 int main(int argc, char* argv[])
 {
 	char* mapPath = "/home/szsz//git//Lokalizacja//Lokalizacja//Debug//labNowe3.roson";

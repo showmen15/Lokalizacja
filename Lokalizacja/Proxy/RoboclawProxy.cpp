@@ -97,8 +97,12 @@ double RoboclawProxy::GetSpeed()
 
 	do
 	{
-	udp->Send(requestScan,requestScanLength);
-	packetBytes = udp->Receive();
+		do
+		{
+			udp->Send(requestScan,requestScanLength);
+			packetBytes = udp->Receive();
+		}
+		while(udp->n < 0);
 	
 	currentSpeed = motorsSpeedRequest(packetBytes);
 	

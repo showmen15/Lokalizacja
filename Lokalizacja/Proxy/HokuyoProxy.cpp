@@ -24,8 +24,12 @@ HokuyoProxy::HokuyoProxy(UdpClient *client_udp)
 	char *packetBytes;
 	amber::hokuyo_proto::Scan* tmp_scan;
 	
-	udp->Send(requestScan,requestScanLength);
-	packetBytes = udp->Receive();
+	do
+	{
+		udp->Send(requestScan,requestScanLength);
+		packetBytes = udp->Receive();
+	}
+	while(udp->n < 0);
 	
 	tmp_scan = scanRequest(packetBytes);
 	
@@ -58,8 +62,12 @@ void HokuyoProxy::GetScan()
 	char *packetBytes;
 	amber::hokuyo_proto::Scan* tmp_scan;
 
-	udp->Send(requestScan,requestScanLength);
-	packetBytes = udp->Receive();
+	do
+	{
+		udp->Send(requestScan,requestScanLength);
+		packetBytes = udp->Receive();
+	}
+	while(udp->n < 0);
 	
 	tmp_scan = scanRequest(packetBytes);
 	

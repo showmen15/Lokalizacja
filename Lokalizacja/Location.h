@@ -5,6 +5,12 @@
 #include <unistd.h>
 #include <sstream>
 
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <net/if.h>
+
 #include "common.h"
 
 #include "Proxy/UdpClientLinux.h"
@@ -62,6 +68,8 @@ private:
 
 	void UsunWylosujNoweCzastki2(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniecia,BoundingBox* bBox,unsigned int BoundingBoxCount);
 	inline int wylosujBB(int fMin, int fMax);
+
+	char* getRobotIPAdress();
 
 	/////// Diagnostic ////////////////
 #if DIAGNOSTIC == 1

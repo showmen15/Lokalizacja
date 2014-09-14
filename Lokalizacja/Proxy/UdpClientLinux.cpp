@@ -20,12 +20,13 @@ UdpClient::UdpClient(char* sIP,unsigned short portNo,unsigned int bufforSize)
     server.sin_port = htons(port);
     server.sin_addr = *((struct in_addr*) host->h_addr);
 
-    //set timer for recv_socket
+    struct timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 100000;
 
-   /* static int timeout = TIMEOUT_MS;
+    if (setsockopt(s, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0)
+     	 err((char*)"Error timeout");
 
-    setsockopt(s, SOL_SOCKET, SO_RCVTIMEO,(char*)&timeout,sizeof(timeout));
-    */
 }
 
 UdpClient::~UdpClient()
