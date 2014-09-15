@@ -78,6 +78,16 @@ public:
 		Losuj();
 	}
 
+
+	//static const int nPlaces = 2;
+	static const double dbShift = 100; //pow(10.0,nPlaces);
+
+	inline double Round(double dbVal)
+	{
+	    return dbVal;
+		//return round(dbVal * dbShift) / dbShift;
+	}
+
 	double X;
 	double Y;
 	double Alfa;
@@ -243,12 +253,14 @@ inline void getLine(double X,double Y,double alfa,double *A,double *B,double *C)
 	(*C) = (Y + ((*A) * X));
 */
 	(*A) = tan(alfa);
-	(*A) = round((*A) * 10000) / 10000;
+	(*A) = Round(*A);
+	//(*A) = round((*A) * 10000) / 10000;
 
 	(*B) = -1;
 
 	(*C) = (Y - ((*A) * X));
-	(*C) = round((*C) * 10000) / 10000;
+	(*C) = Round((*C));
+	//(*C) = round((*C) * 10000) / 10000;
 
 }
 
@@ -298,9 +310,10 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 		X = Wx / W;
 		Y = Wy / W;
 
-
-		X = round(X * 100) / 100;
-		Y = round(Y * 100) / 100;
+		X = Round(X);
+		Y = Round(Y);
+		//X = round(X * 100) / 100;
+		//Y = round(Y * 100) / 100;
 
 		if(canCountDistanceToWall(alfa,Y2,Y))
 		{

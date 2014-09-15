@@ -13,7 +13,15 @@ Location::Location(char* mapPath,unsigned int numberParticles,double epsilon,int
 
 	srand(10);
 
-	//countRoomAndBox = parseJasonFile(mapPath,bBox,rooms);
+	countRoomAndBox = parseJasonFile(mapPath,bBox,rooms);
+
+	for(int i = 0; i <rooms[0].ContainerWallCount(); i++)
+	{
+
+	printf("%s\tA:%fB:%f\C:%fFrom_X:%fFrom_Y:%fTo_X:%f,To_Y:%f\n",rooms[0].ContainerWall[i].Id.c_str(),rooms[0].ContainerWall[i].A,rooms[0].ContainerWall[i].B,rooms[0].ContainerWall[i].C,
+			rooms[0].ContainerWall[i].From_X,rooms[0].ContainerWall[i].From_Y,rooms[0].ContainerWall[i].To_X,rooms[0].ContainerWall[i].To_Y);
+
+	}
 
 	NumberParticles = numberParticles;
 	tablicaCzastek = new Particle[NumberParticles];

@@ -11,6 +11,7 @@
 #include <vector>
 #include <float.h>
 #include <math.h>
+#include "common.h"
 
 using std::string;
 using namespace std;
@@ -76,16 +77,28 @@ public :
 	//	B = ((From_X * To_Y) - (To_X * From_Y)) / (From_X - To_X);
 	//}
 
+	//static const int nPlaces = 2;
+	static const double dbShift = 100;//pow(10.0,nPlaces);
+
+	inline double Round(double dbVal)
+	{
+	    return dbVal;
+		//return round(dbVal * dbShift) / dbShift;
+	}
+
 	void Calculate()
 	{
 		A = (From_Y - To_Y);
-		A = round(A * 10000) / 10000;
+		A = Round(A);
+		//A = round(A * 10000) / 10000;
 
 		B = (To_X - From_X);
-		B = round(B * 10000) / 10000;
+		B = Round(B);
+		//B = round(B * 10000) / 10000;
 
 		C =  (From_X * To_Y) - (From_Y * To_X);
- 		C = round(C * 10000) / 10000;
+ 		C = Round(C);
+		//C = round(C * 10000) / 10000;
 	}
 };
 
