@@ -88,15 +88,35 @@ public :
 
 	void Calculate()
 	{
+		if(From_Y ==  To_Y)
+		{
+			A = 0;
+			B = 1;
+			C = - From_Y;
+		}
+		else if(From_X ==  To_X)
+		{
+
+			A = 1;
+			B = 0;
+			C = - From_X;
+		}
+		else
+		{
+
 		A = (From_Y - To_Y);
-		A = Round(A);
-		//A = round(A * 10000) / 10000;
+
 
 		B = (To_X - From_X);
-		B = Round(B);
-		//B = round(B * 10000) / 10000;
+
 
 		C =  (From_X * To_Y) - (From_Y * To_X);
+		}
+
+		A = Round(A);
+		//A = round(A * 10000) / 10000;
+		B = Round(B);
+		//B = round(B * 10000) / 10000;
  		C = Round(C);
 		//C = round(C * 10000) / 10000;
 	}
