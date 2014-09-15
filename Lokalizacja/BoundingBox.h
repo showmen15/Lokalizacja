@@ -92,14 +92,14 @@ public :
 		{
 			A = 0;
 			B = 1;
-			C = - From_Y;
+			C = -1 * From_Y;
 		}
 		else if(From_X ==  To_X)
 		{
 
 			A = 1;
 			B = 0;
-			C = - From_X;
+			C = -1 *  From_X;
 		}
 		else
 		{
