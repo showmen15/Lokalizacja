@@ -516,7 +516,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 					for (int j = 0; j < iloscScian; j++)
 					{
 
-						printf("%s\n",(&box->ContainerWallTable[j])->Id.c_str());
+						//printf("%s\n",(&box->ContainerWallTable[j])->Id.c_str());
 
 						dist2 = getDistnace(&box->ContainerWallTable[j],this->Alfa + angleTable[i],this->X,this->Y);
 

@@ -21,7 +21,7 @@ UdpClient::UdpClient(char* sIP,unsigned short portNo,unsigned int bufforSize)
     server.sin_addr = *((struct in_addr*) host->h_addr);
 
     struct timeval tv;
-    tv.tv_sec = 0;
+    tv.tv_sec = 2;
     tv.tv_usec = 100000;
 
     if (setsockopt(s, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0)

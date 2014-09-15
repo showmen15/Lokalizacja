@@ -4,7 +4,7 @@
 Location::Location(char* mapPath,unsigned int numberParticles,double epsilon,int generation,unsigned int ilosc_losowanych_nowych_czastek)
 {
 #if DIAGNOSTIC == 1
-	IPPart = "192.168.2.101"; //wizualizacja
+	IPPart = "192.168.2.104"; //wizualizacja
 	clientParticle = new UdpClient(IPPart,1234,9000); //wizualizacja
 #endif
 
@@ -15,13 +15,13 @@ Location::Location(char* mapPath,unsigned int numberParticles,double epsilon,int
 
 	countRoomAndBox = parseJasonFile(mapPath,bBox,rooms);
 
-	for(int i = 0; i <rooms[0].ContainerWallCount(); i++)
+	/*for(int i = 0; i <rooms[0].ContainerWallCount(); i++)
 	{
 
 	printf("%s\tA:%fB:%f\C:%fFrom_X:%fFrom_Y:%fTo_X:%f,To_Y:%f\n",rooms[0].ContainerWall[i].Id.c_str(),rooms[0].ContainerWall[i].A,rooms[0].ContainerWall[i].B,rooms[0].ContainerWall[i].C,
 			rooms[0].ContainerWall[i].From_X,rooms[0].ContainerWall[i].From_Y,rooms[0].ContainerWall[i].To_X,rooms[0].ContainerWall[i].To_Y);
 
-	}
+	}*/
 
 	NumberParticles = numberParticles;
 	tablicaCzastek = new Particle[NumberParticles];
@@ -116,7 +116,7 @@ void Location::RunLocation()
 		clientParticle->Send(wys,size);
 #endif
 
-		qsort(tablicaCzastek,NumberParticles,sizeof(Particle),compareMyType);
+	//	qsort(tablicaCzastek,NumberParticles,sizeof(Particle),compareMyType);
 
 
 #if DIAGNOSTIC == 1
