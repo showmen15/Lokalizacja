@@ -4,7 +4,7 @@
 Location::Location(char* mapPath,unsigned int numberParticles,double epsilon,int generation,unsigned int ilosc_losowanych_nowych_czastek)
 {
 #if DIAGNOSTIC == 1
-	IPPart = "192.168.2.104"; //wizualizacja
+	IPPart = "192.168.56.1"; //wizualizacja
 	clientParticle = new UdpClient(IPPart,1234,9000); //wizualizacja
 #endif
 
@@ -60,7 +60,7 @@ void Location::RunLocation()
 	clientParticle->Send(wys,size);
 #endif
 
-	speedRoboClaw = roboClaw->GetSpeed(); //??? po co
+	//speedRoboClaw = roboClaw->GetSpeed(); //??? po co
 
 	gettimeofday(&start, NULL);
 
@@ -77,9 +77,9 @@ void Location::RunLocation()
 		deletaTime = ((end.tv_sec - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec)/1000.0) / 1000;
 		gettimeofday(&start, NULL);
 
-		skaner->GetScan();
-		speedRoboClaw = roboClaw->GetSpeed(); //droga w metrach
-		angleRoboClaw = roboClaw->GetAngle(deletaTime);
+		//skaner->GetScan();
+		speedRoboClaw = 0;//roboClaw->GetSpeed(); //droga w metrach
+		angleRoboClaw = 0;//roboClaw->GetAngle(deletaTime);
 
 		for (unsigned int i = 0; i < NumberParticles; i++)
 		{

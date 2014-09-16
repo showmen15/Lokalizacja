@@ -265,6 +265,7 @@ inline void getLine(double X,double Y,double alfa,double *A,double *B,double *C)
 }
 
 
+
 inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 {	
 	double dist = -1.0;
@@ -283,6 +284,8 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 
 	getLine(X2,Y2,alfa,&a2,&b2,&c2);
 
+
+	/*
 	prawie_zero = (X2 * a2 + Y2 * b2 + c2);
 
 	if( (prawie_zero) >  0.0001)
@@ -299,6 +302,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 	if(prawie_zeroDlasciany > 0.0001)
 			prawie_zeroDlasciany = 0.0;
 
+*/
 
 	W = a1 * b2 - b1 * a2;
 	
@@ -317,14 +321,17 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 
 		if(canCountDistanceToWall(alfa,Y2,Y))
 		{
-			if((wall->From_Y == wall->To_Y) && (wall->From_X <= X) && (X <= wall->To_X))
+			if((wall->From_X <= X) && (X <= wall->To_X) && (wall->From_Y <= Y) && (Y <= wall->To_Y))
+				dist = sqrt(pow(X - X2 ,2) + pow( Y - Y2,2)); //wartosc oczekiwan*/
+			/*if((wall->From_Y == wall->To_Y) && (wall->From_X <= X) && (X <= wall->To_X))
 				dist = sqrt(pow(X - X2 ,2) + pow( Y - Y2,2)); //wartosc oczekiwana
 			else if((wall->From_X == X <= wall->To_X) && (wall->From_Y <= Y) && (Y <= wall->To_Y))
-				dist = sqrt(pow(X - X2 ,2) + pow( Y - Y2,2)); //wartosc oczekiwan
+				dist = sqrt(pow(X - X2 ,2) + pow( Y - Y2,2)); //wartosc oczekiwan*/
 
 		}
 
-		//printf("Przecicie X: %f Y: %f\n",X,Y);
+		//if(dist > -1)
+			//printf("Sciana: %s,Przecicie X: %f Y: %fDist: %f\n",wall->Id.c_str(), X,Y,dist);
 	}
 
 	return dist;
@@ -482,6 +489,12 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 		}
 
 
+		inline double radianNaStpnie(double radian)
+		{
+			return  radian * 180 /M_PI;
+		}
+
+
 		inline void UpdateCountProbability4(Room* box,int scanTable[],double angleTable[],int length)
 		{
 				double dist;
@@ -512,6 +525,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 
 					double dist2;
 
+					//printf("ID %d,Kat %f KatStopnie:%f\t",i,tablicaKatow[i],radianNaStpnie(tablicaKatow[i]));
 
 					for (int j = 0; j < iloscScian; j++)
 					{
@@ -553,9 +567,11 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 				for(int i = 0; i < length;i++)
 				{
 					printf("ID: %d Obliczone: %f Kat: %f Skan: %f Gaus: %fSciana: %s\n",i, tablicaOdleglosci[i],tablicaKatow[i],tablicaSkan[i],tablicaGauss[i],tablicaScien[i].c_str());
+
+					fflush(NULL);
 				}
 
-				fflush(NULL);
+
 
 				double yy = ((double) ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa) * Gauss2(1,1);
 				Probability =  Normalize(sumProbability,0,yy);  //(sumProbability / index);  /// (length / PRZLIECZENIE_DLA_POMIARU_SKANERA)); //sumProbability
