@@ -84,8 +84,8 @@ public:
 
 	inline double Round(double dbVal)
 	{
-	    return dbVal;
-		//return round(dbVal * dbShift) / dbShift;
+	    //return dbVal;
+		return ceil(dbVal * dbShift) / dbShift;
 	}
 
 	double X;
@@ -314,8 +314,8 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 		X = Wx / W;
 		Y = Wy / W;
 
-		X = Round(X);
-		Y = Round(Y);
+		//X = Round(X);
+		//Y = Round(Y);
 		//X = round(X * 100) / 100;
 		//Y = round(Y * 100) / 100;
 
@@ -331,7 +331,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 		}
 
 		//if(dist > -1)
-			//printf("Sciana: %s,Przecicie X: %f Y: %fDist: %f\n",wall->Id.c_str(), X,Y,dist);
+			printf("Sciana: %s,Sciana Start_X: %fSciana Start_Y: %f,Sciana End_X: %f,Sciana EndY: %f  Przecicie X: %f Y: %fDist: %f\n",wall->Id.c_str(),wall->From_X,wall->From_Y,wall->To_X,wall->To_Y, X,Y,dist);
 	}
 
 	return dist;
@@ -527,6 +527,8 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 
 					//printf("ID %d,Kat %f KatStopnie:%f\t",i,tablicaKatow[i],radianNaStpnie(tablicaKatow[i]));
 
+					printf("Start\n");
+
 					for (int j = 0; j < iloscScian; j++)
 					{
 
@@ -546,6 +548,8 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 						}
 					}
 
+					printf("End\n");
+
 					if(dist > 0)
 					{
 											double scan = (((double) scanTable[i]) / 1000);
@@ -561,6 +565,8 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 										sumProbability += gauss;
 					}
 
+					int www;
+					www= 112;
 				}
 
 
