@@ -87,8 +87,13 @@ public:
 	    //return dbVal;
 		//return ceil(dbVal * dbShift) / dbShift;
 
-		int test = (int) (dbVal * 100);
-		return ((double) test) * 0.01;
+		//int test = (int) (dbVal * 100);
+		//return ((double) test) * 0.01;
+
+		double zm = dbVal * 100;
+		zm = round(zm);
+		zm *= 0.01;
+		return zm;
 	}
 
 	double X;
@@ -341,8 +346,8 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 
 		}
 
-		//if(dist > -1)
-		//	printf("Sciana: %s,Sciana Start_X: %fSciana Start_Y: %f,Sciana End_X: %f,Sciana EndY: %f  Przecicie X: %f Y: %fDist: %f\n",wall->Id.c_str(),wall->From_X,wall->From_Y,wall->To_X,wall->To_Y, X,Y,dist);
+//		if(dist > -1)
+			printf("Sciana: %s,Sciana Start_X: %fSciana Start_Y: %f,Sciana End_X: %f,Sciana EndY: %f  Przecicie X: %f Y: %fDist: %f\n",wall->Id.c_str(),wall->From_X,wall->From_Y,wall->To_X,wall->To_Y, X,Y,dist);
 	}
 
 	return dist;
