@@ -238,12 +238,12 @@ public:
 
 		if((Alfa_Czastki >= 0) && (Alfa_Czastki <= M_PI))
 		{
-			if(Y > 0)
+			if(Y >= 0)
 				result = true;
 		}
 		else
 		{
-			if(Y < 0)
+			if(Y <= 0)
 				result = true;
 		}
 
@@ -586,13 +586,13 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 				}
 
 
-				for(int i = 0; i < length;i++)
+			/*	for(int i = 0; i < length;i++)
 				{
 					printf("ID: %d Obliczone: %f Kat: %f Skan: %f Gaus: %fSciana: %s\n",i, tablicaOdleglosci[i],tablicaKatow[i],tablicaSkan[i],tablicaGauss[i],tablicaScien[i].c_str());
 
 					fflush(NULL);
 				}
-
+*/
 
 
 				double yy = ((double) ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa) * Gauss2(1,1);

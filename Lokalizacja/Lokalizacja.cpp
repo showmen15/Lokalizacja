@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 	unsigned int numberParticles = 104;
 	double epsilon = 0.96;
 	int generation = 1;
-	unsigned int ilosc_losowanych_nowych_czastek = 10;
+	unsigned int ilosc_losowanych_nowych_czastek = 20;
 
 	Location *lok = new Location(mapPath,numberParticles,epsilon,generation,ilosc_losowanych_nowych_czastek);
 
