@@ -4,7 +4,7 @@
 Location::Location(char* mapPath,unsigned int numberParticles,double epsilon,int generation,unsigned int ilosc_losowanych_nowych_czastek)
 {
 #if DIAGNOSTIC == 1
-	IPPart =  "192.168.2.100";//"169.254.162.40"; //wizualizacja
+	IPPart =  "192.168.2.102";//"169.254.162.40"; //wizualizacja
 	clientParticle = new UdpClient(IPPart,1234,9000); //wizualizacja
 #endif
 
@@ -248,14 +248,14 @@ void Location::UsunWylosujNoweCzastki2(Particle* tablicaCzastek,int length,int i
 
 	//rozmnazamy dobre czastki
 	for(unsigned int i = start, j = 0; i < end; i++, j++)
-		tablicaCzastek[i].LosujSasiada(tablicaCzastek[j].X,tablicaCzastek[j].Y,tablicaCzastek[j].Alfa);
+		tablicaCzastek[i].LosujSasiada2(tablicaCzastek[j].X,tablicaCzastek[j].Y,tablicaCzastek[j].Alfa);
 
 	//nowe czastki
-	for(unsigned int i = end; i < end; i++)
+	for(unsigned int i = end; i < length; i++)
 		tablicaCzastek[i].Losuj22();
 
 
-	/*iloscCzastekDoUsuniecia = 0;
+/*	iloscCzastekDoUsuniecia = 0;
 	for(int i = 0; i < length;i++)
 	{
 		if(tablicaCzastek[i].sMarkToDelete > GENERATION)

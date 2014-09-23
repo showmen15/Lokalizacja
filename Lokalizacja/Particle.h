@@ -217,6 +217,35 @@ public:
 		sMarkToDelete = 0;
 	}
 
+
+	inline void LosujSasiada2(double X0,double Y0, double alfa) //Generuj czastke w sasiedztwie innej czastki
+	{
+		double t = fRand(0,2 * M_PI);
+		double R1 =  fRand(0,PROMIEN);
+
+		X =  X0 + R1 * cos(t);
+		Y = Y0 + R1 * sin(t);
+
+		if(X < 0)
+			X *= -1;
+
+		if(Y < 0)
+			Y *= -1;
+
+#if DIAGNOSTIC == 1
+			if(X < 0)
+				printf("LosujPozycje X UJEMNE,%e",X);
+			if(Y < 0)
+				printf("LosujPozycje Y UJEMNE,%e",Y);
+			fflush(NULL);
+#endif
+
+		Alfa =  fRand(0,2 * M_PI);
+		Probability = 0.0;
+		sMarkToDelete = 0;
+	}
+
+
 	/*inline Point getIntersection(double A,double B,double C,double X0,double Y0,double Alfa)
 	{
 		Point p;
@@ -347,7 +376,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 		}
 
 //		if(dist > -1)
-			printf("Sciana: %s,Sciana Start_X: %fSciana Start_Y: %f,Sciana End_X: %f,Sciana EndY: %f  Przecicie X: %f Y: %fDist: %f\n",wall->Id.c_str(),wall->From_X,wall->From_Y,wall->To_X,wall->To_Y, X,Y,dist);
+		//	printf("Sciana: %s,Sciana Start_X: %fSciana Start_Y: %f,Sciana End_X: %f,Sciana EndY: %f  Przecicie X: %f Y: %fDist: %f\n",wall->Id.c_str(),wall->From_X,wall->From_Y,wall->To_X,wall->To_Y, X,Y,dist);
 	}
 
 	return dist;
