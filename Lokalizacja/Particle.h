@@ -85,7 +85,15 @@ public:
 	inline double Round(double dbVal)
 	{
 	    //return dbVal;
-		return ceil(dbVal * dbShift) / dbShift;
+		//return ceil(dbVal * dbShift) / dbShift;
+
+		//int test = (int) (dbVal * 100);
+		//return ((double) test) * 0.01;
+
+		double zm = dbVal * 100;
+		zm = round(zm);
+		zm *= 0.01;
+		return zm;
 	}
 
 	double X;
@@ -209,6 +217,35 @@ public:
 		sMarkToDelete = 0;
 	}
 
+
+	inline void LosujSasiada2(double X0,double Y0, double alfa) //Generuj czastke w sasiedztwie innej czastki
+	{
+		double t = fRand(0,2 * M_PI);
+		double R1 =  fRand(0,PROMIEN);
+
+		X =  X0 + R1 * cos(t);
+		Y = Y0 + R1 * sin(t);
+
+		if(X < 0)
+			X *= -1;
+
+		if(Y < 0)
+			Y *= -1;
+
+#if DIAGNOSTIC == 1
+			if(X < 0)
+				printf("LosujPozycje X UJEMNE,%e",X);
+			if(Y < 0)
+				printf("LosujPozycje Y UJEMNE,%e",Y);
+			fflush(NULL);
+#endif
+
+		Alfa =  fRand(0,2 * M_PI);
+		Probability = 0.0;
+		sMarkToDelete = 0;
+	}
+
+
 	/*inline Point getIntersection(double A,double B,double C,double X0,double Y0,double Alfa)
 	{
 		Point p;
@@ -230,12 +267,12 @@ public:
 
 		if((Alfa_Czastki >= 0) && (Alfa_Czastki <= M_PI))
 		{
-			if(Y > 0)
+			if(Y >= 0)
 				result = true;
 		}
 		else
 		{
-			if(Y < 0)
+			if(Y <= 0)
 				result = true;
 		}
 
@@ -314,15 +351,23 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 		X = Wx / W;
 		Y = Wy / W;
 
-		//X = Round(X);
-		//Y = Round(Y);
+		X = Round(X);
+		Y = Round(Y);
 		//X = round(X * 100) / 100;
 		//Y = round(Y * 100) / 100;
 
 		if(canCountDistanceToWall(alfa,Y2,Y))
 		{
-			if((wall->From_X <= X) && (X <= wall->To_X) && (wall->From_Y <= Y) && (Y <= wall->To_Y))
+			//if((wall->From_X <= X) && (X <= wall->To_X) && (wall->From_Y <= Y) && (Y <= wall->To_Y))
+				//dist = sqrt(pow(X - X2 ,2) + pow( Y - Y2,2)); //wartosc oczekiwan*/
+
+			if((wall->From_X == wall->To_X) && (wall->From_Y <= Y) && (Y <= wall->To_Y))
 				dist = sqrt(pow(X - X2 ,2) + pow( Y - Y2,2)); //wartosc oczekiwan*/
+			else if((wall->From_Y == wall->To_Y) && (wall->From_X <= X) && (X <= wall->To_X))
+				dist = sqrt(pow(X - X2 ,2) + pow( Y - Y2,2)); //wartosc oczekiwan*/
+			else if((wall->From_X <= X) && (X <= wall->To_X) && (wall->From_Y <= Y) && (Y <= wall->To_Y))
+				dist = sqrt(pow(X - X2 ,2) + pow( Y - Y2,2)); //wartosc oczekiwan*/
+
 			/*if((wall->From_Y == wall->To_Y) && (wall->From_X <= X) && (X <= wall->To_X))
 				dist = sqrt(pow(X - X2 ,2) + pow( Y - Y2,2)); //wartosc oczekiwana
 			else if((wall->From_X == X <= wall->To_X) && (wall->From_Y <= Y) && (Y <= wall->To_Y))
@@ -330,8 +375,8 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 
 		}
 
-		//if(dist > -1)
-			printf("Sciana: %s,Sciana Start_X: %fSciana Start_Y: %f,Sciana End_X: %f,Sciana EndY: %f  Przecicie X: %f Y: %fDist: %f\n",wall->Id.c_str(),wall->From_X,wall->From_Y,wall->To_X,wall->To_Y, X,Y,dist);
+//		if(dist > -1)
+		//	printf("Sciana: %s,Sciana Start_X: %fSciana Start_Y: %f,Sciana End_X: %f,Sciana EndY: %f  Przecicie X: %f Y: %fDist: %f\n",wall->Id.c_str(),wall->From_X,wall->From_Y,wall->To_X,wall->To_Y, X,Y,dist);
 	}
 
 	return dist;
@@ -527,7 +572,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 
 					//printf("ID %d,Kat %f KatStopnie:%f\t",i,tablicaKatow[i],radianNaStpnie(tablicaKatow[i]));
 
-					printf("Start\n");
+					//printf("Start\n");
 
 					for (int j = 0; j < iloscScian; j++)
 					{
@@ -548,7 +593,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 						}
 					}
 
-					printf("End\n");
+					//printf("End\n");
 
 					if(dist > 0)
 					{
@@ -570,13 +615,13 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 				}
 
 
-				for(int i = 0; i < length;i++)
+			/*	for(int i = 0; i < length;i++)
 				{
 					printf("ID: %d Obliczone: %f Kat: %f Skan: %f Gaus: %fSciana: %s\n",i, tablicaOdleglosci[i],tablicaKatow[i],tablicaSkan[i],tablicaGauss[i],tablicaScien[i].c_str());
 
 					fflush(NULL);
 				}
-
+*/
 
 
 				double yy = ((double) ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa) * Gauss2(1,1);
