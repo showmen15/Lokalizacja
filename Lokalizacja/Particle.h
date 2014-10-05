@@ -16,14 +16,21 @@ using std::string;
 #define NEW_MIN 0
 #define NEW_MAX 1
 
-/*
+
 struct Point
 {
 	public:
 		double X;
 		double Y;
-};*/
+};
 
+struct Line
+{
+public:
+	double A;
+	double B;
+	double C;
+};
 
 class Particle
 {
@@ -301,7 +308,53 @@ inline void getLine(double X,double Y,double alfa,double *A,double *B,double *C)
 
 }
 
+inline Line getLine(double X,double Y,double alfa)
+{
+	Line temp;
 
+	temp.A = Round(tan(alfa));
+	temp.B = -1;
+	temp.C =Round((Y - (temp.A * X)));
+
+	return temp;
+}
+
+
+inline Point calculateIntersection(MazeWall *wall,double alfa,double X2,double Y2)
+{
+	Point temp;
+
+	double W;
+	double Wx;
+	double Wy;
+	double a1 = wall->A;
+	double b1 = wall->B;
+	double c1 = wall->C;
+
+	double a2,b2,c2;
+
+	getLine(X2,Y2,alfa,&a2,&b2,&c2);
+
+	W = a1 * b2 - b1 * a2;
+
+	if(W != 0)
+	{
+		Wx =  b1 * c2 - c1 * b2;
+		Wy = c1 * a2 - a1 * c2;
+
+		temp.X = Round(Wx / W);
+		temp.Y = Round(Wy / W);
+	}
+	else
+		temp.X = temp.Y = -1;
+
+	return temp;
+}
+
+inline double calculateDistnace(double X1,double Y1,double X2,double Y2)
+{
+	return sqrt(pow(X1 - X2 ,2) + pow(Y1 - Y2,2));
+}
 
 inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 {	
@@ -376,8 +429,12 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 		}
 
 //		if(dist > -1)
-		//	printf("Sciana: %s,Sciana Start_X: %fSciana Start_Y: %f,Sciana End_X: %f,Sciana EndY: %f  Przecicie X: %f Y: %fDist: %f\n",wall->Id.c_str(),wall->From_X,wall->From_Y,wall->To_X,wall->To_Y, X,Y,dist);
+		printf("Sciana: %s,Sciana Start_X: %fSciana Start_Y: %f,Sciana End_X: %f,Sciana EndY: %f  Przecicie X: %f Y: %fDist: %f\n",wall->Id.c_str(),wall->From_X,wall->From_Y,wall->To_X,wall->To_Y, X,Y,dist);
+					fflush(NULL);
 	}
+
+	//printf("Sciana: %s,Sciana Start_X: %fSciana Start_Y: %f,Sciana End_X: %f,Sciana EndY: %f  Przecicie X: %f Y: %fDist: %f\n",wall->Id.c_str(),wall->From_X,wall->From_Y,wall->To_X,wall->To_Y, X,Y,dist);
+		//		fflush(NULL);
 
 	return dist;
 }
@@ -539,6 +596,140 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 			return  radian * 180 /M_PI;
 		}
 
+		inline bool isIntersectionOK(Line lineStart, Line lineEnd,double alfa,Point intersection,MazeWall *wall)
+		{
+			bool result = false;
+			double tmplineStar = lineStart.A * intersection.X + lineStart.B * intersection.Y + lineStart.C;
+			double tmplineEnd = lineEnd.A * intersection.X + lineEnd.B * intersection.Y + lineEnd.C;
+
+			if((alfa >= 0) && (alfa < M_PI))
+			{
+				if(!((tmplineStar >= 0) && (tmplineEnd <= 0)))
+				{
+					if((wall->From_X == wall->To_X) && (wall->From_Y <= Y) && (Y <= wall->To_Y))
+						result = true;
+					else if((wall->From_Y == wall->To_Y) && (wall->From_X <= X) && (X <= wall->To_X))
+						result = true;
+					else if((wall->From_X <= X) && (X <= wall->To_X) && (wall->From_Y <= Y) && (Y <= wall->To_Y))
+						result = true;
+				}
+			}
+			else
+			{
+				if(!((tmplineStar <= 0) && (tmplineEnd >= 0)))
+				{
+					if((wall->From_X == wall->To_X) && (wall->From_Y <= Y) && (Y <= wall->To_Y))
+						result = true;
+					else if((wall->From_Y == wall->To_Y) && (wall->From_X <= X) && (X <= wall->To_X))
+						result = true;
+					else if((wall->From_X <= X) && (X <= wall->To_X) && (wall->From_Y <= Y) && (Y <= wall->To_Y))
+						result = true;
+				}
+			}
+
+			return result;
+		}
+
+		inline void UpdateCountProbability5(Room* box,int scanTable[],double angleTable[],int length)
+			{
+			Point intersection;
+
+			double dist;
+					double gauss;
+					double sumProbability = 0.0;
+					Probability = 0.0;
+					int iloscScian = box->ContainerWallCount();
+					//double norm;
+					double tablicaOdleglosci[length];
+					double tablicaKatow[length];
+					double tablicaSkan[length];
+					double tablicaGauss[length];
+					std::string tablicaScien[length];
+					//int www = 0;
+					int ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa = 0;
+
+					Line lineStart = getLine(this->X,this->Y,this->Alfa + angleTable[0]);
+					Line lineEnd = getLine(this->X,this->Y,this->Alfa + angleTable[length - 1]);
+
+					for (int i = 0; i < length; i++)
+					{
+						int test = 0;
+						test++;
+
+						tablicaOdleglosci[i] = -1;
+						tablicaKatow[i] = this->Alfa + angleTable[i];
+						tablicaSkan[i] = (((double) scanTable[i]) / 1000);
+						tablicaGauss[i] = -1;
+
+						dist = DBL_MAX;
+
+						double dist2;
+
+						//printf("ID %d,Kat %f KatStopnie:%f\t",i,tablicaKatow[i],radianNaStpnie(tablicaKatow[i]));
+
+						//printf("Start\n");
+
+						for (int j = 0; j < iloscScian; j++)
+						{
+							 intersection = calculateIntersection(&box->ContainerWallTable[j],this->Alfa + angleTable[i],this->X,this->Y);
+
+							 if(isIntersectionOK(lineStart,lineEnd,this->Alfa,intersection,&box->ContainerWallTable[j]))
+								 dist2 = calculateDistnace(this->X,this->Y,intersection.X,intersection.Y);
+							 else
+								 dist2 = -1;
+
+
+							//printf("%s\n",(&box->ContainerWallTable[j])->Id.c_str());
+
+							//dist2 = getDistnace(&box->ContainerWallTable[j],this->Alfa + angleTable[i],this->X,this->Y);
+
+							if(dist2 > -1)
+							{
+								dist = min(dist2,dist);
+
+								#if DIAGNOSTIC == 1
+									if(min(dist2,dist) == dist2)
+										tablicaScien[i] = (&box->ContainerWallTable[j])->Id;
+
+								#endif
+							}
+						}
+
+						//printf("End\n");
+
+						if(dist > 0)
+						{
+												double scan = (((double) scanTable[i]) / 1000);
+												gauss =  Gauss2(dist,scan);
+
+												tablicaOdleglosci[i] = dist;
+												tablicaKatow[i] = angleTable[i];
+												tablicaSkan[i] = scan;
+												tablicaGauss[i] = gauss;
+
+
+												ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa++;
+											sumProbability += gauss;
+						}
+
+						int www;
+						www= 112;
+					}
+
+
+					for(int i = 0; i < length;i++)
+					{
+						printf("ID: %d Obliczone: %f Kat: %f Skan: %f Gaus: %fSciana: %s\n",i, tablicaOdleglosci[i],tablicaKatow[i],tablicaSkan[i],tablicaGauss[i],tablicaScien[i].c_str());
+
+						fflush(NULL);
+					}
+
+
+
+					double yy = ((double) ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa) * Gauss2(1,1);
+					Probability =  Normalize(sumProbability,0,yy);  //(sumProbability / index);  /// (length / PRZLIECZENIE_DLA_POMIARU_SKANERA)); //sumProbability
+				}
+
 
 		inline void UpdateCountProbability4(Room* box,int scanTable[],double angleTable[],int length)
 		{
@@ -615,13 +806,13 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 				}
 
 
-			/*	for(int i = 0; i < length;i++)
+				for(int i = 0; i < length;i++)
 				{
 					printf("ID: %d Obliczone: %f Kat: %f Skan: %f Gaus: %fSciana: %s\n",i, tablicaOdleglosci[i],tablicaKatow[i],tablicaSkan[i],tablicaGauss[i],tablicaScien[i].c_str());
 
 					fflush(NULL);
 				}
-*/
+
 
 
 				double yy = ((double) ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa) * Gauss2(1,1);
