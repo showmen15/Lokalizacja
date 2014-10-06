@@ -50,8 +50,8 @@ Location::~Location()
 
 void Location::RunLocation()
 {
-	//RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,NumberParticles);
-	InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox);
+	RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,NumberParticles);
+	//InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox);
 
 #if DIAGNOSTIC == 1
 	SendParticle(&diagnostic,tablicaCzastek,&size);

@@ -12,6 +12,7 @@ using namespace std;
 using std::string;
 
 #define M_PI       3.14159265358979323846
+#define M_PI2      6.28318530717958647692
 #define ODCHYLENIE 0.15
 #define NEW_MIN 0
 #define NEW_MAX 1
@@ -342,8 +343,11 @@ inline Point calculateIntersection(MazeWall *wall,double alfa,double X2,double Y
 		Wx =  b1 * c2 - c1 * b2;
 		Wy = c1 * a2 - a1 * c2;
 
-		temp.X = Round(Wx / W);
-		temp.Y = Round(Wy / W);
+		temp.X = Wx / W;
+		temp.X = Round(temp.X);
+
+		temp.Y = Wy / W;
+		temp.Y = Round(temp.Y);
 	}
 	else
 		temp.X = temp.Y = -1;
@@ -429,8 +433,8 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 		}
 
 //		if(dist > -1)
-		printf("Sciana: %s,Sciana Start_X: %fSciana Start_Y: %f,Sciana End_X: %f,Sciana EndY: %f  Przecicie X: %f Y: %fDist: %f\n",wall->Id.c_str(),wall->From_X,wall->From_Y,wall->To_X,wall->To_Y, X,Y,dist);
-					fflush(NULL);
+	//	printf("Sciana: %s,Sciana Start_X: %fSciana Start_Y: %f,Sciana End_X: %f,Sciana EndY: %f  Przecicie X: %f Y: %fDist: %f\n",wall->Id.c_str(),wall->From_X,wall->From_Y,wall->To_X,wall->To_Y, X,Y,dist);
+	//				fflush(NULL);
 	}
 
 	//printf("Sciana: %s,Sciana Start_X: %fSciana Start_Y: %f,Sciana End_X: %f,Sciana EndY: %f  Przecicie X: %f Y: %fDist: %f\n",wall->Id.c_str(),wall->From_X,wall->From_Y,wall->To_X,wall->To_Y, X,Y,dist);
@@ -596,10 +600,51 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 			return  radian * 180 /M_PI;
 		}
 
-		inline bool isIntersectionOK(Line lineStart, Line lineEnd,double alfa,Point intersection,MazeWall *wall)
+		//inline bool isIntersectionOK(Line lineStart, Line lineEnd,double alfa,Point intersection,MazeWall *wall)
+		inline bool isIntersectionOK(MazeWall *wall,double alfa,Point intersection)
 		{
 			bool result = false;
-			double tmplineStar = lineStart.A * intersection.X + lineStart.B * intersection.Y + lineStart.C;
+
+			if((intersection.X >= 0) && (intersection.Y >= 0))
+			{
+				double Y = Round(intersection.Y - this->Y);
+
+				if((alfa >= 0) && (alfa <= M_PI))
+				{
+					if(Y >= 0)
+					{
+							if((wall->From_X == wall->To_X) && (wall->From_Y <= intersection.Y) && (intersection.Y <= wall->To_Y))
+									result = true;
+							else if((wall->From_Y == wall->To_Y) && (wall->From_X <= intersection.X) && (intersection.X <= wall->To_X))
+									result = true;
+							else if((wall->From_X <= intersection.X) && (intersection.X <= wall->To_X) && (wall->From_Y <= intersection.Y) && (intersection.Y <= wall->To_Y))
+									result = true;
+					}
+				}
+				else if((alfa > M_PI) && (alfa < M_PI2))
+					{
+						if(Y <= 0)
+						{
+							if((wall->From_X == wall->To_X) && (wall->From_Y <= intersection.Y) && (intersection.Y <= wall->To_Y))
+									result = true;
+							else if((wall->From_Y == wall->To_Y) && (wall->From_X <= intersection.X) && (intersection.X <= wall->To_X))
+									result = true;
+							else if((wall->From_X <= intersection.X) && (intersection.X <= wall->To_X) && (wall->From_Y <= intersection.Y) && (intersection.Y <= wall->To_Y))
+									result = true;
+						}
+					}
+					else
+					{
+						int bug = 22;
+						bug++;
+					}
+			}
+
+			return result;
+
+
+
+			/*double tmplineStar = lineStart.A * intersection.X + lineStart.B * intersection.Y + lineStart.C;
 			double tmplineEnd = lineEnd.A * intersection.X + lineEnd.B * intersection.Y + lineEnd.C;
 
 			if((alfa >= 0) && (alfa < M_PI))
@@ -625,9 +670,9 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 					else if((wall->From_X <= X) && (X <= wall->To_X) && (wall->From_Y <= Y) && (Y <= wall->To_Y))
 						result = true;
 				}
-			}
+			}*/
 
-			return result;
+			//return result;
 		}
 
 		inline void UpdateCountProbability5(Room* box,int scanTable[],double angleTable[],int length)
@@ -645,11 +690,10 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 					double tablicaSkan[length];
 					double tablicaGauss[length];
 					std::string tablicaScien[length];
-					//int www = 0;
 					int ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa = 0;
 
-					Line lineStart = getLine(this->X,this->Y,this->Alfa + angleTable[0]);
-					Line lineEnd = getLine(this->X,this->Y,this->Alfa + angleTable[length - 1]);
+					MazeWall * wall;
+
 
 					for (int i = 0; i < length; i++)
 					{
@@ -664,24 +708,25 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 						dist = DBL_MAX;
 
 						double dist2;
+						double tempAlfa;
 
-						//printf("ID %d,Kat %f KatStopnie:%f\t",i,tablicaKatow[i],radianNaStpnie(tablicaKatow[i]));
+						tempAlfa = this->Alfa + angleTable[i];
 
-						//printf("Start\n");
+						if(tempAlfa < 0)
+							tempAlfa += M_PI2;
+						else if(tempAlfa > M_PI2)
+							tempAlfa -= M_PI2;
+
+						tempAlfa = Round(tempAlfa);
 
 						for (int j = 0; j < iloscScian; j++)
 						{
-							 intersection = calculateIntersection(&box->ContainerWallTable[j],this->Alfa + angleTable[i],this->X,this->Y);
+							 intersection = calculateIntersection(&box->ContainerWallTable[j],tempAlfa,this->X,this->Y);
 
-							 if(isIntersectionOK(lineStart,lineEnd,this->Alfa,intersection,&box->ContainerWallTable[j]))
+							 if(isIntersectionOK(&box->ContainerWallTable[j],tempAlfa,intersection))
 								 dist2 = calculateDistnace(this->X,this->Y,intersection.X,intersection.Y);
 							 else
 								 dist2 = -1;
-
-
-							//printf("%s\n",(&box->ContainerWallTable[j])->Id.c_str());
-
-							//dist2 = getDistnace(&box->ContainerWallTable[j],this->Alfa + angleTable[i],this->X,this->Y);
 
 							if(dist2 > -1)
 							{
@@ -693,6 +738,11 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 
 								#endif
 							}
+
+							 wall = &box->ContainerWallTable[j];
+
+							//printf("Sciana: %s,Sciana Start_X: %fSciana Start_Y: %f,Sciana End_X: %f,Sciana EndY: %f  Przecicie X: %f Y: %fDist: %f\n",wall->Id.c_str(),wall->From_X,wall->From_Y,wall->To_X,wall->To_Y, intersection.X,intersection.Y,dist2);
+							//fflush(NULL);
 						}
 
 						//printf("End\n");
