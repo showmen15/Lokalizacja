@@ -1,10 +1,13 @@
 
 #include "Location.h"
 
+#define TESTHOKU 0
+
+
 Location::Location(char* mapPath,unsigned int numberParticles,double epsilon,int generation,unsigned int ilosc_losowanych_nowych_czastek)
 {
 #if DIAGNOSTIC == 1
-	IPPart =  "192.168.56.1";//"192.168.2.102";//"169.254.162.40"; //wizualizacja
+	IPPart =  "192.168.2.101";//"172.29.53.31";//"192.168.56.1";//"192.168.2.102";//"169.254.162.40"; //wizualizacja
 	clientParticle = new UdpClient(IPPart,1234,9000); //wizualizacja
 #endif
 
@@ -50,8 +53,8 @@ Location::~Location()
 
 void Location::RunLocation()
 {
-	RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,NumberParticles);
-	//InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox);
+	//RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,NumberParticles);
+	InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox);
 
 #if DIAGNOSTIC == 1
 	SendParticle(&diagnostic,tablicaCzastek,&size);
@@ -77,9 +80,22 @@ void Location::RunLocation()
 		deletaTime = ((end.tv_sec - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec)/1000.0) / 1000;
 		gettimeofday(&start, NULL);
 
+#if TESTHOKU == 0
+
+
+		skaner->GetScan();
+		speedRoboClaw = roboClaw->GetSpeed(); //droga w metrach
+		angleRoboClaw = roboClaw->GetAngle(deletaTime);
+#endif
+
+
+#if TESTHOKU == 1
+
+
 		skaner->GetScan();
 		speedRoboClaw = 0;//roboClaw->GetSpeed(); //droga w metrach
 		angleRoboClaw = 0;//roboClaw->GetAngle(deletaTime);
+#endif
 
 		for (unsigned int i = 0; i < NumberParticles; i++)
 		{
@@ -251,8 +267,8 @@ void Location::UsunWylosujNoweCzastki2(Particle* tablicaCzastek,int length,int i
 		tablicaCzastek[i].LosujSasiada2(tablicaCzastek[j].X,tablicaCzastek[j].Y,tablicaCzastek[j].Alfa);
 
 	//nowe czastki
-	for(unsigned int i = end; i < length; i++)
-		tablicaCzastek[i].Losuj22();
+	//for(unsigned int i = end; i < length; i++)
+		//tablicaCzastek[i].Losuj22();
 
 
 /*	iloscCzastekDoUsuniecia = 0;
@@ -286,6 +302,43 @@ void Location::UsunWylosujNoweCzastki2(Particle* tablicaCzastek,int length,int i
 		}
 	}*/
 }
+
+
+void Location::UsunWylosujNoweCzastki3(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniecia,BoundingBox* bBox,unsigned int BoundingBoxCount)
+{
+	iloscCzastekDoUsuniecia = 0;
+	for(int i = 0; i < length;i++)
+	{
+		if(tablicaCzastek[i].sMarkToDelete > GENERATION)
+			iloscCzastekDoUsuniecia++;
+	}
+	if(iloscCzastekDoUsuniecia > 0)
+	{
+		if(iloscCzastekDoUsuniecia == length)
+		{
+			iloscCzastekDoUsuniecia--;
+			InitTablicaCzastekLosowo(tablicaCzastek,bBox,BoundingBoxCount);
+		}
+		int zakres = length - iloscCzastekDoUsuniecia;
+		//powiel czastki
+		for(int i = zakres, j = 0; i < length - ILOSC_LOSOWANYCH_NOWYCH_CZASTEK;i++, j = (j + 1) % zakres)
+		{
+			tablicaCzastek[i].LosujSasiada(tablicaCzastek[j].X,tablicaCzastek[j].Y,tablicaCzastek[j].Alfa);
+		}
+		for(int index = length - ILOSC_LOSOWANYCH_NOWYCH_CZASTEK; index < length; index++)
+		{
+#if DIAGNOSTIC == 1
+			if(index < 0)
+				printf("UsunWylosujNoweCzastki index,%d",index);
+			fflush(NULL);
+#endif
+			int p = wylosujBB(0,BoundingBoxCount);
+			tablicaCzastek[index].LosujPozycje(bBox[p].X_Left_Bottom,bBox[p].X_Right_Bottom,bBox[p].Y_Left_Bottom,bBox[p].Y_Left_Top);
+		}
+}
+}
+
+
 
 int Location::compareMyType (const void * a, const void * b)
 {

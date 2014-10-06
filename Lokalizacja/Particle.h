@@ -6,14 +6,14 @@
 #include <algorithm>
 
 #define TEST 1
-#define PROMIEN 0.1
+#define PROMIEN 0.2
 
 using namespace std;
 using std::string;
 
 #define M_PI       3.14159265358979323846
 #define M_PI2      6.28318530717958647692
-#define ODCHYLENIE 0.15
+#define ODCHYLENIE 0.4
 #define NEW_MIN 0
 #define NEW_MAX 1
 
@@ -767,12 +767,12 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 					}
 
 
-					for(int i = 0; i < length;i++)
+					/*for(int i = 0; i < length;i++)
 					{
 						printf("ID: %d Obliczone: %f Kat: %f Skan: %f Gaus: %fSciana: %s\n",i, tablicaOdleglosci[i],tablicaKatow[i],tablicaSkan[i],tablicaGauss[i],tablicaScien[i].c_str());
 
 						fflush(NULL);
-					}
+					}*/
 
 
 
