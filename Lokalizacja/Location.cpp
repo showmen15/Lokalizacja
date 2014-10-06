@@ -4,7 +4,7 @@
 Location::Location(char* mapPath,unsigned int numberParticles,double epsilon,int generation,unsigned int ilosc_losowanych_nowych_czastek)
 {
 #if DIAGNOSTIC == 1
-	IPPart = "169.254.162.40"; //wizualizacja
+	IPPart =  "192.168.56.1";//"192.168.2.102";//"169.254.162.40"; //wizualizacja
 	clientParticle = new UdpClient(IPPart,1234,9000); //wizualizacja
 #endif
 
@@ -50,8 +50,8 @@ Location::~Location()
 
 void Location::RunLocation()
 {
-	RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,NumberParticles);
-	//InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox);
+	//RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,NumberParticles);
+	InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox);
 
 #if DIAGNOSTIC == 1
 	SendParticle(&diagnostic,tablicaCzastek,&size);
@@ -77,7 +77,7 @@ void Location::RunLocation()
 		deletaTime = ((end.tv_sec - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec)/1000.0) / 1000;
 		gettimeofday(&start, NULL);
 
-		//skaner->GetScan();
+		skaner->GetScan();
 		speedRoboClaw = 0;//roboClaw->GetSpeed(); //droga w metrach
 		angleRoboClaw = 0;//roboClaw->GetAngle(deletaTime);
 
@@ -92,7 +92,7 @@ void Location::RunLocation()
 				continue;
 			}
 
-			tablicaCzastek[i].UpdateCountProbability4(currentRoom, skaner->GetDistances(),skaner->GetAngles(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
+			tablicaCzastek[i].UpdateCountProbability5(currentRoom, skaner->GetDistances(),skaner->GetAngles(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
 
 			/*if(tablicaCzastek[i].sMarkToDelete > GENERATION)
 			iloscCzastekDoUsuniacia++;
@@ -116,7 +116,7 @@ void Location::RunLocation()
 		clientParticle->Send(wys,size);
 #endif
 
-	//	qsort(tablicaCzastek,NumberParticles,sizeof(Particle),compareMyType);
+		qsort(tablicaCzastek,NumberParticles,sizeof(Particle),compareMyType);
 
 
 #if DIAGNOSTIC == 1
@@ -126,8 +126,8 @@ void Location::RunLocation()
 		clientParticle->Send(wys,size);
 #endif
 
-		//iloscCzastekDoUsuniacia /= 2;
-		//UsunWylosujNoweCzastki2(tablicaCzastek,NumberParticles,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
+		iloscCzastekDoUsuniacia /= 2;
+		UsunWylosujNoweCzastki2(tablicaCzastek,NumberParticles,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
 		iloscCzastekDoUsuniacia = 0;
 
 #if DIAGNOSTIC == 1
@@ -248,14 +248,14 @@ void Location::UsunWylosujNoweCzastki2(Particle* tablicaCzastek,int length,int i
 
 	//rozmnazamy dobre czastki
 	for(unsigned int i = start, j = 0; i < end; i++, j++)
-		tablicaCzastek[i].LosujSasiada(tablicaCzastek[j].X,tablicaCzastek[j].Y,tablicaCzastek[j].Alfa);
+		tablicaCzastek[i].LosujSasiada2(tablicaCzastek[j].X,tablicaCzastek[j].Y,tablicaCzastek[j].Alfa);
 
 	//nowe czastki
-	for(unsigned int i = end; i < end; i++)
+	for(unsigned int i = end; i < length; i++)
 		tablicaCzastek[i].Losuj22();
 
 
-	/*iloscCzastekDoUsuniecia = 0;
+/*	iloscCzastekDoUsuniecia = 0;
 	for(int i = 0; i < length;i++)
 	{
 		if(tablicaCzastek[i].sMarkToDelete > GENERATION)
