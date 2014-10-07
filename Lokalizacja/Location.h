@@ -78,6 +78,7 @@ private:
 	char* getRobotIPAdress();
 
 	void UsunWylosujNoweCzastki3(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniecia,BoundingBox* bBox,unsigned int BoundingBoxCount);
+	void UsunWylosujNoweCzastki4(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniecia,BoundingBox* bBox,unsigned int BoundingBoxCount);
 
 	/////// Diagnostic ////////////////
 #if DIAGNOSTIC == 1

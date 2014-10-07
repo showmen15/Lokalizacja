@@ -142,8 +142,8 @@ void Location::RunLocation()
 		clientParticle->Send(wys,size);
 #endif
 
-		iloscCzastekDoUsuniacia /= 2;
-		UsunWylosujNoweCzastki2(tablicaCzastek,NumberParticles,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
+
+		UsunWylosujNoweCzastki4(tablicaCzastek,NumberParticles,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
 		iloscCzastekDoUsuniacia = 0;
 
 #if DIAGNOSTIC == 1
@@ -301,6 +301,25 @@ void Location::UsunWylosujNoweCzastki2(Particle* tablicaCzastek,int length,int i
 			tablicaCzastek[index].LosujPozycje(bBox[p].X_Left_Bottom,bBox[p].X_Right_Bottom,bBox[p].Y_Left_Bottom,bBox[p].Y_Left_Top);
 		}
 	}*/
+}
+
+void Location::UsunWylosujNoweCzastki4(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniecia,BoundingBox* bBox,unsigned int BoundingBoxCount)
+{
+
+	int doodszczalu =  iloscCzastekDoUsuniacia /= 4;
+
+	for(int i = (length - doodszczalu), index = 0; i < length - doodszczalu; i++,index++ )
+	{
+		tablicaCzastek[i].LosujSasiada(tablicaCzastek[index].X,tablicaCzastek[index].Y,tablicaCzastek[index].Alfa);
+
+	}
+
+	for(int i = (length - doodszczalu), index = 0; i < length; i++,index++ )
+	{
+		tablicaCzastek[i].Losuj22();
+
+	}
+
 }
 
 
