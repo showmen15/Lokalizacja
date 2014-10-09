@@ -5,7 +5,6 @@ class LocationProxy
 {
 private:
 
-
 	static const int DEVICE_TYPE = 6;
 	static const int DEVICE_ID = 0;
 

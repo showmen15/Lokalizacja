@@ -9,13 +9,12 @@ MazeWall FindWall(MazeWall* wall,int WallsCount,string id)
 	}
 }
 
-// -1 not find 
 int conteins(vector<Room> rooms,string textToFind)
 {
 	for (int i = 0; i < rooms.size(); i++)
 		if(rooms.at(i).SpaceId == textToFind)
 			return i;
-	return -1;
+	return -1; // -1 not find
 }
 
 char* OpenFile(char *filename)
@@ -112,7 +111,6 @@ int GetMazeSpaces(cJSON *json,MazeSpaces* & tableSpaces)
 int GetRooms(MazeWall* wall,int WallsCount,MazeSpaces* spaces,int SpacesCount,Room* & rooms)
 {
 	vector<Room> temp;
-	//Room* rooms;
 	Room tmpRoom;
 	int index;
 
@@ -180,8 +178,6 @@ int parseJasonFile(char *filename,BoundingBox* & bBox,Room* & rooms)
 	cJSON *json;
 	MazeWall* allWalls = NULL;
 	MazeSpaces* allSpaces = NULL;
-	
-	//BoundingBox* bBox;
 
 	int WallsCount;
 	int SpacesCount;
@@ -201,10 +197,5 @@ int parseJasonFile(char *filename,BoundingBox* & bBox,Room* & rooms)
 
 	cJSON_Delete(json);
 	free(data);
-	//delete [] allWalls;
-	//delete [] allSpaces;
-
-	//delete [] rooms;
-	//delete [] bBox;
 	return BoundingBoxCount;
 }

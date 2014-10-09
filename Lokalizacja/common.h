@@ -1,2 +1,0 @@
-#define DIAGNOSTIC 1
-

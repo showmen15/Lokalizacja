@@ -7,7 +7,9 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <unistd.h>
+
 #define BUF_SIZE 7168
+#define TIMEOUT_S      2     /* Seconds between retransmits */
 
 class UdpClient
 {
@@ -16,10 +18,7 @@ UdpClient(char* sIP,unsigned short port,unsigned int bufforSize);
 ~ UdpClient();
 
 char* Receive();
-
-//void Send(const char* dgram,int bytes);
 void Send(const char* dgram,int count);
-
 
 int n;
 
@@ -32,7 +31,7 @@ private:
     int  s, port;
 	
 
-void err(char *s);
+    void err(char *s);
 
 };
 

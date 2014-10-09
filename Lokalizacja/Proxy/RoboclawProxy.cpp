@@ -1,8 +1,6 @@
 #include "UdpClientLinux.h"
 #include "RoboclawProxy.h"
 
-#define ROBOT_MAX_SPEED 5000
-
 RoboclawProxy::RoboclawProxy(UdpClient *client_udp)
 {
 	udp = client_udp;
@@ -54,14 +52,7 @@ void RoboclawProxy::buildSendMessage(amber::DriverHdr header, amber::DriverMsg* 
 	message->SerializePartialToArray(&output[2 + headerLen + 2],messageLen);
 
 	requestScan = output;
-
-	/*char temo[] = { 0, 4, 8, 2, 16, 0, 0, 7, 16, 1, 24, 100, 168, 1, 1 };
-	//for(int i = 0; i < 	requestScanLength; i++)
-		//output[i] = temo[i];
-	requestScan =  temo;
-*/
 }
-
 
 RoboclawProxy::~RoboclawProxy()
 {

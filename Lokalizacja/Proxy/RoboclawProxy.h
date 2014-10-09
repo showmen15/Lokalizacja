@@ -1,11 +1,11 @@
 #include "drivermsg.pb.h"
 #include "roboclaw.pb.h"
 
+#define ROBOT_MAX_SPEED 5000
+
 class RoboclawProxy 
 {
 private:
-
-
 	static const int DEVICE_TYPE = 2;
 	static const int DEVICE_ID = 0;
 

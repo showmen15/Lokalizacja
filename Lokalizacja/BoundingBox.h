@@ -1,7 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #define _SCL_SECURE_NO_WARNINGS 1
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "cJSON.h"
@@ -11,11 +10,9 @@
 #include <vector>
 #include <float.h>
 #include <math.h>
-#include "common.h"
 
 using std::string;
 using namespace std;
-
 
 struct BoundingBox
 {
@@ -37,7 +34,7 @@ public:
 		X_Left_Top =
 		X_Left_Bottom =
 		Y_Left_Bottom = 
-		X_Right_Bottom = DBL_MAX;//std::numeric_limits<double>::max();
+		X_Right_Bottom = DBL_MAX;
 
 		Y_Left_Top =
 		X_Right_Top =
@@ -48,12 +45,10 @@ public:
 
 class MazeWall 
 {
-private :
-		double w;
+//private :
+		/*double w;
 	    double wa;
-		double wb;
-
-
+		double wb;*/
 public :
 
 	string Type;
@@ -70,20 +65,11 @@ public :
 	double B;
 	double C;
 
-	
-	//void Calculate()
-	//{
-	//	A = (From_Y - To_Y) / (From_X - To_X);
-	//	B = ((From_X * To_Y) - (To_X * From_Y)) / (From_X - To_X);
-	//}
-
-	//static const int nPlaces = 2;
-	static const double dbShift = 100;//pow(10.0,nPlaces);
+	static const double dbShift = 100;
 
 	inline double Round(double dbVal)
 	{
 	    return dbVal;
-		//return round(dbVal * dbShift) / dbShift;
 	}
 
 	void Calculate()
@@ -96,7 +82,6 @@ public :
 		}
 		else if(From_X ==  To_X)
 		{
-
 			A = 1;
 			B = 0;
 			C = -1 *  From_X;
@@ -105,20 +90,13 @@ public :
 		{
 
 		A = (From_Y - To_Y);
-
-
 		B = (To_X - From_X);
-
-
 		C =  (From_X * To_Y) - (From_Y * To_X);
 		}
 
 		A = Round(A);
-		//A = round(A * 10000) / 10000;
 		B = Round(B);
-		//B = round(B * 10000) / 10000;
  		C = Round(C);
-		//C = round(C * 10000) / 10000;
 	}
 };
 
@@ -135,10 +113,8 @@ struct Room
 private:
 	int iContainerWallCount;
 
-
 public:
 	string SpaceId;
-
 	vector<MazeWall> ContainerWall;
 	MazeWall *ContainerWallTable;
 
@@ -156,7 +132,6 @@ public:
 		return iContainerWallCount;
 	}
 };
-
 
 int conteins(vector<Room> rooms,string textToFind);
 

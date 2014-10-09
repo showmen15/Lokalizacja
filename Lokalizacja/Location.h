@@ -11,8 +11,6 @@
 #include <netinet/in.h>
 #include <net/if.h>
 
-#include "common.h"
-
 #include "Proxy/UdpClientLinux.h"
 #include "Proxy/HokuyoProxy.h"
 #include "Proxy/RoboclawProxy.h"
@@ -20,17 +18,11 @@
 
 #include "BoundingBox.h"
 #include "Particle.h"
-
-
 #include <math.h>
-
-
-
-
 
 #define M_PI 3.14159265358979323846
 
-//#define DIAGNOSTIC 1
+#define DIAGNOSTIC 1
 
 using namespace std;
 
@@ -91,7 +83,7 @@ private:
 #endif
 
 public:
-	Location(char* mapPath,unsigned int numberParticles,double epsilon,int generation,unsigned int ilosc_losowanych_nowych_czastek);
+	Location(char* mapPath,unsigned int numberParticles,double epsilon,int generation,unsigned int ilosc_losowanych_nowych_czastek,unsigned int skipScan);
 	~Location();
 	void RunLocation();
 

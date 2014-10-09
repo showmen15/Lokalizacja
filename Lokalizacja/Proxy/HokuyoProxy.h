@@ -2,13 +2,9 @@
 #include "drivermsg.pb.h"
 #include "roboclaw.pb.h"
 #include "hokuyo.pb.h"
-//#include "UdpClientLinux.h"
 
 #include <stdio.h>
 #define M_PI       3.14159265358979323846
-
-#define PRZLIECZENIE_DLA_POMIARU_SKANERA 1
-
 
 class HokuyoProxy 
 {
@@ -32,9 +28,11 @@ private:
 
 	int synNum;
 
+	unsigned int SkipScan;
+
 public:
 
-	HokuyoProxy(UdpClient* client_udp);
+	HokuyoProxy(UdpClient* client_udp,unsigned int skipScan);
 	~HokuyoProxy();
 	
 	int ScanLengthAll;
