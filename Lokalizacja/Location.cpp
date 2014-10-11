@@ -7,11 +7,11 @@
 Location::Location(char* mapPath,unsigned int numberParticles,double epsilon,int generation,unsigned int ilosc_losowanych_nowych_czastek,unsigned int skipScan)
 {
 #if DIAGNOSTIC == 1
-	IPPart =  "192.168.2.101";//"172.29.53.31";//"192.168.56.1";//"192.168.2.102";//"169.254.162.40"; //wizualizacja
+	IPPart =  "192.168.2.102";//"172.29.53.31";//"192.168.56.1";//"192.168.2.102";//"169.254.162.40"; //wizualizacja
 	clientParticle = new UdpClient(IPPart,1234,9000); //wizualizacja
 #endif
 
-	amberUdp = "192.168.2.202";  //getRobotIPAdress(); //przerobic aby bral lokalny adres z robota
+	amberUdp = "192.168.2.204";  //getRobotIPAdress(); //przerobic aby bral lokalny adres z robota
 	clinetAmber = new UdpClient(amberUdp,26233,9000);
 
 	srand(10);
