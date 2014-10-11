@@ -74,6 +74,9 @@ private:
 	void UsunWylosujNoweCzastki5(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniecia,BoundingBox* bBox,unsigned int BoundingBoxCount);
 	void UsunWylosujNoweCzastki6(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniecia,BoundingBox* bBox,unsigned int BoundingBoxCount);
 
+	double RandomWalkMaxDistance;
+	double StandardDeviation;
+
 	/////// Diagnostic ////////////////
 #if DIAGNOSTIC == 1
 	char* IPPart;
@@ -85,7 +88,7 @@ private:
 #endif
 
 public:
-	Location(char* mapPath,unsigned int numberParticles,double epsilon,int generation,unsigned int ilosc_losowanych_nowych_czastek,unsigned int skipScan);
+	Location(char* mapPath,unsigned int numberParticles,double epsilon,int generation,unsigned int ilosc_losowanych_nowych_czastek,unsigned int skipScan,double dRandomWalkMaxDistance,double dStandardDeviation);
 	~Location();
 	void RunLocation();
 

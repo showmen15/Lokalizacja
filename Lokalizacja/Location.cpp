@@ -4,7 +4,7 @@
 #define TESTHOKU 0
 
 
-Location::Location(char* mapPath,unsigned int numberParticles,double epsilon,int generation,unsigned int ilosc_losowanych_nowych_czastek,unsigned int skipScan)
+Location::Location(char* mapPath,unsigned int numberParticles,double epsilon,int generation,unsigned int ilosc_losowanych_nowych_czastek,unsigned int skipScan,double dRandomWalkMaxDistance,double dStandardDeviation)
 {
 #if DIAGNOSTIC == 1
 	IPPart =  "192.168.2.102";//"172.29.53.31";//"192.168.56.1";//"192.168.2.102";//"169.254.162.40"; //wizualizacja
@@ -38,6 +38,8 @@ Location::Location(char* mapPath,unsigned int numberParticles,double epsilon,int
 	EPSILON = epsilon;
 	GENERATION = generation;
 	ILOSC_LOSOWANYCH_NOWYCH_CZASTEK = ilosc_losowanych_nowych_czastek;
+	RandomWalkMaxDistance = dRandomWalkMaxDistance;
+	StandardDeviation = dStandardDeviation;
 }
 
 Location::~Location()
@@ -108,7 +110,7 @@ void Location::RunLocation()
 				continue;
 			}
 
-			tablicaCzastek[i].UpdateCountProbability5(currentRoom, skaner->GetDistances(),skaner->GetAngles(),skaner->ScanLength); //przeliczamy prawdopodobienstwa
+			tablicaCzastek[i].UpdateCountProbability5(currentRoom, skaner->GetDistances(),skaner->GetAngles(),skaner->ScanLength,StandardDeviation); //przeliczamy prawdopodobienstwa
 
 			/*if(tablicaCzastek[i].sMarkToDelete > GENERATION)
 			iloscCzastekDoUsuniacia++;
@@ -276,7 +278,7 @@ void Location::UsunWylosujNoweCzastki2(Particle* tablicaCzastek,int length,int i
 
 	//rozmnazamy dobre czastki
 	for(unsigned int i = start, j = 0; i < end; i++, j++)
-		tablicaCzastek[i].LosujSasiada2(tablicaCzastek[j].X,tablicaCzastek[j].Y,tablicaCzastek[j].Alfa);
+		tablicaCzastek[i].LosujSasiada2(tablicaCzastek[j].X,tablicaCzastek[j].Y,tablicaCzastek[j].Alfa,RandomWalkMaxDistance);
 
 	//nowe czastki
 	//for(unsigned int i = end; i < length; i++)
@@ -334,7 +336,7 @@ void Location::UsunWylosujNoweCzastki3(Particle* tablicaCzastek,int length,int i
 		//powiel czastki
 		for(int i = zakres, j = 0; i < length - ILOSC_LOSOWANYCH_NOWYCH_CZASTEK;i++, j = (j + 1) % zakres)
 		{
-			tablicaCzastek[i].LosujSasiada(tablicaCzastek[j].X,tablicaCzastek[j].Y,tablicaCzastek[j].Alfa);
+			tablicaCzastek[i].LosujSasiada(tablicaCzastek[j].X,tablicaCzastek[j].Y,tablicaCzastek[j].Alfa,RandomWalkMaxDistance);
 		}
 		for(int index = length - ILOSC_LOSOWANYCH_NOWYCH_CZASTEK; index < length; index++)
 		{
@@ -358,7 +360,7 @@ void Location::UsunWylosujNoweCzastki4(Particle* tablicaCzastek,int length,int i
 
 	for(int i = (length - doodszczalu), index = 0; i < length - doodszczalu; i++,index++ )
 	{
-		tablicaCzastek[i].LosujSasiada(tablicaCzastek[index].X,tablicaCzastek[index].Y,tablicaCzastek[index].Alfa);
+		tablicaCzastek[i].LosujSasiada(tablicaCzastek[index].X,tablicaCzastek[index].Y,tablicaCzastek[index].Alfa,RandomWalkMaxDistance);
 
 	}
 
@@ -381,7 +383,7 @@ void Location::UsunWylosujNoweCzastki5(Particle* tablicaCzastek,int length,int i
 
 	//powielenie
 	for(int i = 0; i < index; i++,index--)
-		tablicaCzastek[index].LosujSasiada(tablicaCzastek[i].X,tablicaCzastek[i].Y,tablicaCzastek[i].Alfa);
+		tablicaCzastek[index].LosujSasiada(tablicaCzastek[i].X,tablicaCzastek[i].Y,tablicaCzastek[i].Alfa,RandomWalkMaxDistance);
 
 
 
@@ -401,11 +403,11 @@ void Location::UsunWylosujNoweCzastki6(Particle* tablicaCzastek,int length,int i
 
 	//powielenie
 	for(int i = 0; i < index; i++,index--)
-		tablicaCzastek[index].LosujSasiada(tablicaCzastek[i].X,tablicaCzastek[i].Y,tablicaCzastek[i].Alfa);
+		tablicaCzastek[index].LosujSasiada(tablicaCzastek[i].X,tablicaCzastek[i].Y,tablicaCzastek[i].Alfa,RandomWalkMaxDistance);
 	}
 	else if(iloscCzastekDoUsuniecia == length)
 	{
-		tablicaCzastek[1].LosujSasiada(tablicaCzastek[0].X,tablicaCzastek[0].Y,tablicaCzastek[0].Alfa);
+		tablicaCzastek[1].LosujSasiada(tablicaCzastek[0].X,tablicaCzastek[0].Y,tablicaCzastek[0].Alfa,RandomWalkMaxDistance);
 
 		for(int i = 2; i< length; i++)
 			tablicaCzastek[i].Losuj22();

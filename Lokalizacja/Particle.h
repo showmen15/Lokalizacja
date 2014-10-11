@@ -6,14 +6,14 @@
 #include <algorithm>
 
 #define TEST 1
-#define PROMIEN 0.7
+//#define PROMIEN 0.7
 
 using namespace std;
 using std::string;
 
 #define M_PI       3.14159265358979323846
 #define M_PI2      6.28318530717958647692
-#define ODCHYLENIE 0.3
+//#define ODCHYLENIE 0.3
 #define NEW_MIN 0
 #define NEW_MAX 1
 
@@ -200,10 +200,10 @@ public:
 				sMarkToDelete = 0;
 		}
 
-	inline void LosujSasiada(double X0,double Y0, double alfa) //Generuj czastke w sasiedztwie innej czastki
+	inline void LosujSasiada(double X0,double Y0, double alfa,double dRandomWalkMaxDistance) //Generuj czastke w sasiedztwie innej czastki
 	{
 		double t = fRand(0,2 * M_PI);
-		double R1 =  fRand(0,PROMIEN);
+		double R1 =  fRand(0,dRandomWalkMaxDistance);
 
 		X =  X0 + R1 * cos(t);
 		Y = Y0 + R1 * sin(t);
@@ -228,10 +228,10 @@ public:
 	}
 
 
-	inline void LosujSasiada2(double X0,double Y0, double alfa) //Generuj czastke w sasiedztwie innej czastki
+	inline void LosujSasiada2(double X0,double Y0, double alfa,double dRandomWalkMaxDistance) //Generuj czastke w sasiedztwie innej czastki
 	{
 		double t = fRand(0,2 * M_PI);
-		double R1 =  fRand(0,PROMIEN);
+		double R1 =  fRand(0,dRandomWalkMaxDistance);
 
 		X =  X0 + R1 * cos(t);
 		Y = Y0 + R1 * sin(t);
@@ -526,7 +526,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 		}
 
 
-		inline void UpdateCountProbability3(Room* box,int scanTable[],double angleTable[],int length)
+		inline void UpdateCountProbability3(Room* box,int scanTable[],double angleTable[],int length,double standardDeviation)
 		{
 			double dist;
 			double gauss;
@@ -563,7 +563,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 
 
 						double scan = (((double) scanTable[i]) / 1000);
-						gauss =  Gauss2(dist,scan); //exp((-1 * pow(scanTable[i] - dist,2)) / ( 2 * ODCHYLENIE * ODCHYLENIE)) / (2 * M_PI * ODCHYLENIE);
+						gauss =  Gauss2(dist,scan,standardDeviation); //exp((-1 * pow(scanTable[i] - dist,2)) / ( 2 * ODCHYLENIE * ODCHYLENIE)) / (2 * M_PI * ODCHYLENIE);
 
 						tablicaOdleglosci[i] = dist;
 						tablicaKatow[i] = angleTable[i];
@@ -592,7 +592,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 
 			fflush(NULL);
 
-			double yy = ((double) ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa) * Gauss2(1,1);
+			double yy = ((double) ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa) * Gauss2(1,1,standardDeviation);
 			Probability =  Normalize(sumProbability,0,yy);  //(sumProbability / index);  /// (length / PRZLIECZENIE_DLA_POMIARU_SKANERA)); //sumProbability
 		}
 
@@ -677,7 +677,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 			//return result;
 		}
 
-		inline void UpdateCountProbability5(Room* box,int scanTable[],double angleTable[],int length)
+		inline void UpdateCountProbability5(Room* box,int scanTable[],double angleTable[],int length,double standardDeviation)
 			{
 			Point intersection;
 
@@ -752,7 +752,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 						if(dist > 0)
 						{
 												double scan = (((double) scanTable[i]) / 1000);
-												gauss =  Gauss2(dist,scan);
+												gauss =  Gauss2(dist,scan,standardDeviation);
 
 												tablicaOdleglosci[i] = dist;
 												tablicaKatow[i] = angleTable[i];
@@ -778,12 +778,12 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 
 
 
-					double yy = ((double) ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa) * Gauss2(1,1);
+					double yy = ((double) ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa) * Gauss2(1,1,standardDeviation);
 					Probability =  Normalize(sumProbability,0,yy);  //(sumProbability / index);  /// (length / PRZLIECZENIE_DLA_POMIARU_SKANERA)); //sumProbability
 				}
 
 
-		inline void UpdateCountProbability4(Room* box,int scanTable[],double angleTable[],int length)
+		inline void UpdateCountProbability4(Room* box,int scanTable[],double angleTable[],int length,double standardDeviation)
 		{
 				double dist;
 				double gauss;
@@ -841,7 +841,7 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 					if(dist > 0)
 					{
 											double scan = (((double) scanTable[i]) / 1000);
-											gauss =  Gauss2(dist,scan);
+											gauss =  Gauss2(dist,scan,standardDeviation);
 
 											tablicaOdleglosci[i] = dist;
 											tablicaKatow[i] = angleTable[i];
@@ -867,16 +867,16 @@ inline double getDistnace(MazeWall *wall,double alfa,double X2,double Y2)
 
 
 
-				double yy = ((double) ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa) * Gauss2(1,1);
+				double yy = ((double) ilosc_pomiarow_uzytych_do_wyliczenia_prawdopdobienstwa) * Gauss2(1,1,standardDeviation);
 				Probability =  Normalize(sumProbability,0,yy);  //(sumProbability / index);  /// (length / PRZLIECZENIE_DLA_POMIARU_SKANERA)); //sumProbability
 			}
 
 
-	inline double Gauss2(double prop,double real)
+	inline double Gauss2(double prop,double real,double standardDeviation)
 	{
 	double a,b,c,d;
 	double x = prop;
-	double delta = sqrt(ODCHYLENIE);
+	double delta = sqrt(standardDeviation);
 	double ni = real;
 
 	a = 1 / (delta  *sqrt(2 * M_PI));
