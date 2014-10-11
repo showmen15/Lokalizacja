@@ -3,7 +3,8 @@
 
 int main(int argc, char* argv[])
 {
-	char* mapPath = "/home/szsz//git//Lokalizacja//Lokalizacja//Debug//labNowe3.roson";
+	//char* mapPath = "/home/szsz//git//Lokalizacja//Lokalizacja//Debug//labNowe3.roson";
+	char* mapPath = "/home//panda//Lokalizacja//Lokalizacja//labNowe3.roson";
 
 	unsigned int numberParticles = 104;
 	double epsilon = 0.96;
