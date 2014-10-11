@@ -6,14 +6,14 @@
 #include <algorithm>
 
 #define TEST 1
-#define PROMIEN 0.2
+#define PROMIEN 0.7
 
 using namespace std;
 using std::string;
 
 #define M_PI       3.14159265358979323846
 #define M_PI2      6.28318530717958647692
-#define ODCHYLENIE 0.4
+#define ODCHYLENIE 0.3
 #define NEW_MIN 0
 #define NEW_MAX 1
 
@@ -47,10 +47,12 @@ private:
 	double alfaNew; //zmienna pomocnicza
 	double d;
 
-	double maxX;
-	double maxY;
+
 
 public:	
+
+	double maxX;
+		double maxY;
 
 	Particle()
 {
