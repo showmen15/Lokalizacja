@@ -11,7 +11,7 @@ Location::Location(char* mapPath,unsigned int numberParticles,double epsilon,int
 	clientParticle = new UdpClient(IPPart,1234,9000); //wizualizacja
 #endif
 
-	amberUdp = "192.168.2.204";  //getRobotIPAdress(); //przerobic aby bral lokalny adres z robota
+	amberUdp = "192.168.2.202";  //getRobotIPAdress(); //przerobic aby bral lokalny adres z robota
 	clinetAmber = new UdpClient(amberUdp,26233,9000);
 
 	srand(10);
@@ -53,7 +53,7 @@ Location::~Location()
 
 void Location::RunLocation()
 {
-	//RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,NumberParticles);
+//	RozmiescCzastki(bBox,countRoomAndBox,tablicaCzastek,NumberParticles);
 	InitTablicaCzastekLosowo(tablicaCzastek,bBox,countRoomAndBox);
 
 #if DIAGNOSTIC == 1
@@ -143,7 +143,7 @@ void Location::RunLocation()
 #endif
 
 
-		UsunWylosujNoweCzastki4(tablicaCzastek,NumberParticles,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
+		UsunWylosujNoweCzastki6(tablicaCzastek,NumberParticles,iloscCzastekDoUsuniacia,bBox,countRoomAndBox);
 		iloscCzastekDoUsuniacia = 0;
 
 #if DIAGNOSTIC == 1
@@ -160,6 +160,15 @@ void Location::RunLocation()
 
 void Location::RozmiescCzastki(BoundingBox* bBox,unsigned int BoundingBoxCount,Particle* tablicaCzastek,unsigned int ParticleCount)
 {
+	double maxX = 0.0;
+		double maxY = 0.0;
+
+		for(int i = 0; i < BoundingBoxCount; i++)
+		{
+		 maxX =  std::max(maxX,bBox[i].X_Right_Top);
+		 maxY =  std::max(maxY,bBox[i].Y_Right_Top);
+		}
+
 	Particle tempRef;
 	tempRef.X = 0.3;
 	tempRef.Y = 0.2;
@@ -183,6 +192,9 @@ void Location::RozmiescCzastki(BoundingBox* bBox,unsigned int BoundingBoxCount,P
 			tablicaCzastek[i].Alfa = tempRef.Alfa;
 			//tablicaCzastek[i].AlfaStopnie = tempRef.AlfaStopnie;
 			tablicaCzastek[i].Probability = 0.0;
+			tablicaCzastek[i].maxX = maxX;
+			tablicaCzastek[i].maxY = maxY;
+
 			i++;
 			przesuniecie = 0.4;
 			tempRef.X += przesuniecie;
@@ -303,26 +315,6 @@ void Location::UsunWylosujNoweCzastki2(Particle* tablicaCzastek,int length,int i
 	}*/
 }
 
-void Location::UsunWylosujNoweCzastki4(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniecia,BoundingBox* bBox,unsigned int BoundingBoxCount)
-{
-
-	int doodszczalu =  iloscCzastekDoUsuniacia /= 4;
-
-	for(int i = (length - doodszczalu), index = 0; i < length - doodszczalu; i++,index++ )
-	{
-		tablicaCzastek[i].LosujSasiada(tablicaCzastek[index].X,tablicaCzastek[index].Y,tablicaCzastek[index].Alfa);
-
-	}
-
-	for(int i = (length - doodszczalu), index = 0; i < length; i++,index++ )
-	{
-		tablicaCzastek[i].Losuj22();
-
-	}
-
-}
-
-
 void Location::UsunWylosujNoweCzastki3(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniecia,BoundingBox* bBox,unsigned int BoundingBoxCount)
 {
 	iloscCzastekDoUsuniecia = 0;
@@ -356,6 +348,70 @@ void Location::UsunWylosujNoweCzastki3(Particle* tablicaCzastek,int length,int i
 		}
 }
 }
+
+
+
+void Location::UsunWylosujNoweCzastki4(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniecia,BoundingBox* bBox,unsigned int BoundingBoxCount)
+{
+
+	int doodszczalu =  iloscCzastekDoUsuniacia /= 4;
+
+	for(int i = (length - doodszczalu), index = 0; i < length - doodszczalu; i++,index++ )
+	{
+		tablicaCzastek[i].LosujSasiada(tablicaCzastek[index].X,tablicaCzastek[index].Y,tablicaCzastek[index].Alfa);
+
+	}
+
+	for(int i = (length - doodszczalu), index = 0; i < length; i++,index++ )
+	{
+		tablicaCzastek[i].Losuj22();
+
+	}
+
+}
+
+
+void Location::UsunWylosujNoweCzastki5(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniecia,BoundingBox* bBox,unsigned int BoundingBoxCount)
+{
+	int index = length - 1;
+
+	//nowe czastki
+	for(int i = 0; i < ILOSC_LOSOWANYCH_NOWYCH_CZASTEK; i++, index--)
+		tablicaCzastek[index].Losuj22();
+
+	//powielenie
+	for(int i = 0; i < index; i++,index--)
+		tablicaCzastek[index].LosujSasiada(tablicaCzastek[i].X,tablicaCzastek[i].Y,tablicaCzastek[i].Alfa);
+
+
+
+}
+
+
+void Location::UsunWylosujNoweCzastki6(Particle* tablicaCzastek,int length,int iloscCzastekDoUsuniecia,BoundingBox* bBox,unsigned int BoundingBoxCount)
+{
+
+   if(iloscCzastekDoUsuniecia != length)
+	{
+		int index = length - 1;
+
+	//nowe czastki
+	for(int i = 0; i < ILOSC_LOSOWANYCH_NOWYCH_CZASTEK; i++, index--)
+		tablicaCzastek[index].Losuj22();
+
+	//powielenie
+	for(int i = 0; i < index; i++,index--)
+		tablicaCzastek[index].LosujSasiada(tablicaCzastek[i].X,tablicaCzastek[i].Y,tablicaCzastek[i].Alfa);
+	}
+	else if(iloscCzastekDoUsuniecia == length)
+	{
+		tablicaCzastek[1].LosujSasiada(tablicaCzastek[0].X,tablicaCzastek[0].Y,tablicaCzastek[0].Alfa);
+
+		for(int i = 2; i< length; i++)
+			tablicaCzastek[i].Losuj22();
+	}
+}
+
 
 
 
