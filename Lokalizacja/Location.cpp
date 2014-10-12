@@ -134,6 +134,10 @@ void Location::RunLocation()
 
 		qsort(tablicaCzastek,NumberParticles,sizeof(Particle),compareMyType);
 
+		this->Pos_X = tablicaCzastek[0].X;
+		this->Pos_Y = tablicaCzastek[0].Y;
+		this->Prop = tablicaCzastek[0].Probability;
+
 
 #if DIAGNOSTIC == 1
 		SendParticle(&diagnostic,tablicaCzastek,&size);
