@@ -89,6 +89,9 @@ public:
 	~Location();
 	void RunLocation();
 
+	double Pos_X;
+	double Pos_Y;
+	double Prop;
 
 };
 
